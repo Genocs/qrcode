@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.Consol
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.Tests", "Genocs.QRCodeLibrary.Tests\Genocs.QRCodeLibrary.Tests.csproj", "{AC12EDB0-9102-416A-9E35-CD570C5207E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.WebApi", "Genocs.QrCodeLibrary.WebApi\Genocs.QRCodeLibrary.WebApi.csproj", "{6CD75320-4371-480C-99A3-0793599F8F1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.WebApi", "Genocs.QRCodeLibrary.WebApi\Genocs.QRCodeLibrary.WebApi.csproj", "{6CD75320-4371-480C-99A3-0793599F8F1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
