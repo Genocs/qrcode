@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>QRCode library for .NET Core 3.1</Description>
+    <Authors>[Genocs] Nocco Giovanni Emanuele</Authors>
+    <Company>Nocco Giovanni Emanuele</Company>
+    <NeutralLanguage></NeutralLanguage>
+    <Version>1.0.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>
