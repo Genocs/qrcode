@@ -3,6 +3,7 @@ Fast qrcode scanner library ported on .NET core 3.1
 
 [![Build Status](https://travis-ci.org/Genocs/qrcode.svg?branch=master)](https://travis-ci.org/Genocs/qrcode)
 
+```
 /////////////////////////////////////////////////////////////////////
 //
 //	QR Code Library
@@ -45,5 +46,5 @@ Fast qrcode scanner library ported on .NET core 3.1
 //
 //	For version history please refer to QRDecoder.cs
 /////////////////////////////////////////////////////////////////////
-
+```
 
