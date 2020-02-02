@@ -1,8 +1,18 @@
 # qrcode
 Fast qrcode scanner library ported on .NET core 3.1
 
+
+---
+## Package
+The nuget package is hosted on myget.
+
+## CI
+The project is build by Travis CI
 [![Build Status](https://travis-ci.org/Genocs/qrcode.svg?branch=master)](https://travis-ci.org/Genocs/qrcode)
 
+
+## References 
+(see original version at [codeproject](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/)).
 ```
 /////////////////////////////////////////////////////////////////////
 //
@@ -46,5 +56,11 @@ Fast qrcode scanner library ported on .NET core 3.1
 //
 //	For version history please refer to QRDecoder.cs
 /////////////////////////////////////////////////////////////////////
+```
+
+## Commands 
+To build the project type following command.
+```ps
+dotnet build .\src
 ```
 
