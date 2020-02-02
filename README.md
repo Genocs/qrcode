@@ -5,6 +5,9 @@ Fast qrcode scanner library ported on .NET core 3.1
 ---
 ## Package
 The nuget package is hosted on myget.
+[Genocs.QRCodeLibrary](https://www.myget.org/feed/genocs-microservices/package/nuget/Genocs.QRCodeLibrary)
+```
+```
 
 ## CI
 The project is build by Travis CI
