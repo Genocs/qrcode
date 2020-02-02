@@ -127,51 +127,51 @@ namespace Genocs.QRCodeLibrary.Decoder
         // Modified Berlekamp-Massey
         internal static int CalculateSigmaMBM
                 (
-                int[] Sigma,
-                int[] Omega,
-                int[] Syndrome,
-                int ErrCorrCodewords
+                int[] sigma,
+                int[] omega,
+                int[] syndrome,
+                int errCorrCodewords
                 )
         {
-            int[] PolyC = new int[ErrCorrCodewords];
-            int[] PolyB = new int[ErrCorrCodewords];
-            PolyC[1] = 1;
-            PolyB[0] = 1;
+            int[] polyC = new int[errCorrCodewords];
+            int[] polyB = new int[errCorrCodewords];
+            polyC[1] = 1;
+            polyB[0] = 1;
             int ErrorControl = 1;
             int ErrorCount = 0;     // L
             int m = -1;
 
-            for (int ErrCorrIndex = 0; ErrCorrIndex < ErrCorrCodewords; ErrCorrIndex++)
+            for (int ErrCorrIndex = 0; ErrCorrIndex < errCorrCodewords; ErrCorrIndex++)
             {
                 // Calculate the discrepancy
-                int Dis = Syndrome[ErrCorrIndex];
-                for (int i = 1; i <= ErrorCount; i++) Dis ^= Multiply(PolyB[i], Syndrome[ErrCorrIndex - i]);
+                int Dis = syndrome[ErrCorrIndex];
+                for (int i = 1; i <= ErrorCount; i++) Dis ^= Multiply(polyB[i], syndrome[ErrCorrIndex - i]);
 
                 if (Dis != 0)
                 {
                     int DisExp = StaticTables.IntToExp[Dis];
-                    int[] WorkPolyB = new int[ErrCorrCodewords];
-                    for (int Index = 0; Index <= ErrCorrIndex; Index++) WorkPolyB[Index] = PolyB[Index] ^ MultiplyIntByExp(PolyC[Index], DisExp);
+                    int[] WorkPolyB = new int[errCorrCodewords];
+                    for (int Index = 0; Index <= ErrCorrIndex; Index++) WorkPolyB[Index] = polyB[Index] ^ MultiplyIntByExp(polyC[Index], DisExp);
                     int js = ErrCorrIndex - m;
                     if (js > ErrorCount)
                     {
                         m = ErrCorrIndex - ErrorCount;
                         ErrorCount = js;
-                        if (ErrorCount > ErrCorrCodewords / 2) return INCORRECTABLE_ERROR;
-                        for (int Index = 0; Index <= ErrorControl; Index++) PolyC[Index] = DivideIntByExp(PolyB[Index], DisExp);
+                        if (ErrorCount > errCorrCodewords / 2) return INCORRECTABLE_ERROR;
+                        for (int Index = 0; Index <= ErrorControl; Index++) polyC[Index] = DivideIntByExp(polyB[Index], DisExp);
                         ErrorControl = ErrorCount;
                     }
-                    PolyB = WorkPolyB;
+                    polyB = WorkPolyB;
                 }
 
                 // shift polynomial right one
-                Array.Copy(PolyC, 0, PolyC, 1, Math.Min(PolyC.Length - 1, ErrorControl));
-                PolyC[0] = 0;
+                Array.Copy(polyC, 0, polyC, 1, Math.Min(polyC.Length - 1, ErrorControl));
+                polyC[0] = 0;
                 ErrorControl++;
             }
 
-            PolynomialMultiply(Omega, PolyB, Syndrome);
-            Array.Copy(PolyB, 0, Sigma, 0, Math.Min(PolyB.Length, Sigma.Length));
+            PolynomialMultiply(omega, polyB, syndrome);
+            Array.Copy(polyB, 0, sigma, 0, Math.Min(polyB.Length, sigma.Length));
             return ErrorCount;
         }
 
@@ -290,12 +290,12 @@ namespace Genocs.QRCodeLibrary.Decoder
 
         internal static int MultiplyDivide
                 (
-                int Int1,
-                int Int2,
-                int Int3
+                int int1,
+                int int2,
+                int int3
                 )
         {
-            return (Int1 == 0 || Int2 == 0) ? 0 : StaticTables.ExpToInt[(StaticTables.IntToExp[Int1] + StaticTables.IntToExp[Int2] - StaticTables.IntToExp[Int3] + 255) % 255];
+            return (int1 == 0 || int2 == 0) ? 0 : StaticTables.ExpToInt[(StaticTables.IntToExp[int1] + StaticTables.IntToExp[int2] - StaticTables.IntToExp[int3] + 255) % 255];
         }
 
         internal static int DivideIntByExp
@@ -307,17 +307,17 @@ namespace Genocs.QRCodeLibrary.Decoder
             return Int == 0 ? 0 : StaticTables.ExpToInt[StaticTables.IntToExp[Int] - Exp + 255];
         }
 
-        internal static void PolynomialMultiply(int[] Result, int[] Poly1, int[] Poly2)
+        internal static void PolynomialMultiply(int[] result, int[] poly1, int[] poly2)
         {
-            Array.Clear(Result, 0, Result.Length);
-            for (int Index1 = 0; Index1 < Poly1.Length; Index1++)
+            Array.Clear(result, 0, result.Length);
+            for (int index1 = 0; index1 < poly1.Length; index1++)
             {
-                if (Poly1[Index1] == 0) continue;
-                int loga = StaticTables.IntToExp[Poly1[Index1]];
-                int Index2End = Math.Min(Poly2.Length, Result.Length - Index1);
+                if (poly1[index1] == 0) continue;
+                int loga = StaticTables.IntToExp[poly1[index1]];
+                int index2End = Math.Min(poly2.Length, result.Length - index1);
                 // = Sum(Poly1[Index1] * Poly2[Index2]) for all Index2
-                for (int Index2 = 0; Index2 < Index2End; Index2++)
-                    if (Poly2[Index2] != 0) Result[Index1 + Index2] ^= StaticTables.ExpToInt[loga + StaticTables.IntToExp[Poly2[Index2]]];
+                for (int index2 = 0; index2 < index2End; index2++)
+                    if (poly2[index2] != 0) result[index1 + index2] ^= StaticTables.ExpToInt[loga + StaticTables.IntToExp[poly2[index2]]];
             }
             return;
         }

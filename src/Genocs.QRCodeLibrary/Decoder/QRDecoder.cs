@@ -276,7 +276,7 @@ namespace Genocs.QRCodeLibrary.Decoder
 
         public QrCodeResult ImageDecoder(Bitmap image)
         {
-            byte[][]  tempResult = ImageDecoderRaw(image);
+            byte[][] tempResult = ImageDecoderRaw(image);
             return QRCodeResult(tempResult);
         }
 
@@ -295,9 +295,9 @@ namespace Genocs.QRCodeLibrary.Decoder
 
             result = new QrCodeResult();
 
-            for (int Index = 0; Index < bufferData.Length; Index++)
+            for (int index = 0; index < bufferData.Length; index++)
             {
-                result.Results.Add(ForDisplay(QRDecoder.ByteArrayToStr(bufferData[Index])));
+                result.Results.Add(ForDisplay(QRDecoder.ByteArrayToStr(bufferData[index])));
             }
 
             return result;
