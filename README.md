@@ -1,18 +1,10 @@
-# qrcode
-Fast qrcode scanner library ported on .NET core 3.1
-
-
----
-
-## CI
-The project has been built with Travis CI
-
-[![Build Status](https://travis-ci.org/Genocs/qrcode.svg?branch=master)](https://travis-ci.org/Genocs/qrcode)
+# qrcode [![Build Status](https://travis-ci.org/Genocs/qrcode.svg?branch=master)](https://travis-ci.org/Genocs/qrcode)
 [![NuGet](https://img.shields.io/badge/nuget-v1.0.1-blue)](https://www.nuget.org/packages/Genocs.QRCodeLibrary)
 [![MyGet](https://img.shields.io/badge/myget-v1.0.1-blue)](https://www.myget.org/feed/genocs-microservices/package/nuget/Genocs.QRCodeLibrary)
 [![Docker](https://img.shields.io/badge/docker-v1.0.1-green)](https://hub.docker.com/repository/docker/genocs/qrcode)
+Fast qrcode scanner library ported on .NET core 3.1
 
-
+---
 
 ## References 
 (see original version at [codeproject](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/)).
