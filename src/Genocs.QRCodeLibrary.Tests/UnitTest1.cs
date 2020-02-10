@@ -10,7 +10,7 @@ namespace Genocs.QRCodeLibrary.Tests
         [Fact]
         public void LoadFilexUnitTest()
         {
-            string demoFilePath = HelperUnitTest.GetDemoFile("image2.jpg");
+            string demoFilePath = HelperUnitTest.GetDemoFile("img3.jpg");
 
             using (Bitmap bitmap = new Bitmap(demoFilePath))
             {

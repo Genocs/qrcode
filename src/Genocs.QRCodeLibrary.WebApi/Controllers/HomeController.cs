@@ -1,4 +1,5 @@
-﻿using Genocs.QRCodeLibrary.Decoder;
+﻿using Aspose.BarCode.BarCodeRecognition;
+using Genocs.QRCodeLibrary.Decoder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,15 +18,15 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+            => _logger = logger;
 
         [HttpGet]
-        public IActionResult Get() => Ok("QRCode Web API Service");
+        public IActionResult Get()
+            => Ok("QRCode Web API Service");
 
         [HttpGet("ping")]
-        public IActionResult GetPing() => Ok("pong");
+        public IActionResult GetPing() 
+            => Ok("pong");
 
         /// <summary>
         /// It allows to upload a file containing a QRCode
@@ -56,6 +57,21 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
                 // process uploaded files
                 // Don't rely on or trust the FileName property without validation.
                 //Displaying File Name for verification purposes for now -Rohit
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+
+                using (BarCodeReader reader = new BarCodeReader(memory))
+                {
+                    result = new QrCodeResult();
+                    var res = reader.ReadBarCodes();
+                    if (res != null && res.Length > 0)
+                    {
+                        result.Results.Add(res[0].CodeText);
+                    }
+                }
+
                 if (result != null)
                 {
                     return Ok(result);
