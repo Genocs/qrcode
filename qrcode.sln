@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary", "Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj", "{44621280-F620-40F8-AC3A-FA0F242DD532}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary", "src\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj", "{44621280-F620-40F8-AC3A-FA0F242DD532}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.Console", "Genocs.QRCodeLibrary.Console\Genocs.QRCodeLibrary.Console.csproj", "{1F63C0FA-555C-4A10-9A58-CCA86A748F12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.Console", "src\Genocs.QRCodeLibrary.Console\Genocs.QRCodeLibrary.Console.csproj", "{1F63C0FA-555C-4A10-9A58-CCA86A748F12}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.Tests", "Genocs.QRCodeLibrary.Tests\Genocs.QRCodeLibrary.Tests.csproj", "{AC12EDB0-9102-416A-9E35-CD570C5207E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.Tests", "src\Genocs.QRCodeLibrary.Tests\Genocs.QRCodeLibrary.Tests.csproj", "{AC12EDB0-9102-416A-9E35-CD570C5207E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.WebApi", "Genocs.QRCodeLibrary.WebApi\Genocs.QRCodeLibrary.WebApi.csproj", "{6CD75320-4371-480C-99A3-0793599F8F1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.WebApi", "src\Genocs.QRCodeLibrary.WebApi\Genocs.QRCodeLibrary.WebApi.csproj", "{6CD75320-4371-480C-99A3-0793599F8F1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

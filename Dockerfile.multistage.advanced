@@ -1,0 +1,29 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+WORKDIR /app
+
+ARG sln=Solomon.sln
+ARG service=src/Genocs.QRCode.WebApi
+ARG tests=src/Genocs.QRCode.Tests
+ARG configuration=Release
+ARG feed='--source "https://api.nuget.org/v3/index.json"'
+
+COPY ${sln} ./
+COPY ./${service} ./${service}/
+COPY ./${tests} ./${tests}/
+
+RUN dotnet restore /property:Configuration=${configuration} ${feed}
+
+COPY . ./
+RUN dotnet publish ${service} -c ${configuration} -o out ${feed}
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+WORKDIR /app
+
+ARG service=src/Genocs.QRCode.WebApi
+
+COPY --from=builder /app/${service}/out/ .
+
+ENV ASPNETCORE_URLS http://*:5000
+ENV ASPNETCORE_ENVIRONMENT docker
+EXPOSE 5000
+ENTRYPOINT dotnet Genocs.QRCode.WebApi.dll
