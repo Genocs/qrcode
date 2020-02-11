@@ -3,7 +3,7 @@ DOCKER_TAG=''
 
 case "$TRAVIS_BRANCH" in
   "master")
-    DOCKER_TAG=latest
+    DOCKER_TAG=2.0.0
     ;;
   "develop")
     DOCKER_TAG=dev
