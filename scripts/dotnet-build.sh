@@ -6,5 +6,5 @@ case "$TRAVIS_BRANCH" in
     ;;
 esac
 
-dotnet build ./src -c Release --no-cache
+dotnet build -c Release --no-cache
 #dotnet test ./src
