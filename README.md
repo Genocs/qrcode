@@ -54,7 +54,7 @@ Fast qrcode scanner library ported on .NET core 3.1
 ## Commands 
 To build the project type following command:
 ```ps
-dotnet build .\src
+dotnet build
 ```
 
 If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
