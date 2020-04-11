@@ -1,5 +1,4 @@
 using Genocs.QRCodeLibrary.Decoder;
-using System;
 using System.Drawing;
 using Xunit;
 

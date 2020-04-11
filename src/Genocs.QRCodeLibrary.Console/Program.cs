@@ -22,7 +22,7 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
             Console.WriteLine("Done!");
         }
 
-        private static void test2()
+        private static void Test2()
         {
             // load the PDF in PdfConverter
             using (var converter = new Aspose.Pdf.Facades.PdfConverter())
@@ -89,8 +89,6 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
                 f.ToImage("image2_out.jpg", 1);
 
             }
-
-
         }
 
 
@@ -108,8 +106,8 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
             {
                 // handle exception here;
             }
-
         }
+
         private static void test6()
         {
             try
@@ -128,14 +126,11 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
         }
 
 
-
         private static void read()
         {
             using (BarCodeReader reader = new BarCodeReader("image1_out.jpg"))
             {
                 var result = reader.ReadBarCodes();
-
-                int i = 0;
             }
         }
     }

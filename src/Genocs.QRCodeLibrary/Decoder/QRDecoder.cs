@@ -262,14 +262,14 @@ namespace Genocs.QRCodeLibrary.Decoder
         /// <summary>
         /// Convert byte array to string using UTF8 encoding
         /// </summary>
-        /// <param name="DataArray">Input array</param>
+        /// <param name="bufferData">Input array</param>
         /// <returns>Output string</returns>
-        public static string ByteArrayToStr(byte[] DataArray)
+        public static string ByteArrayToStr(byte[] bufferData)
         {
             System.Text.Decoder decoder = System.Text.Encoding.UTF8.GetDecoder();
-            int CharCount = decoder.GetCharCount(DataArray, 0, DataArray.Length);
+            int CharCount = decoder.GetCharCount(bufferData, 0, bufferData.Length);
             char[] chars = new char[CharCount];
-            decoder.GetChars(DataArray, 0, DataArray.Length, chars, 0);
+            decoder.GetChars(bufferData, 0, bufferData.Length, chars, 0);
             return new string(chars);
         }
 
@@ -1177,10 +1177,7 @@ namespace Genocs.QRCodeLibrary.Decoder
         // Search for QR Code version
         ////////////////////////////////////////////////////////////////////
 
-        internal bool DecodeQRCodeCorner
-                (
-                Corner Corner
-                )
+        internal bool DecodeQRCodeCorner(Corner corner)
         {
             try
             {
@@ -1241,10 +1238,7 @@ namespace Genocs.QRCodeLibrary.Decoder
 #endif
         }
 
-        internal void SetTransMatrix
-                (
-                Corner Corner
-                )
+        internal void SetTransMatrix(Corner corner)
         {
             // save
             int BottomRightPos = QRCodeDimension - 4;
@@ -1257,33 +1251,33 @@ namespace Genocs.QRCodeLibrary.Decoder
             Matrix1[0, 0] = 3;
             Matrix1[0, 1] = 3;
             Matrix1[0, 2] = 1;
-            Matrix1[0, 3] = Corner.TopLeftFinder.Col;
+            Matrix1[0, 3] = corner.TopLeftFinder.Col;
 
             Matrix1[1, 0] = BottomRightPos;
             Matrix1[1, 1] = 3;
             Matrix1[1, 2] = 1;
-            Matrix1[1, 3] = Corner.TopRightFinder.Col;
+            Matrix1[1, 3] = corner.TopRightFinder.Col;
 
             Matrix1[2, 0] = 3;
             Matrix1[2, 1] = BottomRightPos;
             Matrix1[2, 2] = 1;
-            Matrix1[2, 3] = Corner.BottomLeftFinder.Col;
+            Matrix1[2, 3] = corner.BottomLeftFinder.Col;
 
             // build matrix 2 for Vertical Y direction
             Matrix2[0, 0] = 3;
             Matrix2[0, 1] = 3;
             Matrix2[0, 2] = 1;
-            Matrix2[0, 3] = Corner.TopLeftFinder.Row;
+            Matrix2[0, 3] = corner.TopLeftFinder.Row;
 
             Matrix2[1, 0] = BottomRightPos;
             Matrix2[1, 1] = 3;
             Matrix2[1, 2] = 1;
-            Matrix2[1, 3] = Corner.TopRightFinder.Row;
+            Matrix2[1, 3] = corner.TopRightFinder.Row;
 
             Matrix2[2, 0] = 3;
             Matrix2[2, 1] = BottomRightPos;
             Matrix2[2, 2] = 1;
-            Matrix2[2, 3] = Corner.BottomLeftFinder.Row;
+            Matrix2[2, 3] = corner.BottomLeftFinder.Row;
 
             // solve matrix1
             SolveMatrixOne(Matrix1);
@@ -1340,24 +1334,20 @@ namespace Genocs.QRCodeLibrary.Decoder
         // Get image pixel color
         ////////////////////////////////////////////////////////////////////
 
-        internal bool GetModule
-                (
-                int Row,
-                int Col
-                )
+        internal bool GetModule(int row, int col)
         {
             // get module based on three finders
             if (!Trans4Mode)
             {
-                int Trans3Col = (int)Math.Round(Trans3a * Col + Trans3c * Row + Trans3e, 0, MidpointRounding.AwayFromZero);
-                int Trans3Row = (int)Math.Round(Trans3b * Col + Trans3d * Row + Trans3f, 0, MidpointRounding.AwayFromZero);
+                int Trans3Col = (int)Math.Round(Trans3a * col + Trans3c * row + Trans3e, 0, MidpointRounding.AwayFromZero);
+                int Trans3Row = (int)Math.Round(Trans3b * col + Trans3d * row + Trans3f, 0, MidpointRounding.AwayFromZero);
                 return BlackWhiteImage[Trans3Row, Trans3Col];
             }
 
             // get module based on three finders plus one alignment mark
-            double W = Trans4g * Col + Trans4h * Row + 1.0;
-            int Trans4Col = (int)Math.Round((Trans4a * Col + Trans4b * Row + Trans4c) / W, 0, MidpointRounding.AwayFromZero);
-            int Trans4Row = (int)Math.Round((Trans4d * Col + Trans4e * Row + Trans4f) / W, 0, MidpointRounding.AwayFromZero);
+            double W = Trans4g * col + Trans4h * row + 1.0;
+            int Trans4Col = (int)Math.Round((Trans4a * col + Trans4b * row + Trans4c) / W, 0, MidpointRounding.AwayFromZero);
+            int Trans4Row = (int)Math.Round((Trans4d * col + Trans4e * row + Trans4f) / W, 0, MidpointRounding.AwayFromZero);
             return BlackWhiteImage[Trans4Row, Trans4Col];
         }
 
@@ -1365,10 +1355,7 @@ namespace Genocs.QRCodeLibrary.Decoder
         // search row by row for finders blocks
         ////////////////////////////////////////////////////////////////////
 
-        internal bool FindAlignmentMark
-                (
-                Corner Corner
-                )
+        internal bool FindAlignmentMark(Corner corner)
         {
             // alignment mark estimated position
             int AlignRow = QRCodeDimension - 7;
@@ -1381,7 +1368,7 @@ namespace Genocs.QRCodeLibrary.Decoder
 #endif
 
             // search area
-            int Side = (int)Math.Round(ALIGNMENT_SEARCH_AREA * (Corner.TopLineLength + Corner.LeftLineLength), 0, MidpointRounding.AwayFromZero);
+            int Side = (int)Math.Round(ALIGNMENT_SEARCH_AREA * (corner.TopLineLength + corner.LeftLineLength), 0, MidpointRounding.AwayFromZero);
 
             int AreaLeft = ImageCol - Side / 2;
             int AreaTop = ImageRow - Side / 2;
@@ -1522,12 +1509,12 @@ namespace Genocs.QRCodeLibrary.Decoder
 
         internal int GetVersionOne()
         {
-            int VersionCode = 0;
-            for (int Index = 0; Index < 18; Index++)
+            int versionCode = 0;
+            for (int index = 0; index < 18; index++)
             {
-                if (GetModule(Index / 3, QRCodeDimension - 11 + (Index % 3))) VersionCode |= 1 << Index;
+                if (GetModule(index / 3, QRCodeDimension - 11 + (index % 3))) versionCode |= 1 << index;
             }
-            return TestVersionCode(VersionCode);
+            return TestVersionCode(versionCode);
         }
 
         ////////////////////////////////////////////////////////////////////
@@ -2204,12 +2191,9 @@ namespace Genocs.QRCodeLibrary.Decoder
         // Format info to error correction code
         ////////////////////////////////////////////////////////////////////
 
-        internal ErrorCorrection FormatInfoToErrCode
-                (
-                int Info
-                )
+        internal ErrorCorrection FormatInfoToErrCode(int info)
         {
-            return (ErrorCorrection)(Info ^ 1);
+            return (ErrorCorrection)(info ^ 1);
         }
 
         ////////////////////////////////////////////////////////////////////
@@ -2239,7 +2223,8 @@ namespace Genocs.QRCodeLibrary.Decoder
             {
                 byte[] AlignPos = StaticTables.AlignmentPositionArray[QRCodeVersion];
                 int AlignmentDimension = AlignPos.Length;
-                for (int Row = 0; Row < AlignmentDimension; Row++) for (int Col = 0; Col < AlignmentDimension; Col++)
+                for (int Row = 0; Row < AlignmentDimension; Row++)
+                    for (int Col = 0; Col < AlignmentDimension; Col++)
                     {
                         if (Col == 0 && Row == 0 || Col == AlignmentDimension - 1 && Row == 0 || Col == 0 && Row == AlignmentDimension - 1) continue;
 
@@ -2272,13 +2257,10 @@ namespace Genocs.QRCodeLibrary.Decoder
         // Apply Mask
         ////////////////////////////////////////////////////////////////////
 
-        internal void ApplyMask
-                (
-                int Mask
-                )
+        internal void ApplyMask(int mask)
         {
             MaskMatrix = (byte[,])BaseMatrix.Clone();
-            switch (Mask)
+            switch (mask)
             {
                 case 0:
                     ApplyMask0();
