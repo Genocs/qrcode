@@ -1,4 +1,4 @@
-# qrcode [![Build Status](https://travis-ci.org/Genocs/genocs-libraries.svg?branch=master)](https://travis-ci.org/Genocs/genocs-libraries) [![NuGet](https://img.shields.io/badge/nuget-v1.0.1-blue)](https://www.nuget.org/packages/Genocs.Core) 
+# qrcode [![Build Status](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library) [![NuGet](https://img.shields.io/badge/nuget-v1.0.1-blue)](https://www.nuget.org/packages/Genocs.Core) 
 
 Fast qrcode scanner library ported on .NET core 3.1
 
