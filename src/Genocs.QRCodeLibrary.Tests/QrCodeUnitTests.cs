@@ -4,12 +4,12 @@ using Xunit;
 
 namespace Genocs.QRCodeLibrary.Tests
 {
-    public class QrCodeUnitTest
+    public class QrCodeUnitTests
     {
         [Fact]
         public void LoadFilexUnitTest()
         {
-            string demoFilePath = HelperUnitTest.GetDemoFile("image2.jpg");
+            string demoFilePath = HelperUnitTests.GetDemoFile("image2.jpg");
 
             using (Bitmap bitmap = new Bitmap(demoFilePath))
             {
