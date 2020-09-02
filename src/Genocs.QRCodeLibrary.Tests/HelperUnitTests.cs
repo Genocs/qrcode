@@ -10,7 +10,7 @@ namespace Genocs.QRCodeLibrary.Tests
             return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
 
-        public static string GetDemoFilefolder()
+        public static string GetDemoFileFolder()
         {
             string fullPath = GetLocationOfExecutingAssembly();
             return @$"{fullPath}\Demofiles";

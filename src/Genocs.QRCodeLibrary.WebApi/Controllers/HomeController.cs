@@ -64,13 +64,16 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
                     return Ok(result);
                 }
 
-                using (BarCodeReader reader = new BarCodeReader(memory))
+                using (MemoryStream memory = new MemoryStream())
                 {
-                    result = new QrCodeResult();
-                    var res = reader.ReadBarCodes();
-                    if (res != null && res.Length > 0)
+                    using (BarCodeReader reader = new BarCodeReader(memory))
                     {
-                        result.Results.Add(res[0].CodeText);
+                        result = new QrCodeResult();
+                        var res = reader.ReadBarCodes();
+                        if (res != null && res.Length > 0)
+                        {
+                            result.Results.Add(res[0].CodeText);
+                        }
                     }
                 }
 
