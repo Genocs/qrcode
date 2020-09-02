@@ -104,26 +104,22 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         {
             try
             {
+
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
+
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
-                using (Bitmap qrCodeImage = qrCode.GetGraphic(20))
-                {
-                    return File(ImageToByteArray(qrCodeImage), "image/png");
-                }
+                using Bitmap qrCodeImage = qrCode.GetGraphic(20);
+                using MemoryStream ms = new MemoryStream();
+                qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                return File(ms.ToArray(), "image/png");
+
             }
             catch (Exception exp)
             {
                 string message = $"Error on processing file. Message: '{exp.Message}'!";
                 return Ok(message);
             }
-        }
-
-        public byte[] ImageToByteArray(System.Drawing.Image imageIn)
-        {
-            MemoryStream ms = new MemoryStream();
-            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-            return ms.ToArray();
         }
     }
 }
