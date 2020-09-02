@@ -1,10 +1,6 @@
 ﻿using Aspose.BarCode.BarCodeRecognition;
-using Aspose.Pdf;
-using Aspose.Pdf.Devices;
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 
 namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
 {
@@ -30,10 +26,10 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
                 {
                     QRDecoder decoder = new QRDecoder();
                     var qrCode = decoder.ImageDecoder(bitmap);
-                    int i = 0;
+   
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // handle exception here;
             }
