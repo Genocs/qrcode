@@ -80,14 +80,14 @@ namespace Genocs.QRCodeLibrary.Decoder
 
             // top line slope
             TopLineDeltaX = TopRightFinder.Col - TopLeftFinder.Col;
-            TopLineDeltaY = TopRightFinder.Row - TopLeftFinder.Row;
+            TopLineDeltaY = TopRightFinder._row - TopLeftFinder._row;
 
             // top line length
             TopLineLength = Math.Sqrt(TopLineDeltaX * TopLineDeltaX + TopLineDeltaY * TopLineDeltaY);
 
             // left line slope
             LeftLineDeltaX = BottomLeftFinder.Col - TopLeftFinder.Col;
-            LeftLineDeltaY = BottomLeftFinder.Row - TopLeftFinder.Row;
+            LeftLineDeltaY = BottomLeftFinder._row - TopLeftFinder._row;
 
             // left line length
             LeftLineLength = Math.Sqrt(LeftLineDeltaX * LeftLineDeltaX + LeftLineDeltaY * LeftLineDeltaY);
@@ -120,11 +120,11 @@ namespace Genocs.QRCodeLibrary.Decoder
 
                 // top line slope
                 double topLineDeltaX = topRightFinder.Col - topLeftFinder.Col;
-                double topLineDeltaY = topRightFinder.Row - topLeftFinder.Row;
+                double topLineDeltaY = topRightFinder._row - topLeftFinder._row;
 
                 // left line slope
                 double leftLineDeltaX = bottomLeftFinder.Col - topLeftFinder.Col;
-                double leftLineDeltaY = bottomLeftFinder.Row - topLeftFinder.Row;
+                double leftLineDeltaY = bottomLeftFinder._row - topLeftFinder._row;
 
                 // top line length
                 double topLineLength = Math.Sqrt(topLineDeltaX * topLineDeltaX + topLineDeltaY * topLineDeltaY);
@@ -174,7 +174,7 @@ namespace Genocs.QRCodeLibrary.Decoder
             if (Math.Abs(TopLineDeltaX) >= Math.Abs(TopLineDeltaY))
             {
                 topModules += TopLineLength * TopLineLength /
-                    (Math.Abs(TopLineDeltaX) * 0.5 * (TopLeftFinder.HModule + TopRightFinder.HModule));
+                    (Math.Abs(TopLineDeltaX) * 0.5 * (TopLeftFinder._hModule + TopRightFinder._hModule));
             }
 
             // top line is mostly vertical
@@ -198,7 +198,7 @@ namespace Genocs.QRCodeLibrary.Decoder
             else
             {
                 leftModules += LeftLineLength * LeftLineLength /
-                    (Math.Abs(LeftLineDeltaX) * 0.5 * (TopLeftFinder.HModule + BottomLeftFinder.HModule));
+                    (Math.Abs(LeftLineDeltaX) * 0.5 * (TopLeftFinder._hModule + BottomLeftFinder._hModule));
             }
 
             // version (there is rounding in the calculation)

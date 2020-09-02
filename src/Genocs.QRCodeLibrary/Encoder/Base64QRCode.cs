@@ -10,24 +10,24 @@ namespace Genocs.QRCodeLibrary.Encoder
 {
     public class Base64QRCode : AbstractQRCode, IDisposable
     {
-        private QRCode qr;
+        private QRCode _qrCode;
 
         /// <summary>
         /// Constructor without params to be used in COM Objects connections
         /// </summary>
         public Base64QRCode()
         {
-            qr = new QRCode();
+            _qrCode = new QRCode();
         }
 
         public Base64QRCode(QRCodeData data) : base(data)
         {
-            qr = new QRCode(data);
+            _qrCode = new QRCode(data);
         }
 
         public override void SetQRCodeData(QRCodeData data)
         {
-            this.qr.SetQRCodeData(data);
+            _qrCode.SetQRCodeData(data);
         }
 
         public string GetGraphic(int pixelsPerModule)
@@ -44,7 +44,7 @@ namespace Genocs.QRCodeLibrary.Encoder
         public string GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
         {
             var base64 = string.Empty;
-            using (Bitmap bmp = qr.GetGraphic(pixelsPerModule, darkColor, lightColor, drawQuietZones))
+            using (Bitmap bmp = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, drawQuietZones))
             {
                 base64 = BitmapToBase64(bmp, imgType);
             }
@@ -54,7 +54,7 @@ namespace Genocs.QRCodeLibrary.Encoder
         public string GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, Bitmap icon, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
         {
             var base64 = string.Empty;
-            using (Bitmap bmp = qr.GetGraphic(pixelsPerModule, darkColor, lightColor, icon, iconSizePercent, iconBorderWidth, drawQuietZones))
+            using (Bitmap bmp = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, icon, iconSizePercent, iconBorderWidth, drawQuietZones))
             {
                 base64 = BitmapToBase64(bmp, imgType);
             }
@@ -95,7 +95,6 @@ namespace Genocs.QRCodeLibrary.Encoder
             Jpeg,
             Png
         }
-
     }
 
     public static class Base64QRCodeHelper

@@ -457,11 +457,11 @@ namespace Genocs.QRCodeLibrary.Decoder
                             foreach (Finder Align in AlignList)
                             {
 #if DEBUG
-                                QRCodeTrace.Format("Calculated alignment mark: Row {0}, Col {1}", Align.Row, Align.Col);
+                                QRCodeTrace.Format("Calculated alignment mark: Row {0}, Col {1}", Align._row, Align.Col);
 #endif
 
                                 // calculate transformation based on 3 finders and bottom right alignment mark
-                                SetTransMatrix(Corner, Align.Row, Align.Col);
+                                SetTransMatrix(Corner, Align._row, Align.Col);
 
                                 // decode corner using three finders and one alignment mark
                                 if (DecodeQRCodeCorner(Corner)) break;
@@ -774,7 +774,7 @@ namespace Genocs.QRCodeLibrary.Decoder
             bool[] ActiveColumn = new bool[ImageWidth];
             foreach (Finder HF in FinderList)
             {
-                for (int Col = HF.Col1; Col < HF.Col2; Col++) ActiveColumn[Col] = true;
+                for (int Col = HF._col1; Col < HF._col2; Col++) ActiveColumn[Col] = true;
             }
 
             // look for finder patterns
@@ -851,7 +851,7 @@ namespace Genocs.QRCodeLibrary.Decoder
             bool[] ActiveColumn = new bool[AreaWidth];
             foreach (Finder HF in AlignList)
             {
-                for (int Col = HF.Col1; Col < HF.Col2; Col++) ActiveColumn[Col - AreaLeft] = true;
+                for (int Col = HF._col1; Col < HF._col2; Col++) ActiveColumn[Col - AreaLeft] = true;
             }
 
             // look for finder patterns
@@ -1267,17 +1267,17 @@ namespace Genocs.QRCodeLibrary.Decoder
             Matrix2[0, 0] = 3;
             Matrix2[0, 1] = 3;
             Matrix2[0, 2] = 1;
-            Matrix2[0, 3] = corner.TopLeftFinder.Row;
+            Matrix2[0, 3] = corner.TopLeftFinder._row;
 
             Matrix2[1, 0] = BottomRightPos;
             Matrix2[1, 1] = 3;
             Matrix2[1, 2] = 1;
-            Matrix2[1, 3] = corner.TopRightFinder.Row;
+            Matrix2[1, 3] = corner.TopRightFinder._row;
 
             Matrix2[2, 0] = 3;
             Matrix2[2, 1] = BottomRightPos;
             Matrix2[2, 2] = 1;
-            Matrix2[2, 3] = corner.BottomLeftFinder.Row;
+            Matrix2[2, 3] = corner.BottomLeftFinder._row;
 
             // solve matrix1
             SolveMatrixOne(Matrix1);
@@ -1436,23 +1436,23 @@ namespace Genocs.QRCodeLibrary.Decoder
             Matrix[4, 3] = 3.0;
             Matrix[4, 4] = 3.0;
             Matrix[4, 5] = 1.0;
-            Matrix[4, 6] = -3.0 * Corner.TopLeftFinder.Row;
-            Matrix[4, 7] = -3.0 * Corner.TopLeftFinder.Row;
-            Matrix[4, 8] = Corner.TopLeftFinder.Row;
+            Matrix[4, 6] = -3.0 * Corner.TopLeftFinder._row;
+            Matrix[4, 7] = -3.0 * Corner.TopLeftFinder._row;
+            Matrix[4, 8] = Corner.TopLeftFinder._row;
 
             Matrix[5, 3] = FarFinder;
             Matrix[5, 4] = 3.0;
             Matrix[5, 5] = 1.0;
-            Matrix[5, 6] = -FarFinder * Corner.TopRightFinder.Row;
-            Matrix[5, 7] = -3.0 * Corner.TopRightFinder.Row;
-            Matrix[5, 8] = Corner.TopRightFinder.Row;
+            Matrix[5, 6] = -FarFinder * Corner.TopRightFinder._row;
+            Matrix[5, 7] = -3.0 * Corner.TopRightFinder._row;
+            Matrix[5, 8] = Corner.TopRightFinder._row;
 
             Matrix[6, 3] = 3.0;
             Matrix[6, 4] = FarFinder;
             Matrix[6, 5] = 1.0;
-            Matrix[6, 6] = -3.0 * Corner.BottomLeftFinder.Row;
-            Matrix[6, 7] = -FarFinder * Corner.BottomLeftFinder.Row;
-            Matrix[6, 8] = Corner.BottomLeftFinder.Row;
+            Matrix[6, 6] = -3.0 * Corner.BottomLeftFinder._row;
+            Matrix[6, 7] = -FarFinder * Corner.BottomLeftFinder._row;
+            Matrix[6, 8] = Corner.BottomLeftFinder._row;
 
             Matrix[7, 3] = FarAlign;
             Matrix[7, 4] = FarAlign;
