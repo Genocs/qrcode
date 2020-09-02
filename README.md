@@ -1,23 +1,8 @@
-# qrcode
+# qrcode [![Build Status](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library) [![NuGet](https://img.shields.io/badge/nuget-v1.0.1-blue)](https://www.nuget.org/packages/Genocs.Core) 
+
 Fast qrcode scanner library ported on .NET core 3.1
 
-
 ---
-
-## CI
-The project has been built with Travis CI
-
-[![Build Status](https://travis-ci.org/Genocs/qrcode.svg?branch=master)](https://travis-ci.org/Genocs/qrcode)
-
-
-## Package
-The nuget package is hosted on myget.
-[Genocs.QRCodeLibrary](https://www.myget.org/feed/genocs-microservices/package/nuget/Genocs.QRCodeLibrary)
-```
-```
-
-## Docker Image
-You can use a Docker image if you like [Docker qrcode](https://hub.docker.com/repository/docker/genocs/qrcode).
 
 ## References 
 (see original version at [codeproject](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/)).
@@ -69,6 +54,10 @@ You can use a Docker image if you like [Docker qrcode](https://hub.docker.com/re
 ## Commands 
 To build the project type following command:
 ```ps
-dotnet build .\src
+dotnet build
 ```
 
+If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
+- [ASP.NET Core](https://github.com/aspnet/Home)
+- [Visual Studio Code](https://github.com/Microsoft/vscode)
+- [Chakra Core](https://github.com/Microsoft/ChakraCore)

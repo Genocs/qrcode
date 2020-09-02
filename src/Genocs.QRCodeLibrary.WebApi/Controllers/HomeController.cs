@@ -35,23 +35,25 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         /// <returns>QrCode scanning result</returns>
         [Route("FindQrCode"), HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> PostFindQrCode(IFormFile file)
         {
             try
             {
                 if (file == null || file.Length == 0)
-                    return Content("file not selected");
+                    return Content("File not provided or empty");
 
                 QrCodeResult result = null;
 
-                MemoryStream memory = new MemoryStream();
-                await file.CopyToAsync(memory);
-
-                using (Bitmap bitmap = new Bitmap(memory))
+                using (MemoryStream memory = new MemoryStream())
                 {
-                    QRDecoder decoder = new QRDecoder();
-                    result = decoder.ImageDecoder(bitmap);
+                    await file.CopyToAsync(memory);
+
+                    using (Bitmap bitmap = new Bitmap(memory))
+                    {
+                        QRDecoder decoder = new QRDecoder();
+                        result = decoder.ImageDecoder(bitmap);
+                    }
                 }
 
                 // process uploaded files
@@ -81,7 +83,7 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
             }
             catch (Exception exp)
             {
-                string message = $"file / upload failed!";
+                string message = $"Error on processing file. Message: '{exp.Message}'!";
                 return Ok(message);
             }
         }

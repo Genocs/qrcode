@@ -1,11 +1,10 @@
 using Genocs.QRCodeLibrary.Decoder;
-using System;
 using System.Drawing;
 using Xunit;
 
 namespace Genocs.QRCodeLibrary.Tests
 {
-    public class QrCodeUnitTest
+    public class QrCodeUnitTests
     {
         [Fact]
         public void LoadFilexUnitTest()

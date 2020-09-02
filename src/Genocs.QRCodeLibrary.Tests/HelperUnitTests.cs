@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Genocs.QRCodeLibrary.Tests
 {
-    public static class HelperUnitTest
+    public static class HelperUnitTests
     {
         public static string GetLocationOfExecutingAssembly()
         {
