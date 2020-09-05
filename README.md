@@ -1,6 +1,7 @@
-![QRCode Library](https://raw.githubusercontent.com/genocs/clean-architecture-template/master/images/genocs-icon.png) qrcode scanner and builde
+![QRCode Library](https://raw.githubusercontent.com/genocs/clean-architecture-template/master/images/genocs-icon.png) QRCode scanner and builder
 =========
 Fast qrcode scanner and builder library ported on .NET core 3.1
+
 This is simple but useful library that can be used to Scan images containing QR code. The library allows to build a QR code image as well.
 
 ----
@@ -37,14 +38,13 @@ docker run -p 90:80 -d --name qrcodeapi-container genocs/qrcode.api
 
 If you want to use the container into a docker network:
 ``` ps
-docker run -d --name qrcodeapi-container -p 5001:80 genocs/qrcode.api --network genocs-network
-
+docker run -p 90:80 -d --name qrcodeapi-container genocs/qrcode.api --network genocs-network
 ```
 
 
 ### Push the images to the Docker image repository (Docker Hub)
 
-The tagname is optinal 
+The tagname is optional 
 
 ``` ps
 docker push genocs/qrcode.api:tagname
