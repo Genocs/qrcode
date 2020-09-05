@@ -7,7 +7,7 @@ GET {{url}}/ping
 ### Build a qrcode
 GET {{url}}/BuildQrCode?payload={{payload}}
 
-###
+### Read a qrcode printed into an image
 POST {{url}}/findQrCode
 Content-Type: application/json
 {
