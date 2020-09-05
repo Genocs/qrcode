@@ -1,22 +1,24 @@
-![QRCode Library](https://raw.githubusercontent.com/genocs/clean-architecture-template/master/images/genocs-icon.png) Fast qrcode scanner and builder library ported on .NET core 3.1
+![QRCode Library](https://raw.githubusercontent.com/genocs/clean-architecture-template/master/images/genocs-icon.png) qrcode scanner and builde
 =========
+Fast qrcode scanner and builder library ported on .NET core 3.1
 This is simple but useful library that can be used to Scan images containing QR code. The library allows to build a QR code image as well.
 
 ----
 
-[![Build Status](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library) [![NuGet](https://img.shields.io/badge/nuget-v1.0.1-blue)](https://www.nuget.org/packages/Genocs.Core) [![Gitter](https://img.shields.io/badge/chat-on%20gitter-blue.svg)](https://gitter.im/genocs/)
+[![Build Status](https://travis-ci.com/Genocs/qrcode.svg?branch=master)](https://travis-ci.com/Genocs/qrcode) <a href="https://www.nuget.org/packages/Genocs.QRCodeLibrary/" rel="Genocs.QRCodeLibrary">![NuGet](https://buildstats.info/nuget/genocs.qrcodelibrary)</a> ![Docker Automated build](https://img.shields.io/docker/automated/genocs/qrcode.api) [![Gitter](https://img.shields.io/badge/chat-on%20gitter-blue.svg)](https://gitter.im/genocs/)
 
 
 ## References 
-(see original version at [codeproject](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/)).
+Please see the original version at [codeproject](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/).
 
 ## Commands
 
 ### Build the project
-To build the project type following command:
+To build and test the project type following command:
 
 ```ps
 dotnet build
+dotnet test
 ```
 
 
