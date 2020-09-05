@@ -22,8 +22,8 @@ namespace Genocs.QRCodeLibrary.Tests
             QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
-
-            //qrCodeImage.Save(@"c:\tmp\img.png");
+            string filePath = HelperUnitTests.GetDemoFile("img.png");
+            qrCodeImage.Save(filePath);
         }
 
         [Fact]
@@ -41,8 +41,8 @@ namespace Genocs.QRCodeLibrary.Tests
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(generator, QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
-
-            //qrCodeImage.Save(@"c:\tmp\img.png");
+            string filePath = HelperUnitTests.GetDemoFile("img.png");
+            qrCodeImage.Save(filePath);
         }
 
         [Fact]

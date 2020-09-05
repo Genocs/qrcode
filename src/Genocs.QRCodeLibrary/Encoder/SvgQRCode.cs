@@ -16,7 +16,7 @@ namespace Genocs.QRCodeLibrary.Encoder
 
         public string GetGraphic(int pixelsPerModule)
         {
-            var viewBox = new Size(pixelsPerModule*this.QrCodeData.ModuleMatrix.Count, pixelsPerModule * this.QrCodeData.ModuleMatrix.Count);
+            var viewBox = new Size(pixelsPerModule * this.QrCodeData.ModuleMatrix.Count, pixelsPerModule * this.QrCodeData.ModuleMatrix.Count);
             return this.GetGraphic(viewBox, Color.Black, Color.White);
         }
         public string GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute)

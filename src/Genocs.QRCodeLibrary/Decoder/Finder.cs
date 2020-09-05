@@ -51,10 +51,10 @@ namespace Genocs.QRCodeLibrary.Decoder
     internal class Finder
     {
         // horizontal scan
-        internal int Row;
-        internal int Col1;
-        internal int Col2;
-        internal double HModule;
+        internal int _row;
+        internal int _col1;
+        internal int _col2;
+        internal double _hModule;
 
         // vertical scan
         internal int Col;
@@ -70,12 +70,11 @@ namespace Genocs.QRCodeLibrary.Decoder
         /// </summary>
         internal Finder(int row, int col1, int col2, double hModule)
         {
-            this.Row = row;
-            this.Col1 = col1;
-            this.Col2 = col2;
-            this.HModule = hModule;
+            this._row = row;
+            this._col1 = col1;
+            this._col2 = col2;
+            this._hModule = hModule;
             Distance = double.MaxValue;
-            return;
         }
 
         /// <summary>
@@ -84,14 +83,14 @@ namespace Genocs.QRCodeLibrary.Decoder
         internal void Match(int col, int row1, int row2, double vModule)
         {
             // test if horizontal and vertical are not related
-            if (col < Col1 || col >= Col2 || Row < row1 || Row >= row2) return;
+            if (col < _col1 || col >= _col2 || _row < row1 || _row >= row2) return;
 
             // Module sizes must be about the same
-            if (Math.Min(HModule, vModule) < Math.Max(HModule, vModule) * QRDecoder.MODULE_SIZE_DEVIATION) return;
+            if (Math.Min(_hModule, vModule) < Math.Max(_hModule, vModule) * QRDecoder.MODULE_SIZE_DEVIATION) return;
 
             // calculate distance
-            double deltaX = col - 0.5 * (Col1 + Col2);
-            double deltaY = Row - 0.5 * (row1 + row2);
+            double deltaX = col - 0.5 * (_col1 + _col2);
+            double deltaY = _row - 0.5 * (row1 + row2);
             double delta = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
 
             // distance between two points must be less than 2 pixels
@@ -104,7 +103,7 @@ namespace Genocs.QRCodeLibrary.Decoder
                 this.Row1 = row1;
                 this.Row2 = row2;
                 this.VModule = vModule;
-                ModuleSize = 0.5 * (HModule + vModule);
+                ModuleSize = 0.5 * (_hModule + vModule);
                 Distance = delta;
             }
             return;
@@ -115,7 +114,7 @@ namespace Genocs.QRCodeLibrary.Decoder
         /// </summary>
         internal bool Overlap(Finder other)
         {
-            return other.Col1 < Col2 && other.Col2 >= Col1 && other.Row1 < Row2 && other.Row2 >= Row1;
+            return other._col1 < _col2 && other._col2 >= _col1 && other.Row1 < Row2 && other.Row2 >= Row1;
         }
 
         /// <summary>
@@ -125,10 +124,10 @@ namespace Genocs.QRCodeLibrary.Decoder
         {
             if (Distance == double.MaxValue)
             {
-                return string.Format("Finder: Row: {0}, Col1: {1}, Col2: {2}, HModule: {3:0.00}", Row, Col1, Col2, HModule);
+                return string.Format("Finder: Row: {0}, Col1: {1}, Col2: {2}, HModule: {3:0.00}", _row, _col1, _col2, _hModule);
             }
 
-            return string.Format("Finder: Row: {0}, Col: {1}, Module: {2:0.00}, Distance: {3:0.00}", Row, Col, ModuleSize, Distance);
+            return string.Format("Finder: Row: {0}, Col: {1}, Module: {2:0.00}, Distance: {3:0.00}", _row, Col, ModuleSize, Distance);
         }
     }
 }

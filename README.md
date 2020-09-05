@@ -55,6 +55,7 @@ Fast qrcode scanner library ported on .NET core 3.1
 
 ### Build the project
 To build the project type following command:
+
 ```ps
 dotnet build
 ```
@@ -79,6 +80,14 @@ Before start check if the network exist otherwise remove it or create the networ
 docker run -d --name qrcode_1 -p 5001:80 genocs.qrcode --network genocs-network
 docker run -d --name qrcode_2 -p 5002:80 genocs.qrcode --network genocs-network
 
+```
+
+If you want to use Docker
+
+```ps
+docker build -t genocs.qrcode.api .
+docker tag genocs.qrcode.api genocs/qrcode.api
+docker run -p 90:80 -d --name qrcodeapi-container genocs/qrcode.api
 ```
 
 
