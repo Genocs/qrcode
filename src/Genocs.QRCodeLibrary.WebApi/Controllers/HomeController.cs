@@ -1,5 +1,4 @@
-﻿using Aspose.BarCode.BarCodeRecognition;
-using Genocs.QRCodeLibrary.Decoder;
+﻿using Genocs.QRCodeLibrary.Decoder;
 using Genocs.QRCodeLibrary.Encoder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -60,24 +59,6 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
                 // process uploaded files
                 // Don't rely on or trust the FileName property without validation.
                 //Displaying File Name for verification purposes for now -Rohit
-                if (result != null)
-                {
-                    return Ok(result);
-                }
-
-                using (MemoryStream memory = new MemoryStream())
-                {
-                    using (BarCodeReader reader = new BarCodeReader(memory))
-                    {
-                        result = new QrCodeResult();
-                        var res = reader.ReadBarCodes();
-                        if (res != null && res.Length > 0)
-                        {
-                            result.Results.Add(res[0].CodeText);
-                        }
-                    }
-                }
-
                 if (result != null)
                 {
                     return Ok(result);

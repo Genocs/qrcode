@@ -61,28 +61,12 @@ dotnet build
 ```
 
 
-### Build the Docker image
-
-``` ps
-docker build -t genocs.qrcode .
-```
-
-### Create the image tag
-
-``` ps
-docker tag genocs.qrcode genocs/genocs.qrcode
-```
-
-### Run the container
-Before start check if the network exist otherwise remove it or create the network
-
-``` ps
-docker run -d --name qrcode_1 -p 5001:80 genocs.qrcode --network genocs-network
-docker run -d --name qrcode_2 -p 5002:80 genocs.qrcode --network genocs-network
-
-```
-
 If you want to use Docker
+
+1. Build the Docker image
+2. Create the image tag
+3. Run The container
+
 
 ```ps
 docker build -t genocs.qrcode.api .
@@ -90,17 +74,23 @@ docker tag genocs.qrcode.api genocs/qrcode.api
 docker run -p 90:80 -d --name qrcodeapi-container genocs/qrcode.api
 ```
 
+If you want to use the container into a docker network:
+``` ps
+docker run -d --name qrcodeapi-container -p 5001:80 genocs/qrcode.api --network genocs-network
+
+```
 
 
 ### Push the images to the Docker image repository (Docker Hub)
 
+The tagname is optinal 
+
 ``` ps
-docker push genocs/genocs.qrcode:tagname
+docker push genocs/qrcode.api:tagname
 ```
 
+### Pull the image form Docker image repository (Docker Hub)
 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+``` ps
+docker pull genocs/qrcode.api:tagname
+```

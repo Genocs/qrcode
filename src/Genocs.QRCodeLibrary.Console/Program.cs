@@ -1,5 +1,4 @@
-﻿using Aspose.BarCode.BarCodeRecognition;
-using System;
+﻿using System;
 using System.Drawing;
 
 namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
@@ -16,8 +15,6 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
         }
 
 
-
-
         private static void DecodeQrCode()
         {
             try
@@ -31,15 +28,6 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
             catch (Exception)
             {
                 // handle exception here;
-            }
-        }
-
-
-        private static void read()
-        {
-            using (BarCodeReader reader = new BarCodeReader("image1_out.jpg"))
-            {
-                var result = reader.ReadBarCodes();
             }
         }
     }

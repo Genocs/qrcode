@@ -4,23 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Aspose.BarCode" Version="20.1.0" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="template.pdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="data\" />
   </ItemGroup>
 
 </Project>

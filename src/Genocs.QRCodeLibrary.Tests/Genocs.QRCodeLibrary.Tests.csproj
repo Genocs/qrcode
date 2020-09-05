@@ -29,16 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DemoFiles\20200127_101322.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="DemoFiles\image2.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="DemoFiles\image3.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="DemoFiles\img3.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
