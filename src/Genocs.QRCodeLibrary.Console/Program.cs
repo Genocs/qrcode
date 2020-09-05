@@ -116,7 +116,6 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
                 {
                     QRDecoder decoder = new QRDecoder();
                     var qrCode = decoder.ImageDecoder(bitmap);
-                    int i = 0;
                 }
             }
             catch (Exception ex)

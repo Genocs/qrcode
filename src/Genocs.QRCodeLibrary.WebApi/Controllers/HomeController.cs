@@ -28,7 +28,7 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         /// <summary>
         /// It allows to upload a file containing a QRCode
         /// </summary>
-        /// <param name="files">files</param>
+        /// <param name="file">file</param>
         /// <returns>QrCode scanning result</returns>
         [Route("FindQrCode"), HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]

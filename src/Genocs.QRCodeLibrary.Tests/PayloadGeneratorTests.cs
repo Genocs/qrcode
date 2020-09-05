@@ -23,7 +23,7 @@ namespace Genocs.QRCodeLibrary.Tests
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
 
-            qrCodeImage.Save(@"c:\tmp\img.png");
+            //qrCodeImage.Save(@"c:\tmp\img.png");
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Genocs.QRCodeLibrary.Tests
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
 
-            qrCodeImage.Save(@"c:\tmp\img.png");
+            //qrCodeImage.Save(@"c:\tmp\img.png");
         }
 
         [Fact]

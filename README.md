@@ -51,11 +51,45 @@ Fast qrcode scanner library ported on .NET core 3.1
 /////////////////////////////////////////////////////////////////////
 ```
 
-## Commands 
+## Commands
+
+### Build the project
 To build the project type following command:
 ```ps
 dotnet build
 ```
+
+
+### Build the Docker image
+
+``` ps
+docker build -t genocs.qrcode .
+```
+
+### Create the image tag
+
+``` ps
+docker tag genocs.qrcode genocs/genocs.qrcode
+```
+
+### Run the container
+Before start check if the network exist otherwise remove it or create the network
+
+``` ps
+docker run -d --name qrcode_1 -p 5001:80 genocs.qrcode --network genocs-network
+docker run -d --name qrcode_2 -p 5002:80 genocs.qrcode --network genocs-network
+
+```
+
+
+
+### Push the images to the Docker image repository (Docker Hub)
+
+``` ps
+docker push genocs/genocs.qrcode:tagname
+```
+
+
 
 If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
 - [ASP.NET Core](https://github.com/aspnet/Home)
