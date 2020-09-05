@@ -13,7 +13,7 @@ script:
   - ./scripts/build.sh
   #- ./scripts/test.sh
 after_success:
-  - ./scripts/dockerize.sh
+  #- ./scripts/dockerize.sh
 notifications:
   email:
     on_success: never
