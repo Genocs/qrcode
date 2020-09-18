@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -12,8 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj" />
+    <PackageReference Include="Convey.Docs.Swagger" Version="0.4.349" />
+    <PackageReference Include="Convey.Logging" Version="0.4.349" />
+    <PackageReference Include="Convey.WebApi" Version="0.4.349" />
+    <PackageReference Include="Convey.WebApi.CQRS" Version="0.4.349" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj" />
+  </ItemGroup>
 
 </Project>

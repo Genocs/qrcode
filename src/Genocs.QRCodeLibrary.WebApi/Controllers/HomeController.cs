@@ -11,22 +11,14 @@ using System.Threading.Tasks;
 namespace Genocs.QRCodeLibrary.WebApi.Controllers
 {
 
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("")]
     public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
             => _logger = logger;
-
-        [HttpGet]
-        public IActionResult Get()
-            => Ok("QRCode Web API Service");
-
-        [HttpGet("ping")]
-        public IActionResult GetPing()
-            => Ok("pong");
 
         /// <summary>
         /// It allows to upload a file containing a QRCode
@@ -81,7 +73,7 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         [Route("BuildQrCode"), HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetBuildQrCode([FromQuery] string payload)
+        public IActionResult GetBuildQrCode([FromQuery] string payload, int size = 20)
         {
             try
             {
@@ -90,7 +82,7 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
 
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
-                using Bitmap qrCodeImage = qrCode.GetGraphic(20);
+                using Bitmap qrCodeImage = qrCode.GetGraphic(size);
                 using MemoryStream ms = new MemoryStream();
                 qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                 return File(ms.ToArray(), "image/png");
