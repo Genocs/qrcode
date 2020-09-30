@@ -34,7 +34,7 @@ namespace Genocs.QRCodeLibrary.WebApi
                                 .UseRouting()
                                 .UseEndpoints(r => r.MapControllers())
                                 .UseDispatcherEndpoints(endpoints => endpoints
-                                    .Get("", ctx => ctx.Response.WriteAsync("QRCode Service"))
+                                    .Get("", ctx => ctx.Response.WriteAsync("QRCode Service. Go to ./docs to get informations."))
                                     .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
                                 )
                                 .UseSwaggerDocs())
