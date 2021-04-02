@@ -66,10 +66,11 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         }
 
         /// <summary>
-        /// It allows to upload a file containing a QRCode
+        /// It allows to build an image containing a QRCode
         /// </summary>
-        /// <param name="files">files</param>
-        /// <returns>QrCode scanning result</returns>
+        /// <param name="payload">The QRCode payload data</param>
+        /// <param name="size">The QRCode size</param>
+        /// <returns>QRCode image result</returns>
         [Route("BuildQrCode"), HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -85,6 +86,37 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
                 using Bitmap qrCodeImage = qrCode.GetGraphic(size);
                 using MemoryStream ms = new MemoryStream();
                 qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                return File(ms.ToArray(), "image/png");
+
+            }
+            catch (Exception exp)
+            {
+                string message = $"Error on processing file. Message: '{exp.Message}'!";
+                return Ok(message);
+            }
+        }
+
+        /// <summary>
+        /// It allows to build an image containing a Barcode
+        /// </summary>
+        /// <param name="payload">The Barcode payload data</param>
+        /// <param name="width">The Barcode width</param>
+        /// <param name="height">The Barcode height</param>
+
+        /// <returns>Barcode image result</returns>
+        [Route("BuildBarcode"), HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult GetBuildBarCode([FromQuery] string payload = "038000356216", int width = 290, int height = 120)
+        {
+            try
+            {
+                BarcodeLibrary.Barcode barcodeGenerator = new BarcodeLibrary.Barcode();
+
+                Image img = barcodeGenerator.Encode(BarcodeLibrary.TYPE.UPCA, payload, Color.Black, Color.White, width, height);
+
+                using MemoryStream ms = new MemoryStream();
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                 return File(ms.ToArray(), "image/png");
 
             }

@@ -32,6 +32,7 @@ If you want to use Docker
 ```ps
 docker build -t genocs.qrcode.api .
 docker tag genocs.qrcode.api genocs/qrcode.api
+docker push genocs/qrcode.api
 docker run -p 90:80 -d --name qrcodeapi-container genocs/qrcode.api
 ```
 
