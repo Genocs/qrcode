@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Genocs.BarcodeLibrary\Genocs.BarcodeLibrary.csproj" />
     <ProjectReference Include="..\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj" />
   </ItemGroup>
 

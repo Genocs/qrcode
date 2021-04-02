@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.WebApi", "src\Genocs.QRCodeLibrary.WebApi\Genocs.QRCodeLibrary.WebApi.csproj", "{6CD75320-4371-480C-99A3-0793599F8F1C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.BarcodeLibrary", "src\Genocs.BarcodeLibrary\Genocs.BarcodeLibrary.csproj", "{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6CD75320-4371-480C-99A3-0793599F8F1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CD75320-4371-480C-99A3-0793599F8F1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CD75320-4371-480C-99A3-0793599F8F1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
