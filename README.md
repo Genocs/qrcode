@@ -1,6 +1,6 @@
 ![QRCode Library](https://raw.githubusercontent.com/genocs/clean-architecture-template/master/images/genocs-icon.png) QRCode scanner and builder
 =========
-Fast qrcode scanner and builder library ported on .NET core 3.1
+Fast qrcode scanner and builder library ported on .NET core 5.0
 
 This is simple but useful library that can be used to Scan images containing QR code. The library allows to build a QR code image as well.
 
