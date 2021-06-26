@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Convey.Docs.Swagger" Version="0.5.433" />
-    <PackageReference Include="Convey.Logging" Version="0.5.433" />
-    <PackageReference Include="Convey.WebApi" Version="0.5.433" />
-    <PackageReference Include="Convey.WebApi.CQRS" Version="0.5.433" />
+    <PackageReference Include="Convey.Docs.Swagger" Version="0.5.445" />
+    <PackageReference Include="Convey.Logging" Version="0.5.445" />
+    <PackageReference Include="Convey.WebApi" Version="0.5.445" />
+    <PackageReference Include="Convey.WebApi.CQRS" Version="0.5.445" />
   </ItemGroup>
 
   <ItemGroup>
