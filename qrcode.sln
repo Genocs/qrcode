@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.WebApi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.BarcodeLibrary", "src\Genocs.BarcodeLibrary\Genocs.BarcodeLibrary.csproj", "{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{791555BA-984E-48EC-964D-3BFC84C1BA70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AC12EDB0-9102-416A-9E35-CD570C5207E5} = {791555BA-984E-48EC-964D-3BFC84C1BA70}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7289BF93-DA7D-4E8F-BA32-AEB480F9FFE9}
