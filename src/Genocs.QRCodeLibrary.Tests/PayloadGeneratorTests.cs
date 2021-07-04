@@ -60,8 +60,6 @@ namespace Genocs.QRCodeLibrary.Tests
                 .ShouldBe("bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?label=Some%20Label%20to%20Encode&message=Some%20Message%20to%20Encode&amount=.123");
         }
 
-
-
         [Fact]
         public void bitcoin_address_generator_should_skip_missing_label()
         {

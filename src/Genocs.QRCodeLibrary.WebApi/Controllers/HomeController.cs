@@ -1,5 +1,4 @@
-﻿using Aspose.BarCode.BarCodeRecognition;
-using Genocs.QRCodeLibrary.Decoder;
+﻿using Genocs.QRCodeLibrary.Decoder;
 using Genocs.QRCodeLibrary.Encoder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +11,8 @@ using System.Threading.Tasks;
 namespace Genocs.QRCodeLibrary.WebApi.Controllers
 {
 
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("")]
     public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
@@ -21,18 +20,10 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         public HomeController(ILogger<HomeController> logger)
             => _logger = logger;
 
-        [HttpGet]
-        public IActionResult Get()
-            => Ok("QRCode Web API Service");
-
-        [HttpGet("ping")]
-        public IActionResult GetPing()
-            => Ok("pong");
-
         /// <summary>
         /// It allows to upload a file containing a QRCode
         /// </summary>
-        /// <param name="files">files</param>
+        /// <param name="file">file</param>
         /// <returns>QrCode scanning result</returns>
         [Route("FindQrCode"), HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -65,24 +56,6 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
                     return Ok(result);
                 }
 
-                using (MemoryStream memory = new MemoryStream())
-                {
-                    using (BarCodeReader reader = new BarCodeReader(memory))
-                    {
-                        result = new QrCodeResult();
-                        var res = reader.ReadBarCodes();
-                        if (res != null && res.Length > 0)
-                        {
-                            result.Results.Add(res[0].CodeText);
-                        }
-                    }
-                }
-
-                if (result != null)
-                {
-                    return Ok(result);
-                }
-
                 return Ok(new { file.Length, file.FileName, message = "QRCode not find" });
             }
             catch (Exception exp)
@@ -93,14 +66,15 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         }
 
         /// <summary>
-        /// It allows to upload a file containing a QRCode
+        /// It allows to build an image containing a QRCode
         /// </summary>
-        /// <param name="files">files</param>
-        /// <returns>QrCode scanning result</returns>
+        /// <param name="payload">The QRCode payload data</param>
+        /// <param name="size">The QRCode size</param>
+        /// <returns>QRCode image result</returns>
         [Route("BuildQrCode"), HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetBuildQrCode([FromQuery] string payload)
+        public IActionResult GetBuildQrCode([FromQuery] string payload, int size = 20)
         {
             try
             {
@@ -109,9 +83,40 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
 
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
-                using Bitmap qrCodeImage = qrCode.GetGraphic(20);
+                using Bitmap qrCodeImage = qrCode.GetGraphic(size);
                 using MemoryStream ms = new MemoryStream();
                 qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                return File(ms.ToArray(), "image/png");
+
+            }
+            catch (Exception exp)
+            {
+                string message = $"Error on processing file. Message: '{exp.Message}'!";
+                return Ok(message);
+            }
+        }
+
+        /// <summary>
+        /// It allows to build an image containing a Barcode
+        /// </summary>
+        /// <param name="payload">The Barcode payload data</param>
+        /// <param name="width">The Barcode width</param>
+        /// <param name="height">The Barcode height</param>
+
+        /// <returns>Barcode image result</returns>
+        [Route("BuildBarcode"), HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult GetBuildBarCode([FromQuery] string payload = "038000356216", int width = 290, int height = 120)
+        {
+            try
+            {
+                BarcodeLibrary.Barcode barcodeGenerator = new BarcodeLibrary.Barcode();
+
+                Image img = barcodeGenerator.Encode(BarcodeLibrary.TYPE.UPCA, payload, Color.Black, Color.White, width, height);
+
+                using MemoryStream ms = new MemoryStream();
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                 return File(ms.ToArray(), "image/png");
 
             }

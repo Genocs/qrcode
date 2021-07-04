@@ -1,31 +1,17 @@
-@url = http://localhost:5002
-@customerId = 00000000-0000-0000-0000-000000000000
-@state = valid
+@url = http://localhost:90
+@payload = Ciao
 
-###
-GET {{url}}/customers
+### Single check
+GET {{url}}/ping
 
-###
-GET {{url}}/customers/{{customerId}}
+### Build a qrcode
+GET {{url}}/BuildQrCode?payload={{payload}}
 
-###
-scriGET {{url}}/customers/{{customerId}}/state
-
-###
-POST {{url}}/customers
+### Read a qrcode printed into an image
+POST {{url}}/findQrCode
 Content-Type: application/json
-
 {
-  "customerId": "{{customerId}}",
+
   "fullname": "John Doe",
   "address": "New York City, Street XYZ"
-}
-
-###
-PUT {{url}}/customers/{{customerId}}/state/{{state}}
-Content-Type: application/json
-
-{
-  "customerId": "{{customerId}}",
-  "state": "{{state}}"
 }

@@ -11,6 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary.WebApi", "src\Genocs.QRCodeLibrary.WebApi\Genocs.QRCodeLibrary.WebApi.csproj", "{6CD75320-4371-480C-99A3-0793599F8F1C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.BarcodeLibrary", "src\Genocs.BarcodeLibrary\Genocs.BarcodeLibrary.csproj", "{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{791555BA-984E-48EC-964D-3BFC84C1BA70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.BarcodeLibrary.Tests", "src\Genocs.BarcodeLibrary.Tests\Genocs.BarcodeLibrary.Tests.csproj", "{9C63FECD-612E-4EC0-BE3B-F1CA2B1376F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +39,21 @@ Global
 		{6CD75320-4371-480C-99A3-0793599F8F1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CD75320-4371-480C-99A3-0793599F8F1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CD75320-4371-480C-99A3-0793599F8F1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{191870C8-9C13-4BE8-8CDC-DAC8CB64D4CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C63FECD-612E-4EC0-BE3B-F1CA2B1376F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C63FECD-612E-4EC0-BE3B-F1CA2B1376F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C63FECD-612E-4EC0-BE3B-F1CA2B1376F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C63FECD-612E-4EC0-BE3B-F1CA2B1376F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AC12EDB0-9102-416A-9E35-CD570C5207E5} = {791555BA-984E-48EC-964D-3BFC84C1BA70}
+		{9C63FECD-612E-4EC0-BE3B-F1CA2B1376F2} = {791555BA-984E-48EC-964D-3BFC84C1BA70}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7289BF93-DA7D-4E8F-BA32-AEB480F9FFE9}

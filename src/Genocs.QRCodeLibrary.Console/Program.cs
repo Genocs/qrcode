@@ -1,10 +1,5 @@
-﻿using Aspose.BarCode.BarCodeRecognition;
-using Aspose.Pdf;
-using Aspose.Pdf.Devices;
-using System;
+﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 
 namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
 {
@@ -13,13 +8,12 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
         static void Main(string[] args)
         {
             Console.WriteLine("Hello Genocs!");
+            EncodeBarcode();
 
             DecodeQrCode();
             //read();
             Console.WriteLine("Done!");
         }
-
-
 
 
         private static void DecodeQrCode()
@@ -30,21 +24,28 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
                 {
                     QRDecoder decoder = new QRDecoder();
                     var qrCode = decoder.ImageDecoder(bitmap);
-                    int i = 0;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // handle exception here;
             }
         }
 
 
-        private static void read()
+        private static void EncodeBarcode()
         {
-            using (BarCodeReader reader = new BarCodeReader("image1_out.jpg"))
+            try
             {
-                var result = reader.ReadBarCodes();
+                BarcodeLibrary.Barcode b = new();
+                Image img = b.Encode(BarcodeLibrary.TYPE.UPCA, "038000356216", Color.Black, Color.White, 290, 120);
+
+                img.Save("C:\\dev\\image4_out.jpg");
+
+            }
+            catch (Exception)
+            {
+                // handle exception here;
             }
         }
     }

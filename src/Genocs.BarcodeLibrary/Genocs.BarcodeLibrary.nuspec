@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <license type="expression">Apache-2.0</license>
+    <projectUrl>https://github.com/bbarnhill/barcodelib</projectUrl>
+    <iconUrl>https://github.com/bbarnhill/barcodelib/blob/master/BarcodeLibTest/Barcode.ico?raw=true</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>https://raw.githubusercontent.com/barnhill/barcodelib/master/BarcodeStandard/Release%20Notes.txt</releaseNotes>
+    <copyright>Copyright © Brad Barnhill 2007-present</copyright>
+    <tags>barcode</tags>
+  </metadata>
+  <files>
+    <!--
+        Explicitly list files to distribute—and where. We want to
+        include the license in the binary distribution without copying
+        it into the source tree of the consuming project.
+    -->
+    <file src="..\LICENSE" target="lib\LICENSE"/>
+    <file src="Release Notes.txt" target="lib"/>
+  </files>
+</package>

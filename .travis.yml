@@ -2,11 +2,11 @@ language: csharp
 mono: none
 sudo: required
 dist: xenial
-dotnet: 3.1.100
+dotnet: 5.0.301
 branches:
   only:
     - master
-    - develop
+    #- develop
 before_script:
   - chmod -R a+x scripts
 script:
