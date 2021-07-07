@@ -16,6 +16,6 @@ esac
 REPOSITORY=$DOCKER_CONTAINER/qrcode
 
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-docker build -t $REPOSITORY:$TAG -t $REPOSITORY:$VERSION_TAG -f ./src/Genocs.FormRecognizer.WebApi/Dockerfile .
+docker build -t $REPOSITORY:$TAG -t $REPOSITORY:$VERSION_TAG .
 docker push $REPOSITORY:$TAG
 docker push $REPOSITORY:$VERSION_TAG
