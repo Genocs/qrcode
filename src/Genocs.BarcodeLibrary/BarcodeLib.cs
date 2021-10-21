@@ -1333,5 +1333,5 @@ namespace Genocs.BarcodeLibrary
         #endregion
 
         #endregion
-    }//Barcode Class
-}//Barcode namespace
+    }
+}

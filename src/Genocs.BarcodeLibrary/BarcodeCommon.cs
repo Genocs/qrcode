@@ -29,5 +29,5 @@ namespace Genocs.BarcodeLibrary
         {
             return Regex.IsMatch(data, @"^\d+$", RegexOptions.Compiled);
         }
-    }//BarcodeVariables abstract class
-}//namespace
+    }
+}

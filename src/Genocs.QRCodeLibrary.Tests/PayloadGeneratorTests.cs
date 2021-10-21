@@ -1,14 +1,14 @@
-﻿using System;
-using Xunit;
+﻿using Genocs.QRCodeLibrary.Encoder;
 using Shouldly;
-using System.Globalization;
-using System.Threading;
-using System.Reflection;
+using System;
 using System.Drawing;
-using Genocs.QRCodeLibrary.Encoder;
+using System.Globalization;
+using System.Reflection;
+using System.Threading;
+using Xunit;
 using static Genocs.QRCodeLibrary.Encoder.PayloadGenerator.BezahlCode;
-using static Genocs.QRCodeLibrary.Encoder.PayloadGenerator.SwissQrCode.Reference;
 using static Genocs.QRCodeLibrary.Encoder.PayloadGenerator.SwissQrCode.AdditionalInformation;
+using static Genocs.QRCodeLibrary.Encoder.PayloadGenerator.SwissQrCode.Reference;
 
 namespace Genocs.QRCodeLibrary.Tests
 {
