@@ -242,7 +242,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
             Create_CountryCodeRange(980, 980, "REFUND RECEIPTS");
             Create_CountryCodeRange(981, 984, "GS1 COUPON IDENTIFICATION FOR COMMON CURRENCY AREAS");
             Create_CountryCodeRange(990, 999, "GS1 COUPON IDENTIFICATION");
-        }//init_CountryCodes
+        }
+
         private void CheckDigit()
         {
             try
@@ -267,11 +268,11 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     cs = 0;
 
                 Raw_Data = rawDataHolder + cs.ToString()[0];
-            }//try
+            }
             catch
             {
                 Error("EEAN13-4: Error calculating check digit.");
-            }//catch
+            }
         }
 
         #region IBarcode Members

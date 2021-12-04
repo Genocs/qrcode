@@ -13,7 +13,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
         public Code11(string input)
         {
             Raw_Data = input;
-        }//Code11
+        }
+
         /// <summary>
         /// Encode the raw data using the Code 11 algorithm.
         /// </summary>
@@ -37,7 +38,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     cTotal += Int32.Parse(Raw_Data[i].ToString()) * weight++;
                 else
                     cTotal += 10 * weight++;
-            }//for
+            }
             var checksumC = cTotal % 11;
 
             dataToEncodeWithChecksums += checksumC.ToString();
@@ -58,10 +59,11 @@ namespace Genocs.BarcodeLibrary.Symbologies
                         kTotal += Int32.Parse(dataToEncodeWithChecksums[i].ToString()) * weight++;
                     else
                         kTotal += 10 * weight++;
-                }//for
+                }
+
                 var checksumK = kTotal % 11;
                 dataToEncodeWithChecksums += checksumK.ToString();
-            }//if
+            }
 
             //encode data
             var space = "0";
@@ -74,18 +76,18 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
                 //inter-character space
                 result += space;
-            }//foreach
+            }
 
             //stop bars
             result += C11_Code[11];
 
             return result;
-        }//Encode_Code11 
+        }
 
         #region IBarcode Members
 
         public string Encoded_Value => Encode_Code11();
 
         #endregion
-    }//class
-}//namespace
+    }
+}

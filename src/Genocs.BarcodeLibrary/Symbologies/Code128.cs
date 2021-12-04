@@ -29,7 +29,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         public Code128(string input)
         {
             Raw_Data = input;
-        }//Code128
+        }
 
         /// <summary>
         /// Encodes data in Code128 format.
@@ -40,7 +40,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         {
             this.type = type;
             Raw_Data = input;
-        }//Code128
+        }
 
         private string Encode_Code128()
         {
@@ -48,7 +48,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
             init_Code128();
 
             return GetEncoding();
-        }//Encode_Code128
+        }
+
         private void init_Code128()
         {
             //set the table to case sensitive since there are upper and lower case values
@@ -170,7 +171,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
             C128_Code.Rows.Add(new object[] { "104", "START_B", "START_B", "START_B", "11010010000" });
             C128_Code.Rows.Add(new object[] { "105", "START_C", "START_C", "START_C", "11010011100" });
             C128_Code.Rows.Add(new object[] { "", "STOP", "STOP", "STOP", "11000111010" });
-        }//init_Code128
+        }
+
         private List<DataRow> FindStartorCodeCharacter(string s, ref int col)
         {
             var rows = new List<DataRow>();
@@ -187,7 +189,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     rows.Add(C128_Code.Select("A = 'CODE_C'")[0]);
 
                 col = 1;
-            }//if
+            }
             else
             {
                 var AFound = false;
@@ -220,25 +222,26 @@ namespace Genocs.BarcodeLibrary.Symbologies
                             {
                                 _startCharacter = C128_Code.Select("A = 'START_B'")[0];
                                 rows.Add(_startCharacter);
-                            }//if
+                            }
                             else
                                 rows.Add(C128_Code.Select("A = 'CODE_B'")[0]);
-                        }//else
+                        }
                         else if (AFound && BFound)
                             break;
-                    }//try
+                    }
                     catch (Exception ex)
                     {
                         Error("EC128-1: " + ex.Message);
-                    }//catch
-                }//foreach                
+                    }
+                }              
 
                 if (rows.Count <= 0)
                     Error("EC128-2: Could not determine start character.");
-            }//else
+            }
 
             return rows;
         }
+
         private string CalculateCheckDigit()
         {
             var currentStartChar = _FormattedData[0];
@@ -263,12 +266,13 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 var value = UInt32.Parse(rows[0]["Value"].ToString());
                 var addition = value * ((i == 0) ? 1 : i);
                 checkSum += addition;
-            }//for
+            }
 
             var remainder = (checkSum % 103);
             var retRows = C128_Code.Select("Value = '" + remainder.ToString() + "'");
             return retRows[0]["Encoding"].ToString();
         }
+
         private void BreakUpDataForEncoding()
         {
             var temp = "";
