@@ -15,35 +15,35 @@ namespace Genocs.QRCodeLibrary.Tests
 
     public class PayloadGeneratorTests
     {
-        [Fact]
-        public void foo()
-        {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
-            QRCode qrCode = new QRCode(qrCodeData);
-            Bitmap qrCodeImage = qrCode.GetGraphic(20);
-            string filePath = HelperUnitTests.GetDemoFile("img.png");
-            qrCodeImage.Save(filePath);
-        }
+        //[Fact]
+        //public void foo()
+        //{
+        //    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        //    QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
+        //    QRCode qrCode = new QRCode(qrCodeData);
+        //    Bitmap qrCodeImage = qrCode.GetGraphic(20);
+        //    string filePath = HelperUnitTests.GetDemoFile("img.png");
+        //    qrCodeImage.Save(filePath);
+        //}
 
-        [Fact]
-        public void foo_2()
-        {
-            var address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
-            var amount = .123;
-            var label = "Some Label to Encode";
-            var message = "Some Message to Encode";
+        //[Fact]
+        //public void foo_2()
+        //{
+        //    var address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
+        //    var amount = .123;
+        //    var label = "Some Label to Encode";
+        //    var message = "Some Message to Encode";
 
 
-            var generator = new PayloadGenerator.BitcoinAddress(address, amount, label, message);
+        //    var generator = new PayloadGenerator.BitcoinAddress(address, amount, label, message);
 
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(generator, QRCodeGenerator.ECCLevel.Q);
-            QRCode qrCode = new QRCode(qrCodeData);
-            Bitmap qrCodeImage = qrCode.GetGraphic(20);
-            string filePath = HelperUnitTests.GetDemoFile("img.png");
-            qrCodeImage.Save(filePath);
-        }
+        //    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        //    QRCodeData qrCodeData = qrGenerator.CreateQrCode(generator, QRCodeGenerator.ECCLevel.Q);
+        //    QRCode qrCode = new QRCode(qrCodeData);
+        //    Bitmap qrCodeImage = qrCode.GetGraphic(20);
+        //    string filePath = HelperUnitTests.GetDemoFile("img.png");
+        //    qrCodeImage.Save(filePath);
+        //}
 
         [Fact]
         public void bitcoin_address_generator_can_generate_address()
