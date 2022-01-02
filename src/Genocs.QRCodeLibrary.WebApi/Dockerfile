@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["src/Genocs.QRCodeLibrary.WebApi/Genocs.QRCodeLibrary.WebApi.csproj", "src/Genocs.FormRecognizer.WebApi/"]
+COPY ["src/Genocs.QRCodeLibrary.WebApi/Genocs.QRCodeLibrary.WebApi.csproj", "src/Genocs.QRCodeLibrary.WebApi/"]
 COPY ["src/Genocs.QRCodeLibrary/Genocs.QRCodeLibrary.csproj", "src/Genocs.QRCodeLibrary/"]
 COPY ["src/Genocs.BarcodeLibrary/Genocs.BarcodeLibrary.csproj", "src/Genocs.BarcodeLibrary/"]
 
