@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
 # Copy everything else and build
@@ -6,7 +6,7 @@ COPY . .
 RUN dotnet publish src/Genocs.QRCodeLibrary.WebApi -c release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 # Install gdiplus library on Linx container
 # See following link:  https://stackoverflow.com/questions/52069939/dockerized-dotnet-core-2-1-throws-gdip-exception-when-using-select-htmltopdf-net
 RUN apt-get update \
