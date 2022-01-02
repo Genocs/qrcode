@@ -1,4 +1,9 @@
-@url = http://localhost:5000
+###############################################################################
+# Use this file inside Visual Studio code with 'REST Client' plugin 
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+###############################################################################
+
+@url = https://localhost:5000
 @payload = Ciao
 
 ### Single check

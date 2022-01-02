@@ -11,13 +11,11 @@ before_script:
   - chmod -R a+x scripts
 script:
   - ./scripts/build.sh
-  #- ./scripts/test.sh
+  - ./scripts/test.sh
 after_success:
   - ./scripts/dockerize.sh
+  - ./scripts/pack.sh
 notifications:
   email:
     on_success: never
     on_failure: always
-
-
-
