@@ -1,5 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using SixLabors.ImageSharp;
+using System;
+
 
 namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
 {
@@ -20,11 +21,9 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
         {
             try
             {
-                using (Bitmap bitmap = new Bitmap("C:\\dev\\image4_out.jpg"))
-                {
-                    QRDecoder decoder = new QRDecoder();
-                    var qrCode = decoder.ImageDecoder(bitmap);
-                }
+                Image image = Image.Load("C:\\dev\\image4_out.jpg");
+                QRDecoder decoder = new QRDecoder();
+                var qrCode = decoder.ImageDecoder(image);
             }
             catch (Exception)
             {
@@ -37,10 +36,10 @@ namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
         {
             try
             {
-                BarcodeLibrary.Barcode b = new();
-                Image img = b.Encode(BarcodeLibrary.TYPE.UPCA, "038000356216", Color.Black, Color.White, 290, 120);
+                //BarcodeLibrary.Barcode b = new();
+                //Image img = b.Encode(BarcodeLibrary.TYPE.UPCA, "038000356216", Color.Black, Color.White, 290, 120);
 
-                img.Save("C:\\dev\\image4_out.jpg");
+                //img.Save("C:\\dev\\image4_out.jpg");
 
             }
             catch (Exception)

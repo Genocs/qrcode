@@ -3,8 +3,9 @@ using Genocs.QRCodeLibrary.Encoder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -41,11 +42,10 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
                 {
                     await file.CopyToAsync(memory);
 
-                    using (Bitmap bitmap = new Bitmap(memory))
-                    {
-                        QRDecoder decoder = new QRDecoder();
-                        result = decoder.ImageDecoder(bitmap);
-                    }
+                    Image image = Image.Load(memory);
+
+                    QRDecoder decoder = new QRDecoder();
+                    result = decoder.ImageDecoder(image);
                 }
 
                 // process uploaded files
@@ -78,14 +78,13 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         {
             try
             {
-
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
 
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
-                using Bitmap qrCodeImage = qrCode.GetGraphic(size);
+                using Image image = qrCode.GetGraphic(size);
                 using MemoryStream ms = new MemoryStream();
-                qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                image.Save(ms, new PngEncoder());
                 return File(ms.ToArray(), "image/png");
 
             }
@@ -104,27 +103,27 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         /// <param name="height">The Barcode height</param>
 
         /// <returns>Barcode image result</returns>
-        [Route("BuildBarcode"), HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetBuildBarCode([FromQuery] string payload = "038000356216", int width = 290, int height = 120)
-        {
-            try
-            {
-                BarcodeLibrary.Barcode barcodeGenerator = new BarcodeLibrary.Barcode();
+        //[Route("BuildBarcode"), HttpGet]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        ////[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //public IActionResult GetBuildBarCode([FromQuery] string payload = "038000356216", int width = 290, int height = 120)
+        //{
+        //    try
+        //    {
+        //        BarcodeLibrary.Barcode barcodeGenerator = new BarcodeLibrary.Barcode();
 
-                Image img = barcodeGenerator.Encode(BarcodeLibrary.TYPE.UPCA, payload, Color.Black, Color.White, width, height);
+        //        Image img = barcodeGenerator.Encode(BarcodeLibrary.TYPE.UPCA, payload, width, height);
 
-                using MemoryStream ms = new MemoryStream();
-                img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                return File(ms.ToArray(), "image/png");
+        //        using MemoryStream ms = new MemoryStream();
+        //        img.Save(ms, new PngEncoder());
+        //        return File(ms.ToArray(), "image/png");
 
-            }
-            catch (Exception exp)
-            {
-                string message = $"Error on processing file. Message: '{exp.Message}'!";
-                return Ok(message);
-            }
-        }
+        //    }
+        //    catch (Exception exp)
+        //    {
+        //        string message = $"Error on processing file. Message: '{exp.Message}'!";
+        //        return Ok(message);
+        //    }
+        //}
     }
 }

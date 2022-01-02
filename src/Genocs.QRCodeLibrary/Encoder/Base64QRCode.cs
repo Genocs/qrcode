@@ -1,7 +1,10 @@
 ﻿
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using static Genocs.QRCodeLibrary.Encoder.Base64QRCode;
 using static Genocs.QRCodeLibrary.Encoder.QRCodeGenerator;
@@ -38,55 +41,60 @@ namespace Genocs.QRCodeLibrary.Encoder
 
         public string GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
         {
-            return this.GetGraphic(pixelsPerModule, ColorTranslator.FromHtml(darkColorHtmlHex), ColorTranslator.FromHtml(lightColorHtmlHex), drawQuietZones, imgType);
+            return this.GetGraphic(pixelsPerModule, FromHtml(darkColorHtmlHex), FromHtml(lightColorHtmlHex), drawQuietZones, imgType);
         }
 
         public string GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
         {
             var base64 = string.Empty;
-            using (Bitmap bmp = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, drawQuietZones))
+            using (Image image = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, drawQuietZones))
             {
-                base64 = BitmapToBase64(bmp, imgType);
+                base64 = BitmapToBase64(image, imgType);
             }
             return base64;
         }
 
-        public string GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, Bitmap icon, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
+        public string GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, Image icon, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
         {
             var base64 = string.Empty;
-            using (Bitmap bmp = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, icon, iconSizePercent, iconBorderWidth, drawQuietZones))
+            using (Image image = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, icon, iconSizePercent, iconBorderWidth, drawQuietZones))
             {
-                base64 = BitmapToBase64(bmp, imgType);
+                base64 = BitmapToBase64(image, imgType);
             }
             return base64;
         }
 
 
-        private string BitmapToBase64(Bitmap bmp, ImageType imgType)
+        private string BitmapToBase64(Image image, ImageType imgType)
         {
             var base64 = string.Empty;
-            ImageFormat iFormat;
+            IImageEncoder iFormat;
             switch (imgType)
             {
                 case ImageType.Png:
-                    iFormat = ImageFormat.Png;
+                    iFormat = new PngEncoder();
                     break;
                 case ImageType.Jpeg:
-                    iFormat = ImageFormat.Jpeg;
+                    iFormat = new JpegEncoder();
                     break;
                 case ImageType.Gif:
-                    iFormat = ImageFormat.Gif;
+                    iFormat = new GifEncoder();
                     break;
                 default:
-                    iFormat = ImageFormat.Png;
+                    iFormat = new PngEncoder();
                     break;
             }
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                bmp.Save(memoryStream, iFormat);
+                image.Save(memoryStream, iFormat);
                 base64 = Convert.ToBase64String(memoryStream.ToArray(), Base64FormattingOptions.None);
             }
             return base64;
+        }
+
+        public static Color FromHtml(string color)
+        {
+            return Color.Gainsboro;
         }
 
         public enum ImageType

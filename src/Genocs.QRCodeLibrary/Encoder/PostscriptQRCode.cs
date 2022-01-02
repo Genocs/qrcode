@@ -36,7 +36,7 @@ namespace Genocs.QRCodeLibrary.Encoder
 
         public string GetGraphic(Size viewBox, string darkColorHex, string lightColorHex, bool drawQuietZones = true, bool epsFormat = false)
         {
-            return this.GetGraphic(viewBox, ColorTranslator.FromHtml(darkColorHex), ColorTranslator.FromHtml(lightColorHex), drawQuietZones, epsFormat);
+            return this.GetGraphic(viewBox, FromHtml(darkColorHex), FromHtml(lightColorHex), drawQuietZones, epsFormat);
         }
 
         public string GetGraphic(Size viewBox, Color darkColor, Color lightColor, bool drawQuietZones = true, bool epsFormat = false)
@@ -72,6 +72,11 @@ namespace Genocs.QRCodeLibrary.Encoder
         {
             //Clean double values for international use/formats
             return input.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public static Color FromHtml(string color)
+        {
+            return Color.Gainsboro;
         }
 
         private const string psHeader = @"%!PS-Adobe-3.0 {3}

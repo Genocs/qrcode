@@ -1,26 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>1d0c8f80-6671-4db1-bc80-ead8eb85d6a9</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<UserSecretsId>1d0c8f80-6671-4db1-bc80-ead8eb85d6a9</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Convey.Docs.Swagger" Version="0.5.512" />
-    <PackageReference Include="Convey.Logging" Version="0.5.512" />
-    <PackageReference Include="Convey.WebApi" Version="0.5.512" />
-    <PackageReference Include="Convey.WebApi.CQRS" Version="0.5.512" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Convey.Docs.Swagger" Version="0.5.512" />
+		<PackageReference Include="Convey.Logging" Version="0.5.512" />
+		<PackageReference Include="Convey.WebApi" Version="0.5.512" />
+		<PackageReference Include="Convey.WebApi.CQRS" Version="0.5.512" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
+		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Genocs.BarcodeLibrary\Genocs.BarcodeLibrary.csproj" />
-    <ProjectReference Include="..\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj" />
-  </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Genocs.BarcodeLibrary\Genocs.BarcodeLibrary.csproj" />
+		<ProjectReference Include="..\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj" />
+	</ItemGroup>
 
 </Project>
