@@ -1,6 +1,6 @@
 #!/bin/bash
 TAG=''
-VERSION_TAG=
+VERSION_TAG=''
 
 case "$TRAVIS_BRANCH" in
   "master")
@@ -18,4 +18,4 @@ REPOSITORY=$DOCKER_CONTAINER/qrcode
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 docker build -t $REPOSITORY:$TAG -t $REPOSITORY:$VERSION_TAG -f ./src/Genocs.QRCodeLibrary.WebApi/Dockerfile .
 docker push $REPOSITORY:$TAG
-docker push $REPOSITORY:1.0.$VERSION_TAG
+docker push $REPOSITORY:$VERSION_TAG
