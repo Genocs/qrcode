@@ -5,7 +5,7 @@ VERSION_TAG=''
 case "$TRAVIS_BRANCH" in
   "master")
     TAG=latest
-    VERSION_TAG=1.0.$TRAVIS_BUILD_NUMBER
+    VERSION_TAG=2.0.$TRAVIS_BUILD_NUMBER
     ;;
   "develop")
     TAG=dev

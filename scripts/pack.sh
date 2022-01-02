@@ -2,7 +2,7 @@
 echo Executing after success scripts on branch $TRAVIS_BRANCH
 echo Triggering NuGet package build
 
-dotnet pack ./src/Genocs.QRCodeLibrary/Genocs.QRCodeLibrary.csproj -o . -p:Version=1.0.$TRAVIS_BUILD_NUMBER
+dotnet pack ./src/Genocs.QRCodeLibrary/Genocs.QRCodeLibrary.csproj -o . -p:Version=2.0.$TRAVIS_BUILD_NUMBER
 
 echo Uploading Genocs.QRCodeLibrary package to NuGet using branch $TRAVIS_BRANCH
 
