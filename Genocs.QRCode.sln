@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QRCodeLibrary", "src\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj", "{44621280-F620-40F8-AC3A-FA0F242DD532}"
 EndProject
@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.BarcodeLibrary", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{791555BA-984E-48EC-964D-3BFC84C1BA70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.BarcodeLibrary.Tests", "src\Genocs.BarcodeLibrary.Tests\Genocs.BarcodeLibrary.Tests.csproj", "{9C63FECD-612E-4EC0-BE3B-F1CA2B1376F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.BarcodeLibrary.Tests", "src\Genocs.BarcodeLibrary.Tests\Genocs.BarcodeLibrary.Tests.csproj", "{9C63FECD-612E-4EC0-BE3B-F1CA2B1376F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -32,31 +32,23 @@ namespace Genocs.QRCodeLibrary.Encoder
             //Decompress
             if (compressMode == Compression.Deflate)
             {
-                using (var input = new MemoryStream(bytes.ToArray()))
+                using var input = new MemoryStream(bytes.ToArray());
+                using var output = new MemoryStream();
+                using (var dstream = new DeflateStream(input, CompressionMode.Decompress))
                 {
-                    using (var output = new MemoryStream())
-                    {
-                        using (var dstream = new DeflateStream(input, CompressionMode.Decompress))
-                        {
-                            Stream4Methods.CopyTo(dstream, output);
-                        }
-                        bytes = new List<byte>(output.ToArray());
-                    }
+                    Stream4Methods.CopyTo(dstream, output);
                 }
+                bytes = new List<byte>(output.ToArray());
             }
             else if (compressMode == Compression.GZip)
             {
-                using (var input = new MemoryStream(bytes.ToArray()))
+                using var input = new MemoryStream(bytes.ToArray());
+                using var output = new MemoryStream();
+                using (var dstream = new GZipStream(input, CompressionMode.Decompress))
                 {
-                    using (var output = new MemoryStream())
-                    {
-                        using (var dstream = new GZipStream(input, CompressionMode.Decompress))
-                        {
-                            Stream4Methods.CopyTo(dstream, output);
-                        }
-                        bytes = new List<byte>(output.ToArray());
-                    }
+                    Stream4Methods.CopyTo(dstream, output);
                 }
+                bytes = new List<byte>(output.ToArray());
             }
 
             if (bytes[0] != 0x51 || bytes[1] != 0x52 || bytes[2] != 0x52)
@@ -71,7 +63,6 @@ namespace Genocs.QRCodeLibrary.Encoder
             var modules = new Queue<bool>(8 * bytes.Count);
             foreach (var b in bytes)
             {
-                var bArr = new BitArray(new byte[] { b });
                 for (int i = 7; i >= 0; i--)
                 {
                     modules.Enqueue((b & (1 << i)) != 0);
@@ -141,14 +132,12 @@ namespace Genocs.QRCodeLibrary.Encoder
             }
             else if (compressMode == Compression.GZip)
             {
-                using (var output = new MemoryStream())
+                using var output = new MemoryStream();
+                using (GZipStream gzipStream = new GZipStream(output, CompressionMode.Compress, true))
                 {
-                    using (GZipStream gzipStream = new GZipStream(output, CompressionMode.Compress, true))
-                    {
-                        gzipStream.Write(rawData, 0, rawData.Length);
-                    }
-                    rawData = output.ToArray();
+                    gzipStream.Write(rawData, 0, rawData.Length);
                 }
+                rawData = output.ToArray();
             }
             return rawData;
         }

@@ -834,8 +834,8 @@ namespace Genocs.QRCodeLibrary.Encoder
 
             public class Iban
             {
-                private string iban;
-                private IbanType ibanType;
+                private string _iban;
+                private IbanType _ibanType;
 
                 /// <summary>
                 /// IBAN object with type information
@@ -850,18 +850,18 @@ namespace Genocs.QRCodeLibrary.Encoder
                         throw new SwissQrCodeIbanException("The QR-IBAN entered isn't valid.");
                     if (!iban.StartsWith("CH") && !iban.StartsWith("LI"))
                         throw new SwissQrCodeIbanException("The IBAN must start with \"CH\" or \"LI\".");
-                    this.iban = iban;
-                    this.ibanType = ibanType;
+                    this._iban = iban;
+                    this._ibanType = ibanType;
                 }
 
                 public bool IsQrIban
                 {
-                    get { return ibanType == IbanType.QrIban; }
+                    get { return _ibanType == IbanType.QrIban; }
                 }
 
                 public override string ToString()
                 {
-                    return iban.Replace("-", "").Replace("\n", "").Replace(" ", "");
+                    return _iban.Replace("-", "").Replace("\n", "").Replace(" ", "");
                 }
 
                 public enum IbanType

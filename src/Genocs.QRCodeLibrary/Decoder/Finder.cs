@@ -14,24 +14,24 @@ namespace Genocs.QRCodeLibrary.Decoder
         internal double _hModule;
 
         // vertical scan
-        internal int Col;
-        internal int Row1;
-        internal int Row2;
-        internal double VModule;
+        internal int _col;
+        internal int _row1;
+        internal int _row2;
+        internal double _vModule;
 
-        internal double Distance;
-        internal double ModuleSize;
+        internal double _distance;
+        internal double _moduleSize;
 
         /// <summary>
         /// Constructor during horizontal scan
         /// </summary>
         internal Finder(int row, int col1, int col2, double hModule)
         {
-            this._row = row;
-            this._col1 = col1;
-            this._col2 = col2;
-            this._hModule = hModule;
-            Distance = double.MaxValue;
+            _row = row;
+            _col1 = col1;
+            _col2 = col2;
+            _hModule = hModule;
+            _distance = double.MaxValue;
         }
 
         /// <summary>
@@ -54,14 +54,14 @@ namespace Genocs.QRCodeLibrary.Decoder
             if (delta > QRDecoder.HOR_VERT_SCAN_MAX_DISTANCE) return;
 
             // new result is better than last result
-            if (delta < Distance)
+            if (delta < _distance)
             {
-                this.Col = col;
-                this.Row1 = row1;
-                this.Row2 = row2;
-                this.VModule = vModule;
-                ModuleSize = 0.5 * (_hModule + vModule);
-                Distance = delta;
+                _col = col;
+                _row1 = row1;
+                _row2 = row2;
+                _vModule = vModule;
+                _moduleSize = 0.5 * (_hModule + vModule);
+                _distance = delta;
             }
             return;
         }
@@ -71,7 +71,7 @@ namespace Genocs.QRCodeLibrary.Decoder
         /// </summary>
         internal bool Overlap(Finder other)
         {
-            return other._col1 < _col2 && other._col2 >= _col1 && other.Row1 < Row2 && other.Row2 >= Row1;
+            return other._col1 < _col2 && other._col2 >= _col1 && other._row1 < _row2 && other._row2 >= _row1;
         }
 
         /// <summary>
@@ -79,12 +79,12 @@ namespace Genocs.QRCodeLibrary.Decoder
         /// </summary>
         public override string ToString()
         {
-            if (Distance == double.MaxValue)
+            if (_distance == double.MaxValue)
             {
                 return string.Format("Finder: Row: {0}, Col1: {1}, Col2: {2}, HModule: {3:0.00}", _row, _col1, _col2, _hModule);
             }
 
-            return string.Format("Finder: Row: {0}, Col: {1}, Module: {2:0.00}, Distance: {3:0.00}", _row, Col, ModuleSize, Distance);
+            return string.Format("Finder: Row: {0}, Col: {1}, Module: {2:0.00}, Distance: {3:0.00}", _row, _col, _moduleSize, _distance);
         }
     }
 }

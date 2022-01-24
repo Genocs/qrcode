@@ -36,14 +36,14 @@ namespace Genocs.QRCodeLibrary.Decoder
             this.BottomLeftFinder = BottomLeftFinder;
 
             // top line slope
-            TopLineDeltaX = TopRightFinder.Col - TopLeftFinder.Col;
+            TopLineDeltaX = TopRightFinder._col - TopLeftFinder._col;
             TopLineDeltaY = TopRightFinder._row - TopLeftFinder._row;
 
             // top line length
             TopLineLength = Math.Sqrt(TopLineDeltaX * TopLineDeltaX + TopLineDeltaY * TopLineDeltaY);
 
             // left line slope
-            LeftLineDeltaX = BottomLeftFinder.Col - TopLeftFinder.Col;
+            LeftLineDeltaX = BottomLeftFinder._col - TopLeftFinder._col;
             LeftLineDeltaY = BottomLeftFinder._row - TopLeftFinder._row;
 
             // left line length
@@ -76,11 +76,11 @@ namespace Genocs.QRCodeLibrary.Decoder
                 }
 
                 // top line slope
-                double topLineDeltaX = topRightFinder.Col - topLeftFinder.Col;
+                double topLineDeltaX = topRightFinder._col - topLeftFinder._col;
                 double topLineDeltaY = topRightFinder._row - topLeftFinder._row;
 
                 // left line slope
-                double leftLineDeltaX = bottomLeftFinder.Col - topLeftFinder.Col;
+                double leftLineDeltaX = bottomLeftFinder._col - topLeftFinder._col;
                 double leftLineDeltaY = bottomLeftFinder._row - topLeftFinder._row;
 
                 // top line length
@@ -138,7 +138,7 @@ namespace Genocs.QRCodeLibrary.Decoder
             else
             {
                 topModules += TopLineLength * TopLineLength /
-                    (Math.Abs(TopLineDeltaY) * 0.5 * (TopLeftFinder.VModule + TopRightFinder.VModule));
+                    (Math.Abs(TopLineDeltaY) * 0.5 * (TopLeftFinder._vModule + TopRightFinder._vModule));
             }
 
             // version number based on left line
@@ -148,7 +148,7 @@ namespace Genocs.QRCodeLibrary.Decoder
             if (Math.Abs(LeftLineDeltaY) >= Math.Abs(LeftLineDeltaX))
             {
                 leftModules += LeftLineLength * LeftLineLength /
-                    (Math.Abs(LeftLineDeltaY) * 0.5 * (TopLeftFinder.VModule + BottomLeftFinder.VModule));
+                    (Math.Abs(LeftLineDeltaY) * 0.5 * (TopLeftFinder._vModule + BottomLeftFinder._vModule));
             }
 
             // left line is mostly horizontal

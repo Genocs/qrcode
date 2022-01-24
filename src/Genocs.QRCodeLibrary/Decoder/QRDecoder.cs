@@ -326,7 +326,7 @@ namespace Genocs.QRCodeLibrary.Decoder
 
 #if DEBUG
                 int MatchedCount = 0;
-                foreach (Finder HF in FinderList) if (HF.Distance != double.MaxValue) MatchedCount++;
+                foreach (Finder HF in FinderList) if (HF._distance != double.MaxValue) MatchedCount++;
                 QRCodeTrace.Format("Matched Finders count: {0}", MatchedCount);
                 QRCodeTrace.Write("Remove all unused finders");
 #endif
@@ -400,11 +400,11 @@ namespace Genocs.QRCodeLibrary.Decoder
                             foreach (Finder Align in AlignList)
                             {
 #if DEBUG
-                                QRCodeTrace.Format("Calculated alignment mark: Row {0}, Col {1}", Align._row, Align.Col);
+                                QRCodeTrace.Format("Calculated alignment mark: Row {0}, Col {1}", Align._row, Align._col);
 #endif
 
                                 // calculate transformation based on 3 finders and bottom right alignment mark
-                                SetTransMatrix(Corner, Align._row, Align.Col);
+                                SetTransMatrix(Corner, Align._row, Align._col);
 
                                 // decode corner using three finders and one alignment mark
                                 if (DecodeQRCodeCorner(Corner)) break;
@@ -451,82 +451,82 @@ namespace Genocs.QRCodeLibrary.Decoder
             image.Mutate(x => x.BinaryThreshold(10));
             return true;
 
-//            // lock image bits
-//            BitmapData BitmapData = InputImage.LockBits(new Rectangle(0, 0, ImageWidth, ImageHeight),
-//                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            //            // lock image bits
+            //            BitmapData BitmapData = InputImage.LockBits(new Rectangle(0, 0, ImageWidth, ImageHeight),
+            //                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
 
-//            // address of first line
-//            IntPtr BitArrayPtr = BitmapData.Scan0;
+            //            // address of first line
+            //            IntPtr BitArrayPtr = BitmapData.Scan0;
 
-//            // length in bytes of one scan line
-//            int ScanLineWidth = BitmapData.Stride;
-//            if (ScanLineWidth < 0)
-//            {
-//#if DEBUG
-//                QRCodeTrace.Write("Convert image to back and white array. Invalid input image format (upside down).");
-//#endif
-//                return false;
-//            }
+            //            // length in bytes of one scan line
+            //            int ScanLineWidth = BitmapData.Stride;
+            //            if (ScanLineWidth < 0)
+            //            {
+            //#if DEBUG
+            //                QRCodeTrace.Write("Convert image to back and white array. Invalid input image format (upside down).");
+            //#endif
+            //                return false;
+            //            }
 
-//            // image total bytes
-//            int TotalBytes = ScanLineWidth * ImageHeight;
-//            byte[] BitmapArray = new byte[TotalBytes];
+            //            // image total bytes
+            //            int TotalBytes = ScanLineWidth * ImageHeight;
+            //            byte[] BitmapArray = new byte[TotalBytes];
 
-//            // Copy the RGB values into the array.
-//            Marshal.Copy(BitArrayPtr, BitmapArray, 0, TotalBytes);
+            //            // Copy the RGB values into the array.
+            //            Marshal.Copy(BitArrayPtr, BitmapArray, 0, TotalBytes);
 
-//            // unlock image
-//            image.UnlockBits(BitmapData);
+            //            // unlock image
+            //            image.UnlockBits(BitmapData);
 
-//            // allocate gray image 
-//            byte[,] GrayImage = new byte[ImageHeight, ImageWidth];
-//            int[] GrayLevel = new int[256];
+            //            // allocate gray image 
+            //            byte[,] GrayImage = new byte[ImageHeight, ImageWidth];
+            //            int[] GrayLevel = new int[256];
 
-//            // convert to gray
-//            int Delta = ScanLineWidth - 3 * ImageWidth;
-//            int BitmapPtr = 0;
-//            for (int Row = 0; Row < ImageHeight; Row++)
-//            {
-//                for (int Col = 0; Col < ImageWidth; Col++)
-//                {
-//                    int Module = (30 * BitmapArray[BitmapPtr] + 59 * BitmapArray[BitmapPtr + 1] + 11 * BitmapArray[BitmapPtr + 2]) / 100;
-//                    GrayLevel[Module]++;
-//                    GrayImage[Row, Col] = (byte)Module;
-//                    BitmapPtr += 3;
-//                }
-//                BitmapPtr += Delta;
-//            }
+            //            // convert to gray
+            //            int Delta = ScanLineWidth - 3 * ImageWidth;
+            //            int BitmapPtr = 0;
+            //            for (int Row = 0; Row < ImageHeight; Row++)
+            //            {
+            //                for (int Col = 0; Col < ImageWidth; Col++)
+            //                {
+            //                    int Module = (30 * BitmapArray[BitmapPtr] + 59 * BitmapArray[BitmapPtr + 1] + 11 * BitmapArray[BitmapPtr + 2]) / 100;
+            //                    GrayLevel[Module]++;
+            //                    GrayImage[Row, Col] = (byte)Module;
+            //                    BitmapPtr += 3;
+            //                }
+            //                BitmapPtr += Delta;
+            //            }
 
-//            // gray level cutoff between black and white
-//            int LevelStart;
-//            int LevelEnd;
-//            for (LevelStart = 0; LevelStart < 256 && GrayLevel[LevelStart] == 0; LevelStart++) ;
-//            for (LevelEnd = 255; LevelEnd >= LevelStart && GrayLevel[LevelEnd] == 0; LevelEnd--) ;
-//            LevelEnd++;
-//            if (LevelEnd - LevelStart < 2)
-//            {
-//#if DEBUG
-//                QRCodeTrace.Write("Convert image to back and white array. Input image has no color variations");
-//#endif
-//                return false;
-//            }
+            //            // gray level cutoff between black and white
+            //            int LevelStart;
+            //            int LevelEnd;
+            //            for (LevelStart = 0; LevelStart < 256 && GrayLevel[LevelStart] == 0; LevelStart++) ;
+            //            for (LevelEnd = 255; LevelEnd >= LevelStart && GrayLevel[LevelEnd] == 0; LevelEnd--) ;
+            //            LevelEnd++;
+            //            if (LevelEnd - LevelStart < 2)
+            //            {
+            //#if DEBUG
+            //                QRCodeTrace.Write("Convert image to back and white array. Input image has no color variations");
+            //#endif
+            //                return false;
+            //            }
 
-//            int CutoffLevel = (LevelStart + LevelEnd) / 2;
+            //            int CutoffLevel = (LevelStart + LevelEnd) / 2;
 
-//            // create boolean image white = false, black = true
-//            BlackWhiteImage = new bool[ImageHeight, ImageWidth];
-//            for (int Row = 0; Row < ImageHeight; Row++)
-//                for (int Col = 0; Col < ImageWidth; Col++)
-//                    BlackWhiteImage[Row, Col] = GrayImage[Row, Col] < CutoffLevel;
+            //            // create boolean image white = false, black = true
+            //            BlackWhiteImage = new bool[ImageHeight, ImageWidth];
+            //            for (int Row = 0; Row < ImageHeight; Row++)
+            //                for (int Col = 0; Col < ImageWidth; Col++)
+            //                    BlackWhiteImage[Row, Col] = GrayImage[Row, Col] < CutoffLevel;
 
-//            // save as black white image
-//#if DEBUGEX
-//		QRCodeTrace.Write("Display black and white image");
-//		DisplayBlackAndWhiteImage();
-//#endif
+            //            // save as black white image
+            //#if DEBUGEX
+            //		QRCodeTrace.Write("Display black and white image");
+            //		DisplayBlackAndWhiteImage();
+            //#endif
 
-//            // exit;
-//            return true;
+            //            // exit;
+            //            return true;
         }
 
         ////////////////////////////////////////////////////////////////////
@@ -871,7 +871,7 @@ namespace Genocs.QRCodeLibrary.Decoder
             // remove all entries without a match
             for (int Index = 0; Index < FinderList.Count; Index++)
             {
-                if (FinderList[Index].Distance == double.MaxValue)
+                if (FinderList[Index]._distance == double.MaxValue)
                 {
                     FinderList.RemoveAt(Index);
                     Index--;
@@ -895,7 +895,7 @@ namespace Genocs.QRCodeLibrary.Decoder
                 {
                     Finder Finder1 = FinderList[Index1];
                     if (!Finder.Overlap(Finder1)) continue;
-                    if (Finder1.Distance < Finder.Distance)
+                    if (Finder1._distance < Finder._distance)
                     {
                         Finder = Finder1;
                         FinderList[Index] = Finder;
@@ -927,7 +927,7 @@ namespace Genocs.QRCodeLibrary.Decoder
             // remove all entries without a match
             for (int Index = 0; Index < AlignList.Count; Index++)
             {
-                if (AlignList[Index].Distance == double.MaxValue)
+                if (AlignList[Index]._distance == double.MaxValue)
                 {
                     AlignList.RemoveAt(Index);
                     Index--;
@@ -942,7 +942,7 @@ namespace Genocs.QRCodeLibrary.Decoder
                 {
                     Finder Finder1 = AlignList[Index1];
                     if (!Finder.Overlap(Finder1)) continue;
-                    if (Finder1.Distance < Finder.Distance)
+                    if (Finder1._distance < Finder._distance)
                     {
                         Finder = Finder1;
                         AlignList[Index] = Finder;
@@ -1197,17 +1197,17 @@ namespace Genocs.QRCodeLibrary.Decoder
             Matrix1[0, 0] = 3;
             Matrix1[0, 1] = 3;
             Matrix1[0, 2] = 1;
-            Matrix1[0, 3] = corner.TopLeftFinder.Col;
+            Matrix1[0, 3] = corner.TopLeftFinder._col;
 
             Matrix1[1, 0] = BottomRightPos;
             Matrix1[1, 1] = 3;
             Matrix1[1, 2] = 1;
-            Matrix1[1, 3] = corner.TopRightFinder.Col;
+            Matrix1[1, 3] = corner.TopRightFinder._col;
 
             Matrix1[2, 0] = 3;
             Matrix1[2, 1] = BottomRightPos;
             Matrix1[2, 2] = 1;
-            Matrix1[2, 3] = corner.BottomLeftFinder.Col;
+            Matrix1[2, 3] = corner.BottomLeftFinder._col;
 
             // build matrix 2 for Vertical Y direction
             Matrix2[0, 0] = 3;
@@ -1354,23 +1354,23 @@ namespace Genocs.QRCodeLibrary.Decoder
             Matrix[0, 0] = 3.0;
             Matrix[0, 1] = 3.0;
             Matrix[0, 2] = 1.0;
-            Matrix[0, 6] = -3.0 * Corner.TopLeftFinder.Col;
-            Matrix[0, 7] = -3.0 * Corner.TopLeftFinder.Col;
-            Matrix[0, 8] = Corner.TopLeftFinder.Col;
+            Matrix[0, 6] = -3.0 * Corner.TopLeftFinder._col;
+            Matrix[0, 7] = -3.0 * Corner.TopLeftFinder._col;
+            Matrix[0, 8] = Corner.TopLeftFinder._col;
 
             Matrix[1, 0] = FarFinder;
             Matrix[1, 1] = 3.0;
             Matrix[1, 2] = 1.0;
-            Matrix[1, 6] = -FarFinder * Corner.TopRightFinder.Col;
-            Matrix[1, 7] = -3.0 * Corner.TopRightFinder.Col;
-            Matrix[1, 8] = Corner.TopRightFinder.Col;
+            Matrix[1, 6] = -FarFinder * Corner.TopRightFinder._col;
+            Matrix[1, 7] = -3.0 * Corner.TopRightFinder._col;
+            Matrix[1, 8] = Corner.TopRightFinder._col;
 
             Matrix[2, 0] = 3.0;
             Matrix[2, 1] = FarFinder;
             Matrix[2, 2] = 1.0;
-            Matrix[2, 6] = -3.0 * Corner.BottomLeftFinder.Col;
-            Matrix[2, 7] = -FarFinder * Corner.BottomLeftFinder.Col;
-            Matrix[2, 8] = Corner.BottomLeftFinder.Col;
+            Matrix[2, 6] = -3.0 * Corner.BottomLeftFinder._col;
+            Matrix[2, 7] = -FarFinder * Corner.BottomLeftFinder._col;
+            Matrix[2, 8] = Corner.BottomLeftFinder._col;
 
             Matrix[3, 0] = FarAlign;
             Matrix[3, 1] = FarAlign;
