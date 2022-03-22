@@ -11,7 +11,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         public Codabar(string input)
         {
             Raw_Data = input;
-        }//Codabar
+        }
 
         /// <summary>
         /// Encode the raw data using the Codabar algorithm.
@@ -30,7 +30,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 default:
                     Error("ECODABAR-2: Data format invalid. (Invalid START character)");
                     break;
-            }//switch
+            }
 
             //check the ending char to make sure its a start/stop char
             switch (Raw_Data[Raw_Data.Trim().Length - 1].ToString().ToUpper().Trim())
@@ -42,10 +42,10 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 default:
                     Error("ECODABAR-3: Data format invalid. (Invalid STOP character)");
                     break;
-            }//switch
+            }
 
             //populate the hashtable to begin the process
-            init_Codabar();
+            Init_Codabar();
 
             //replace non-numeric VALID chars with empty strings before checking for all numerics
             var temp = Raw_Data;
@@ -55,8 +55,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 if (!CheckNumericOnly(c.ToString()))
                 {
                     temp = temp.Replace(c, '1');
-                }//if
-            }//if
+                }
+            }
 
             //now that all the valid non-numeric chars have been replaced with a number check if all numeric exist
             if (!CheckNumericOnly(temp))
@@ -68,7 +68,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
             {
                 result += Codabar_Code[c].ToString();
                 result += "0"; //inter-character space
-            }//foreach
+            }
 
             //remove the extra 0 at the end of the result
             result = result.Remove(result.Length - 1);
@@ -80,8 +80,9 @@ namespace Genocs.BarcodeLibrary.Symbologies
             Raw_Data = Raw_Data.Trim().Substring(1, RawData.Trim().Length - 2);
 
             return result;
-        }//Encode_Codabar
-        private void init_Codabar()
+        }
+
+        private void Init_Codabar()
         {
             Codabar_Code.Clear();
             Codabar_Code.Add('0', "101010011");//"101001101101");
@@ -108,7 +109,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
             Codabar_Code.Add('b', "1010010011");//"101011001011");
             Codabar_Code.Add('c', "1001001011");//"110101100101");
             Codabar_Code.Add('d', "1010011001");//"101101100101");
-        }//init_Codeabar
+        }
 
         #region IBarcode Members
 
@@ -116,5 +117,5 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         #endregion
 
-    }//class
-}//namespace
+    }
+}

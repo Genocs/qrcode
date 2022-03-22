@@ -1,7 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
+﻿using SixLabors.Fonts;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Drawing.Processing;
+
+using System;
 
 namespace Genocs.BarcodeLibrary
 {
@@ -12,11 +14,12 @@ namespace Genocs.BarcodeLibrary
         /// </summary>
         /// <param name="img">Image representation of the barcode without the labels</param>
         /// <returns>Image representation of the barcode with labels applied</returns>
-        public static Image Label_ITF14(Barcode Barcode, Bitmap img)
+        public static Image Label_ITF14(Barcode Barcode, Image img)
         {
             try
             {
                 Font font = Barcode.LabelFont;
+
 
                 using (Graphics g = Graphics.FromImage(img))
                 {
@@ -28,34 +31,33 @@ namespace Genocs.BarcodeLibrary
                     g.CompositingQuality = CompositingQuality.HighQuality;
 
                     //color a white box at the bottom of the barcode to hold the string of data
-                    using (SolidBrush backBrush = new SolidBrush(Barcode.BackColor))
-                    {
-                        g.FillRectangle(backBrush, new Rectangle(0, img.Height - (font.Height - 2), img.Width, font.Height));
-                    }
+                    SolidBrush backBrush = new SolidBrush(Barcode.BackColor);
+                    img.Mutate(x =>x.Fill(backBrush, new Rectangle(0, img.Height - (font.LineHeight - 2), img.Width, font.LineHeight)));
+
 
                     //draw datastring under the barcode image
                     StringFormat f = new StringFormat();
                     f.Alignment = StringAlignment.Center;
 
-                    using (SolidBrush foreBrush = new SolidBrush(Barcode.ForeColor))
-                    {
-                        g.DrawString(Barcode.AlternateLabel == null ? Barcode.RawData : Barcode.AlternateLabel, font, foreBrush, (float)(img.Width / 2), img.Height - font.Height + 1, f);
-                    }
+                    SolidBrush foreBrush = new SolidBrush(Barcode.ForeColor);
 
-                    using (Pen pen = new Pen(Barcode.ForeColor, (float)img.Height / 16))
-                    {
-                        pen.Alignment = PenAlignment.Inset;
-                        g.DrawLine(pen, new Point(0, img.Height - font.Height - 2), new Point(img.Width, img.Height - font.Height - 2));//bottom
-                    }
+                    g.DrawString(Barcode.AlternateLabel == null ? Barcode.RawData : Barcode.AlternateLabel, font, foreBrush, (float)(img.Width / 2), img.Height - font.Height + 1, f);
 
+
+                    Pen pen = new Pen(Barcode.ForeColor, (float)img.Height / 16);
+
+                    
+                    g.DrawLine(pen, new SixLabors.ImageSharp.Point(0, img.Height - font.LineHeight - 2), new Point(img.Width, img.Height - font.LineHeight - 2));//bottom
+
+                    
                     g.Save();
-                }//using
+                }
                 return img;
-            }//try
+            }
             catch (Exception ex)
             {
                 throw new Exception("ELABEL_ITF14-1: " + ex.Message);
-            }//catch
+            }
         }
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace Genocs.BarcodeLibrary
         /// </summary>
         /// <param name="img">Image representation of the barcode without the labels</param>
         /// <returns>Image representation of the barcode with labels applied</returns>
-        public static Image Label_Generic(Barcode Barcode, Bitmap img)
+        public static Image Label_Generic(Barcode Barcode, Image img)
         {
             try
             {
@@ -117,13 +119,13 @@ namespace Genocs.BarcodeLibrary
                             LabelY = 0;
                             f.Alignment = StringAlignment.Far;
                             break;
-                    }//switch
+                    }
 
                     //color a background color box at the bottom of the barcode to hold the string of data
-                    using (SolidBrush backBrush = new SolidBrush(Barcode.BackColor))
-                    {
-                        g.FillRectangle(backBrush, new RectangleF((float)0, (float)LabelY, (float)img.Width, (float)font.Height));
-                    }
+                    SolidBrush backBrush = new SolidBrush(Barcode.BackColor);
+
+                    g.FillRectangle(backBrush, new RectangleF((float)0, (float)LabelY, (float)img.Width, (float)font.LineHeight));
+
 
                     //draw datastring under the barcode image
                     using (SolidBrush foreBrush = new SolidBrush(Barcode.ForeColor))
@@ -132,9 +134,9 @@ namespace Genocs.BarcodeLibrary
                     }
 
                     g.Save();
-                }//using
+                }
                 return img;
-            }//try
+            }
             catch (Exception ex)
             {
                 throw new Exception("ELABEL_GENERIC-1: " + ex.Message);
@@ -147,7 +149,7 @@ namespace Genocs.BarcodeLibrary
         /// </summary>
         /// <param name="img">Image representation of the barcode without the labels</param>
         /// <returns>Image representation of the barcode with labels applied</returns>
-        public static Image Label_EAN13(Barcode Barcode, Bitmap img)
+        public static Image Label_EAN13(Barcode Barcode, Image img)
         {
             try
             {
@@ -201,41 +203,41 @@ namespace Genocs.BarcodeLibrary
                         float s3 = s2 + w2 + (iBarWidth * 5); //Start position of block 3
 
                         //Draw the background rectangles for each block
-                        using (SolidBrush backBrush = new SolidBrush(Barcode.BackColor))
-                        {
-                            g.FillRectangle(backBrush, new RectangleF(s2, (float)LabelY, w2, (float)labFont.Height));
-                            g.FillRectangle(backBrush, new RectangleF(s3, (float)LabelY, w3, (float)labFont.Height));
+                        SolidBrush backBrush = new SolidBrush(Barcode.BackColor);
 
-                        }
+                        g.FillRectangle(backBrush, new RectangleF(s2, (float)LabelY, w2, (float)labFont.LineHeight));
+                        g.FillRectangle(backBrush, new RectangleF(s3, (float)LabelY, w3, (float)labFont.LineHeight));
+
+
 
                         //draw datastring under the barcode image
-                        using (SolidBrush foreBrush = new SolidBrush(Barcode.ForeColor))
-                        {
-                            using (Font smallFont = new Font(labFont.FontFamily, labFont.SizeInPoints * 0.5f * Barcode.DotsPerPointAt96Dpi, labFont.Style, GraphicsUnit.Pixel))
-                            {
-                                g.DrawString(defTxt.Substring(0, 1), smallFont, foreBrush, new RectangleF(s1, (float)img.Height - (float)(smallFont.Height * 0.9), (float)img.Width, (float)labFont.Height), f);
-                            }
-                            g.DrawString(defTxt.Substring(1, 6), labFont, foreBrush, new RectangleF(s2, (float)LabelY, (float)img.Width, (float)labFont.Height), f);
-                            g.DrawString(defTxt.Substring(7), labFont, foreBrush, new RectangleF(s3 - iBarWidth, (float)LabelY, (float)img.Width, (float)labFont.Height), f);
-                        }
+                        SolidBrush foreBrush = new SolidBrush(Barcode.ForeColor);
+
+                        Font smallFont = new Font(labFont.FontFamily, labFont.SizeInPoints * 0.5f * Barcode.DotsPerPointAt96Dpi, labFont.Style, GraphicsUnit.Pixel);
+
+                        g.DrawString(defTxt.Substring(0, 1), smallFont, foreBrush, new RectangleF(s1, (float)img.Height - (float)(smallFont.Height * 0.9), (float)img.Width, (float)labFont.Height), f);
+
+                        g.DrawString(defTxt.Substring(1, 6), labFont, foreBrush, new RectangleF(s2, (float)LabelY, (float)img.Width, (float)labFont.Height), f);
+                        g.DrawString(defTxt.Substring(7), labFont, foreBrush, new RectangleF(s3 - iBarWidth, (float)LabelY, (float)img.Width, (float)labFont.Height), f);
+
 
                         g.Save();
                     }
-                }//using
+                }
                 return img;
-            }//try
+            }
             catch (Exception ex)
             {
                 throw new Exception("ELABEL_EAN13-1: " + ex.Message);
-            }//catch
-        }//Label_EAN13
+            }
+        }
 
         /// <summary>
         /// Draws Label for UPC-A barcodes
         /// </summary>
         /// <param name="img">Image representation of the barcode without the labels</param>
         /// <returns>Image representation of the barcode with labels applied</returns>
-        public static Image Label_UPCA(Barcode Barcode, Bitmap img)
+        public static Image Label_UPCA(Barcode Barcode, Image img)
         {
             try
             {
@@ -336,7 +338,7 @@ namespace Genocs.BarcodeLibrary
                         {
                             // See how much space the text would
                             // need, specifying a maximum width.
-                            SizeF text_size = gr.MeasureString(lbl, test_font);
+                            SixLabors.ImageSharp.SizeF text_size = gr.MeasureString(lbl, test_font);
                             if ((text_size.Width > wid) || (text_size.Height > hgt))
                             {
                                 fontSize = i - 1;

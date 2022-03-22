@@ -45,12 +45,12 @@ namespace Genocs.BarcodeLibrary.Symbologies
         private string Encode_Code128()
         {
             //initialize datastructure to hold encoding information
-            init_Code128();
+            Init_Code128();
 
             return GetEncoding();
         }
 
-        private void init_Code128()
+        private void Init_Code128()
         {
             //set the table to case sensitive since there are upper and lower case values
             C128_Code.CaseSensitive = true;
@@ -184,7 +184,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 {
                     _startCharacter = C128_Code.Select("A = 'START_C'")[0];
                     rows.Add(_startCharacter);
-                }//if
+                }
                 else
                     rows.Add(C128_Code.Select("A = 'CODE_C'")[0]);
 
@@ -207,12 +207,12 @@ namespace Genocs.BarcodeLibrary.Symbologies
                             {
                                 _startCharacter = C128_Code.Select("A = 'START_A'")[0];
                                 rows.Add(_startCharacter);
-                            }//if
+                            }
                             else
                             {
                                 rows.Add(C128_Code.Select("B = 'CODE_A'")[0]);//first column is FNC4 so use B
-                            }//else
-                        }//if
+                            }
+                        }
                         else if (!BFound && s == row["B"].ToString())
                         {
                             BFound = true;
@@ -233,7 +233,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     {
                         Error("EC128-1: " + ex.Message);
                     }
-                }              
+                }
 
                 if (rows.Count <= 0)
                     Error("EC128-2: Could not determine start character.");
@@ -330,26 +330,27 @@ namespace Genocs.BarcodeLibrary.Symbologies
                         temp += c;
                         _FormattedData.Add(temp);
                         temp = "";
-                    }//else
-                }//if
+                    }
+                }
                 else
                 {
                     if (temp != "")
                     {
                         _FormattedData.Add(temp);
                         temp = "";
-                    }//if
+                    }
                     _FormattedData.Add(c.ToString());
-                }//else
-            }//foreach
+                }
+            }
 
             //if something is still in temp go ahead and push it onto the queue
             if (temp != "")
             {
                 _FormattedData.Add(temp);
                 temp = "";
-            }//if
+            }
         }
+
         private void InsertStartandCodeCharacters()
         {
             DataRow CurrentCodeSet = null;
@@ -372,7 +373,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                         Error("EC128-4: Unknown start type in fixed type encoding.");
                         break;
                 }
-            }//if
+            }
             else
             {
                 try
@@ -390,8 +391,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
                             {
                                 sameCodeSet = true;
                                 break;
-                            }//if
-                        }//foreach
+                            }
+                        }
 
                         //only insert a new code char if starting a new codeset
                         //if (CurrentCodeString == "" || !tempStartChars[0][col].ToString().EndsWith(CurrentCodeString)) /* Removed because of bug */
@@ -502,5 +503,5 @@ namespace Genocs.BarcodeLibrary.Symbologies
         public string Encoded_Value => Encode_Code128();
 
         #endregion
-    }//class
-}//namespace
+    }
+}

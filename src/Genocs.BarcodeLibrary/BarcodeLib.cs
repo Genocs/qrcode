@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
-using System.Drawing.Imaging;
 using Genocs.BarcodeLibrary.Symbologies;
 using System.Xml.Serialization;
 using System.Security;
 using System.Xml;
 using System.Text;
 using System.Text.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.Fonts;
 
 /* 
  * ***************************************************
@@ -31,6 +32,7 @@ namespace Genocs.BarcodeLibrary
     public enum AlignmentPositions : int { CENTER, LEFT, RIGHT };
     public enum LabelPositions : int { TOPLEFT, TOPCENTER, TOPRIGHT, BOTTOMLEFT, BOTTOMCENTER, BOTTOMRIGHT };
     #endregion
+
     /// <summary>
     /// Generates a barcode image of a specified symbology from a string of data.
     /// </summary>
@@ -39,7 +41,6 @@ namespace Genocs.BarcodeLibrary
     {
         #region Variables
         private IBarcode ibarcode = new Blank();
-        private string Raw_Data = "";
         private string Encoded_Value = "";
         private string _Country_Assigning_Manufacturer_Code = "N/A";
         private TYPE Encoded_Type = TYPE.UNSPECIFIED;
@@ -48,7 +49,7 @@ namespace Genocs.BarcodeLibrary
         private Color _BackColor = Color.White;
         private int _Width = 300;
         private int _Height = 150;
-        private ImageFormat _ImageFormat = ImageFormat.Jpeg;
+        private IImageEncoder _ImageFormat;
         private Font _LabelFont = new Font("Microsoft Sans Serif", 10 * DotsPerPointAt96Dpi, FontStyle.Bold, GraphicsUnit.Pixel);
         private LabelPositions _LabelPosition = LabelPositions.BOTTOMCENTER;
         private RotateFlipType _RotateFlipType = RotateFlipType.RotateNoneFlipNone;
@@ -61,20 +62,22 @@ namespace Genocs.BarcodeLibrary
         /// </summary>
         public Barcode()
         {
-            //constructor
-        }//Barcode
+
+        }
+
         /// <summary>
         /// Constructor. Populates the raw data. No whitespace will be added before or after the barcode.
         /// </summary>
         /// <param name="data">String to be encoded.</param>
         public Barcode(string data)
         {
-            //constructor
-            this.Raw_Data = data;
-        }//Barcode
+
+            this.RawData = data;
+        }
+
         public Barcode(string data, TYPE iType)
         {
-            this.Raw_Data = data;
+            this.RawData = data;
             this.Encoded_Type = iType;
             GenerateBarcode();
         }
@@ -101,11 +104,7 @@ namespace Genocs.BarcodeLibrary
         /// <summary>
         /// Gets or sets the raw data to encode.
         /// </summary>
-        public string RawData
-        {
-            get { return Raw_Data; }
-            set { Raw_Data = value; }
-        }//RawData
+        public string RawData { get; set; } = "";
         /// <summary>
         /// Gets the encoded value.
         /// </summary>
@@ -119,7 +118,8 @@ namespace Genocs.BarcodeLibrary
         public string Country_Assigning_Manufacturer_Code
         {
             get { return _Country_Assigning_Manufacturer_Code; }
-        }//Country_Assigning_Manufacturer_Code
+        }
+
         /// <summary>
         /// Gets or sets the Encoded Type (ex. UPC-A, EAN-13 ... etc)
         /// </summary>
@@ -169,7 +169,8 @@ namespace Genocs.BarcodeLibrary
         {
             get { return _LabelPosition; }
             set { _LabelPosition = value; }
-        }//LabelPosition
+        }
+
         /// <summary>
         /// Gets or sets the degree in which to rotate/flip the image.(No action is default)
         /// </summary>
@@ -177,7 +178,8 @@ namespace Genocs.BarcodeLibrary
         {
             get { return _RotateFlipType; }
             set { _RotateFlipType = value; }
-        }//RotatePosition
+        }
+
         /// <summary>
         /// Gets or sets the width of the image to be drawn. (Default is 300 pixels)
         /// </summary>
@@ -230,11 +232,7 @@ namespace Genocs.BarcodeLibrary
         /// <summary>
         /// Alternate label to be displayed.  (IncludeLabel must be set to true as well)
         /// </summary>
-        public String AlternateLabel
-        {
-            get;
-            set;
-        }
+        public String AlternateLabel { get; set; }
 
         /// <summary>
         /// Try to standardize the label format. (Valid only for EAN13 and empty AlternateLabel, default is true)
@@ -253,6 +251,7 @@ namespace Genocs.BarcodeLibrary
             get;
             set;
         }
+
         /// <summary>
         /// Gets or sets the image format to use when encoding and returning images. (Jpeg is default)
         /// </summary>
@@ -286,13 +285,12 @@ namespace Genocs.BarcodeLibrary
                 if (_Encoded_Image == null)
                     return null;
 
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    _Encoded_Image.Save(ms, _ImageFormat);
-                    return ms.ToArray();
-                }//using
+                using MemoryStream ms = new MemoryStream();
+                _Encoded_Image.Save(ms, _ImageFormat);
+                return ms.ToArray();
             }
         }
+
         /// <summary>
         /// Gets the assembly version information.
         /// </summary>
@@ -300,6 +298,7 @@ namespace Genocs.BarcodeLibrary
         {
             get { return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version; }
         }
+
         #endregion
 
         /// <summary>
@@ -333,7 +332,8 @@ namespace Genocs.BarcodeLibrary
             this.Width = Width;
             this.Height = Height;
             return Encode(iType, StringToEncode);
-        }//Encode(TYPE, string, int, int)
+        }
+
         /// <summary>
         /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
         /// </summary>
@@ -349,7 +349,8 @@ namespace Genocs.BarcodeLibrary
             this.Width = Width;
             this.Height = Height;
             return Encode(iType, StringToEncode, ForeColor, BackColor);
-        }//Encode(TYPE, string, Color, Color, int, int)
+        }
+
         /// <summary>
         /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
         /// </summary>
@@ -363,7 +364,8 @@ namespace Genocs.BarcodeLibrary
             this.BackColor = BackColor;
             this.ForeColor = ForeColor;
             return Encode(iType, StringToEncode);
-        }//(Image)Encode(Type, string, Color, Color)
+        }
+
         /// <summary>
         /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
         /// </summary>
@@ -372,9 +374,10 @@ namespace Genocs.BarcodeLibrary
         /// <returns>Image representing the barcode.</returns>
         public Image Encode(TYPE iType, string StringToEncode)
         {
-            Raw_Data = StringToEncode;
+            RawData = StringToEncode;
             return Encode(iType);
-        }//(Image)Encode(TYPE, string)
+        }
+
         /// <summary>
         /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
         /// </summary>
@@ -383,7 +386,8 @@ namespace Genocs.BarcodeLibrary
         {
             Encoded_Type = iType;
             return Encode();
-        }//Encode()
+        }
+
         /// <summary>
         /// Encodes the raw data into a barcode image.
         /// </summary>
@@ -394,7 +398,7 @@ namespace Genocs.BarcodeLibrary
             DateTime dtStartTime = DateTime.Now;
 
             this.Encoded_Value = GenerateBarcode();
-            this.Raw_Data = ibarcode.RawData;
+            this.RawData = ibarcode.RawData;
 
             _Encoded_Image = (Image)Generate_Image();
 
@@ -403,7 +407,8 @@ namespace Genocs.BarcodeLibrary
             this.EncodingTime = ((TimeSpan)(DateTime.Now - dtStartTime)).TotalMilliseconds;
 
             return EncodedImage;
-        }//Encode
+        }
+
 
         /// <summary>
         /// Encodes the raw data into binary form representing bars and spaces.
@@ -417,11 +422,11 @@ namespace Genocs.BarcodeLibrary
         {
             if (raw_data != "")
             {
-                Raw_Data = raw_data;
+                RawData = raw_data;
             }
 
             //make sure there is something to encode
-            if (Raw_Data.Trim() == "")
+            if (RawData.Trim() == "")
                 throw new Exception("EENCODE-1: Input data not allowed to be blank.");
 
             if (this.EncodedType == TYPE.UNSPECIFIED)
@@ -435,98 +440,98 @@ namespace Genocs.BarcodeLibrary
             {
                 case TYPE.UCC12:
                 case TYPE.UPCA: //Encode_UPCA();
-                    ibarcode = new UPCA(Raw_Data);
+                    ibarcode = new UPCA(RawData);
                     break;
                 case TYPE.UCC13:
                 case TYPE.EAN13: //Encode_EAN13();
-                    ibarcode = new EAN13(Raw_Data);
+                    ibarcode = new EAN13(RawData);
                     break;
                 case TYPE.Interleaved2of5_Mod10:
                 case TYPE.Interleaved2of5: //Encode_Interleaved2of5();
-                    ibarcode = new Interleaved2of5(Raw_Data, Encoded_Type);
+                    ibarcode = new Interleaved2of5(RawData, Encoded_Type);
                     break;
                 case TYPE.Industrial2of5_Mod10:
                 case TYPE.Industrial2of5:
                 case TYPE.Standard2of5_Mod10:
                 case TYPE.Standard2of5: //Encode_Standard2of5();
-                    ibarcode = new Standard2of5(Raw_Data, Encoded_Type);
+                    ibarcode = new Standard2of5(RawData, Encoded_Type);
                     break;
                 case TYPE.LOGMARS:
                 case TYPE.CODE39: //Encode_Code39();
-                    ibarcode = new Code39(Raw_Data);
+                    ibarcode = new Code39(RawData);
                     break;
                 case TYPE.CODE39Extended:
-                    ibarcode = new Code39(Raw_Data, true);
+                    ibarcode = new Code39(RawData, true);
                     break;
                 case TYPE.CODE39_Mod43:
-                    ibarcode = new Code39(Raw_Data, false, true);
+                    ibarcode = new Code39(RawData, false, true);
                     break;
                 case TYPE.Codabar: //Encode_Codabar();
-                    ibarcode = new Codabar(Raw_Data);
+                    ibarcode = new Codabar(RawData);
                     break;
                 case TYPE.PostNet: //Encode_PostNet();
-                    ibarcode = new Postnet(Raw_Data);
+                    ibarcode = new Postnet(RawData);
                     break;
                 case TYPE.ISBN:
                 case TYPE.BOOKLAND: //Encode_ISBN_Bookland();
-                    ibarcode = new ISBN(Raw_Data);
+                    ibarcode = new ISBN(RawData);
                     break;
                 case TYPE.JAN13: //Encode_JAN13();
-                    ibarcode = new JAN13(Raw_Data);
+                    ibarcode = new JAN13(RawData);
                     break;
                 case TYPE.UPC_SUPPLEMENTAL_2DIGIT: //Encode_UPCSupplemental_2();
-                    ibarcode = new UPCSupplement2(Raw_Data);
+                    ibarcode = new UPCSupplement2(RawData);
                     break;
                 case TYPE.MSI_Mod10:
                 case TYPE.MSI_2Mod10:
                 case TYPE.MSI_Mod11:
                 case TYPE.MSI_Mod11_Mod10:
                 case TYPE.Modified_Plessey: //Encode_MSI();
-                    ibarcode = new MSI(Raw_Data, Encoded_Type);
+                    ibarcode = new MSI(RawData, Encoded_Type);
                     break;
                 case TYPE.UPC_SUPPLEMENTAL_5DIGIT: //Encode_UPCSupplemental_5();
-                    ibarcode = new UPCSupplement5(Raw_Data);
+                    ibarcode = new UPCSupplement5(RawData);
                     break;
                 case TYPE.UPCE: //Encode_UPCE();
-                    ibarcode = new UPCE(Raw_Data);
+                    ibarcode = new UPCE(RawData);
                     break;
                 case TYPE.EAN8: //Encode_EAN8();
-                    ibarcode = new EAN8(Raw_Data);
+                    ibarcode = new EAN8(RawData);
                     break;
                 case TYPE.USD8:
                 case TYPE.CODE11: //Encode_Code11();
-                    ibarcode = new Code11(Raw_Data);
+                    ibarcode = new Code11(RawData);
                     break;
                 case TYPE.CODE128: //Encode_Code128();
-                    ibarcode = new Code128(Raw_Data);
+                    ibarcode = new Code128(RawData);
                     break;
                 case TYPE.CODE128A:
-                    ibarcode = new Code128(Raw_Data, Code128.TYPES.A);
+                    ibarcode = new Code128(RawData, Code128.TYPES.A);
                     break;
                 case TYPE.CODE128B:
-                    ibarcode = new Code128(Raw_Data, Code128.TYPES.B);
+                    ibarcode = new Code128(RawData, Code128.TYPES.B);
                     break;
                 case TYPE.CODE128C:
-                    ibarcode = new Code128(Raw_Data, Code128.TYPES.C);
+                    ibarcode = new Code128(RawData, Code128.TYPES.C);
                     break;
                 case TYPE.ITF14:
-                    ibarcode = new ITF14(Raw_Data);
+                    ibarcode = new ITF14(RawData);
                     break;
                 case TYPE.CODE93:
-                    ibarcode = new Code93(Raw_Data);
+                    ibarcode = new Code93(RawData);
                     break;
                 case TYPE.TELEPEN:
-                    ibarcode = new Telepen(Raw_Data);
+                    ibarcode = new Telepen(RawData);
                     break;
                 case TYPE.FIM:
-                    ibarcode = new FIM(Raw_Data);
+                    ibarcode = new FIM(RawData);
                     break;
                 case TYPE.PHARMACODE:
-                    ibarcode = new Pharmacode(Raw_Data);
+                    ibarcode = new Pharmacode(RawData);
                     break;
 
                 default: throw new Exception("EENCODE-2: Unsupported encoding type specified.");
-            }//switch
+            }
 
             return ibarcode.Encoded_Value;
         }
@@ -537,20 +542,21 @@ namespace Genocs.BarcodeLibrary
         /// Create and preconfigures a Bitmap for use by the library. Ensures it is independent from
         /// system DPI, etc.
         /// </summary>
-        internal Bitmap CreateBitmap(int width, int height)
+        internal Image CreateBitmap(int width, int height)
         {
-            var bitmap = new Bitmap(width, height);
-            bitmap.SetResolution(HoritontalResolution, VerticalResolution);
+            var bitmap = new IImage(width, height);
+            bitmap.Mutate(width, height);
+            //bitmap.SetResolution(HoritontalResolution, VerticalResolution);
             return bitmap;
         }
         /// <summary>
         /// Gets a bitmap representation of the encoded data.
         /// </summary>
         /// <returns>Bitmap of encoded value.</returns>
-        private Bitmap Generate_Image()
+        private Image Generate_Image()
         {
             if (Encoded_Value == "") throw new Exception("EGENERATE_IMAGE-1: Must be encoded first.");
-            Bitmap bitmap = null;
+            Image bitmap = null;
 
             DateTime dtStartTime = DateTime.Now;
 
@@ -599,35 +605,34 @@ namespace Genocs.BarcodeLibrary
                             g.Clear(BackColor);
 
                             //lines are fBarWidth wide so draw the appropriate color line vertically
-                            using (Pen pen = new Pen(ForeColor, iBarWidth))
+                            Pen pen = new Pen(ForeColor, iBarWidth);
+                            pen.Alignment = PenAlignment.Right;
+
+                            while (pos < Encoded_Value.Length)
                             {
-                                pen.Alignment = PenAlignment.Right;
+                                //draw the appropriate color line vertically
+                                if (Encoded_Value[pos] == '1')
+                                    g.DrawLine(pen, new Point((pos * iBarWidth) + shiftAdjustment + bearerwidth + iquietzone, 0), new Point((pos * iBarWidth) + shiftAdjustment + bearerwidth + iquietzone, Height));
 
-                                while (pos < Encoded_Value.Length)
-                                {
-                                    //draw the appropriate color line vertically
-                                    if (Encoded_Value[pos] == '1')
-                                        g.DrawLine(pen, new Point((pos * iBarWidth) + shiftAdjustment + bearerwidth + iquietzone, 0), new Point((pos * iBarWidth) + shiftAdjustment + bearerwidth + iquietzone, Height));
+                                pos++;
+                            }//while
 
-                                    pos++;
-                                }//while
-
-                                //bearer bars
-                                pen.Width = (float)ILHeight / 8;
-                                pen.Color = ForeColor;
-                                pen.Alignment = PenAlignment.Center;
-                                g.DrawLine(pen, new Point(0, 0), new Point(bitmap.Width, 0));//top
-                                g.DrawLine(pen, new Point(0, ILHeight), new Point(bitmap.Width, ILHeight));//bottom
-                                g.DrawLine(pen, new Point(0, 0), new Point(0, ILHeight));//left
-                                g.DrawLine(pen, new Point(bitmap.Width, 0), new Point(bitmap.Width, ILHeight));//right
-                            }//using
+                            //bearer bars
+                            pen.Width = (float)ILHeight / 8;
+                            pen.Color = ForeColor;
+                            pen.Alignment = PenAlignment.Center;
+                            g.DrawLine(pen, new Point(0, 0), new Point(bitmap.Width, 0));//top
+                            g.DrawLine(pen, new Point(0, ILHeight), new Point(bitmap.Width, ILHeight));//bottom
+                            g.DrawLine(pen, new Point(0, 0), new Point(0, ILHeight));//left
+                            g.DrawLine(pen, new Point(bitmap.Width, 0), new Point(bitmap.Width, ILHeight));//right
+                                                                                                           //using
                         }//using
 
                         if (IncludeLabel)
                             Labels.Label_ITF14(this, bitmap);
 
                         break;
-                    }//case
+                    }
                 case TYPE.UPCA:
                     {
                         // Automatically calculate Width if applicable.
@@ -1309,7 +1314,7 @@ namespace Genocs.BarcodeLibrary
                 _Encoded_Image?.Dispose();
                 _Encoded_Image = null;
 
-                Raw_Data = null;
+                RawData = null;
                 Encoded_Value = null;
                 _Country_Assigning_Manufacturer_Code = null;
                 _ImageFormat = null;
