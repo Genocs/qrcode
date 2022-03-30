@@ -5,11 +5,11 @@ VERSION_TAG=''
 case "$TRAVIS_BRANCH" in
   "master")
     TAG=latest
-    VERSION_TAG=3.0.$TRAVIS_BUILD_NUMBER
+    VERSION_TAG=3.1.0
     ;;
   "develop")
     TAG=dev
-    VERSION_TAG=$TAG-$TRAVIS_BUILD_NUMBER
+    VERSION_TAG=$TAG-3.1.0
     ;;
 esac
 
