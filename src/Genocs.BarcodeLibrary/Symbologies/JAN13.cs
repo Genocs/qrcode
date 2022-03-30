@@ -8,25 +8,22 @@ namespace Genocs.BarcodeLibrary.Symbologies
     {
         public JAN13(string input)
         {
-            Raw_Data = input;
+            _RawData = input;
         }
+
         /// <summary>
         /// Encode the raw data using the JAN-13 algorithm.
         /// </summary>
         private string Encode_JAN13()
         {
-            if (!Raw_Data.StartsWith("49")) Error("EJAN13-1: Invalid Country Code for JAN13 (49 required)");
-            if (!CheckNumericOnly(Raw_Data))
+            if (!RawData.StartsWith("49")) Error("EJAN13-1: Invalid Country Code for JAN13 (49 required)");
+            if (!CheckNumericOnly(RawData))
                 Error("EJAN13-2: Numeric Data Only");
 
-            EAN13 ean13 = new EAN13(Raw_Data);
-            return ean13.Encoded_Value;
-        }//Encode_JAN13
+            EAN13 ean13 = new EAN13(RawData);
+            return ean13.EncodedValue;
+        }
 
-        #region IBarcode Members
-
-        public string Encoded_Value => Encode_JAN13();
-
-        #endregion
+        public string EncodedValue => Encode_JAN13();
     }
 }

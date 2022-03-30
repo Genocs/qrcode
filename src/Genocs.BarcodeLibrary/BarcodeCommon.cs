@@ -6,12 +6,12 @@ namespace Genocs.BarcodeLibrary
 {
     abstract class BarcodeCommon
     {
-        protected string Raw_Data = "";
+        protected string _RawData = "";
         protected List<string> _Errors = new List<string>();
 
         public string RawData
         {
-            get { return this.Raw_Data; }
+            get { return _RawData; }
         }
 
         public List<string> Errors

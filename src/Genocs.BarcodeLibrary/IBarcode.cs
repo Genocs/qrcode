@@ -8,7 +8,7 @@ namespace Genocs.BarcodeLibrary
     /// </summary>
     interface IBarcode
     {
-        string Encoded_Value { get; }
+        string EncodedValue { get; }
 
         string RawData { get; }
 

@@ -14,8 +14,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
         public MSI(string input, TYPE encodedType)
         {
             Encoded_Type = encodedType;
-            Raw_Data = input;
-        }//MSI
+            _RawData = input;
+        }
 
         /// <summary>
         /// Encode the raw data using the MSI algorithm.
@@ -23,10 +23,10 @@ namespace Genocs.BarcodeLibrary.Symbologies
         private string Encode_MSI()
         {
             //check for non-numeric chars
-            if (!CheckNumericOnly(Raw_Data))
+            if (!CheckNumericOnly(RawData))
                 Error("EMSI-1: Numeric Data Only");
 
-            var preEncoded = Raw_Data;
+            var preEncoded = RawData;
 
             //get checksum
             if (Encoded_Type == TYPE.MSI_Mod10 || Encoded_Type == TYPE.MSI_2Mod10)
@@ -52,7 +52,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 var mod = (oddsum + evensum) % 10;
                 var checksum = mod == 0 ? 0 : 10 - mod;
                 preEncoded += checksum.ToString();
-            }//if
+            }
 
             if (Encoded_Type == TYPE.MSI_Mod11 || Encoded_Type == TYPE.MSI_Mod11_Mod10)
             {
@@ -67,7 +67,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 var checksum = mod == 0 ? 0 : 11 - mod;
 
                 preEncoded += checksum.ToString();
-            }//else
+            }
 
             if (Encoded_Type == TYPE.MSI_2Mod10 || Encoded_Type == TYPE.MSI_Mod11_Mod10)
             {
@@ -92,24 +92,20 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     oddsum += Int32.Parse(c.ToString());
                 var checksum = 10 - ((oddsum + evensum) % 10);
                 preEncoded += checksum.ToString();
-            }//if
+            }
 
             var result = "110";
             foreach (var c in preEncoded)
             {
                 result += MSI_Code[Int32.Parse(c.ToString())];
-            }//foreach
+            }
 
             //add stop character
             result += "1001";
 
             return result;
-        }//Encode_MSI
+        }
 
-        #region IBarcode Members
-
-        public string Encoded_Value => Encode_MSI();
-
-        #endregion
-    }//class
-}//namepsace
+        public string EncodedValue => Encode_MSI();
+    }
+}

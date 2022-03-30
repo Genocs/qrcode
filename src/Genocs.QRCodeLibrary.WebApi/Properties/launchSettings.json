@@ -1,13 +1,13 @@
 {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:54504",
+      "applicationUrl": "http://localhost:54504/docs",
       "sslPort": 44393
     }
   },
-  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "Genocs.QrCodeLibrary.WebApi": {
       "commandName": "Project",
@@ -15,7 +15,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:5000;https://localhost:5001"
+      "applicationUrl": "http://localhost:5000/docs;https://localhost:5001/docs"
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -23,6 +23,13 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/docs",
+      "publishAllPorts": true,
+      "useSSL": true
     }
   }
 }

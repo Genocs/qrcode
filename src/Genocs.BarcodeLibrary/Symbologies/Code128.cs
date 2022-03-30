@@ -28,7 +28,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// <param name="input">Data to encode.</param>
         public Code128(string input)
         {
-            Raw_Data = input;
+            _RawData = input;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         public Code128(string input, TYPES type)
         {
             this.type = type;
-            Raw_Data = input;
+            _RawData = input;
         }
 
         private string Encode_Code128()
@@ -276,7 +276,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         private void BreakUpDataForEncoding()
         {
             var temp = "";
-            var tempRawData = Raw_Data;
+            var tempRawData = RawData;
 
             //breaking the raw data up for code A and code B will mess up the encoding
             switch (type)
@@ -284,7 +284,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 case TYPES.A:
                 case TYPES.B:
                     {
-                        foreach (var c in Raw_Data)
+                        foreach (var c in RawData)
                             _FormattedData.Add(c.ToString());
                         return;
                     }
@@ -319,12 +319,12 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
             foreach (var c in tempRawData)
             {
-                if (Char.IsNumber(c))
+                if (char.IsNumber(c))
                 {
                     if (temp == "")
                     {
                         temp += c;
-                    }//if
+                    }
                     else
                     {
                         temp += c;
@@ -395,7 +395,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                         }
 
                         //only insert a new code char if starting a new codeset
-                        //if (CurrentCodeString == "" || !tempStartChars[0][col].ToString().EndsWith(CurrentCodeString)) /* Removed because of bug */
+                        //if  (CurrentCodeString == "" || !tempStartChars[0][col].ToString().EndsWith(CurrentCodeString)) /* Removed because of bug */
 
                         if (CurrentCodeString == "" || !sameCodeSet)
                         {
@@ -408,26 +408,26 @@ namespace Genocs.BarcodeLibrary.Symbologies
                                 {
                                     CurrentCodeString = CurrentCodeSet[col].ToString().Split(new char[] { '_' })[1];
                                     error = false;
-                                }//try
+                                }
                                 catch
                                 {
                                     error = true;
 
                                     if (col++ > CurrentCodeSet.ItemArray.Length)
                                         Error("No start character found in CurrentCodeSet.");
-                                }//catch
-                            }//while
+                                }
+                            }
 
                             _FormattedData.Insert(i++, CurrentCodeSet[col].ToString());
-                        }//if
+                        }
 
-                    }//for
-                }//try
+                    }
+                }
                 catch (Exception ex)
                 {
                     Error("EC128-3: Could not insert start and code characters.\n Message: " + ex.Message);
-                }//catch
-            }//else
+                }
+            }
         }
         private string GetEncoding()
         {
@@ -468,8 +468,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
                             if (E_Row.Length <= 0)
                             {
                                 E_Row = C128_Code.Select("C = '" + s1 + "'");
-                            }//if
-                        }//if
+                            }
+                        }
                         break;
                     default:
                         E_Row = null;
@@ -500,7 +500,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         #region IBarcode Members
 
-        public string Encoded_Value => Encode_Code128();
+        public string EncodedValue => Encode_Code128();
 
         #endregion
     }

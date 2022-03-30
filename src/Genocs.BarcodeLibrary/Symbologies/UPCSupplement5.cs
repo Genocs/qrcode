@@ -14,7 +14,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         public UPCSupplement5(string input)
         {
-            Raw_Data = input;
+            _RawData = input;
         }
 
         /// <summary>
@@ -22,9 +22,9 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// </summary>
         private string Encode_UPCSupplemental_5()
         {
-            if (Raw_Data.Length != 5) Error("EUPC-SUP5-1: Invalid data length. (Length = 5 required)");
+            if (RawData.Length != 5) Error("EUPC-SUP5-1: Invalid data length. (Length = 5 required)");
 
-            if (!CheckNumericOnly(Raw_Data))
+            if (!CheckNumericOnly(RawData))
                 Error("EUPCA-2: Numeric Data Only");
 
             //calculate the checksum digit
@@ -34,13 +34,13 @@ namespace Genocs.BarcodeLibrary.Symbologies
             //odd
             for (var i = 0; i <= 4; i += 2)
             {
-                odd += Int32.Parse(Raw_Data.Substring(i, 1)) * 3;
+                odd += Int32.Parse(RawData.Substring(i, 1)) * 3;
             }//for
 
             //even
             for (var i = 1; i < 4; i += 2)
             {
-                even += Int32.Parse(Raw_Data.Substring(i, 1)) * 9;
+                even += Int32.Parse(RawData.Substring(i, 1)) * 9;
             }//for
 
             var total = even + odd;
@@ -61,11 +61,11 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 {
                     case 'a':
                         //encode using odd parity
-                        result += EAN_CodeA[Int32.Parse(Raw_Data[pos].ToString())]; //if
+                        result += EAN_CodeA[Int32.Parse(RawData[pos].ToString())]; 
                         break;
                     case 'b':
                         //encode using even parity
-                        result += EAN_CodeB[Int32.Parse(Raw_Data[pos].ToString())]; //else if  
+                        result += EAN_CodeB[Int32.Parse(RawData[pos].ToString())]; //else if  
                         break;
                 }
                 pos++;
@@ -75,7 +75,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         #region IBarcode Members
 
-        public string Encoded_Value => Encode_UPCSupplemental_5();
+        public string EncodedValue => Encode_UPCSupplemental_5();
 
         #endregion
     }//class

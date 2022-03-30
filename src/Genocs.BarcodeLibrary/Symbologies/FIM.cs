@@ -17,24 +17,24 @@
             {
                 case "A":
                 case "a":
-                    Raw_Data = FIM_Codes[(int)FIMTypes.FIM_A];
+                    _RawData = FIM_Codes[(int)FIMTypes.FIM_A];
                     break;
                 case "B":
                 case "b":
-                    Raw_Data = FIM_Codes[(int)FIMTypes.FIM_B];
+                    _RawData = FIM_Codes[(int)FIMTypes.FIM_B];
                     break;
                 case "C":
                 case "c":
-                    Raw_Data = FIM_Codes[(int)FIMTypes.FIM_C];
+                    _RawData = FIM_Codes[(int)FIMTypes.FIM_C];
                     break;
                 case "D":
                 case "d":
-                    Raw_Data = FIM_Codes[(int)FIMTypes.FIM_D];
+                    _RawData = FIM_Codes[(int)FIMTypes.FIM_D];
                     break;
                 default:
                     Error("EFIM-1: Could not determine encoding type. (Only pass in A, B, C, or D)");
                     break;
-            }//switch
+            }
         }
 
         public string Encode_FIM()
@@ -43,17 +43,13 @@
             foreach (char c in RawData)
             {
                 encoded += c + "0";
-            }//foreach
+            }
 
             encoded = encoded.Substring(0, encoded.Length - 1);
 
             return encoded;
         }
 
-        #region IBarcode Members
-
-        public string Encoded_Value => Encode_FIM();
-
-        #endregion
+        public string EncodedValue => Encode_FIM();
     }
 }

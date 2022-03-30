@@ -8,7 +8,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
     /// </summary>
     class Code39 : BarcodeCommon, IBarcode
     {
-        private readonly System.Collections.Hashtable C39_Code = new System.Collections.Hashtable(); //is initialized by init_Code39()
+        private readonly System.Collections.Hashtable C39_Code = new System.Collections.Hashtable(); //is initialized by InitCode39()
         private readonly System.Collections.Hashtable ExtC39_Translation = new System.Collections.Hashtable();
         private readonly bool _allowExtended;
         private readonly bool _enableChecksum;
@@ -19,8 +19,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// <param name="input">Data to encode.</param>
         public Code39(string input)
         {
-            Raw_Data = input;
-        }//Code39
+            _RawData = input;
+        }
 
         /// <summary>
         /// Encodes with Code39.
@@ -29,7 +29,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// <param name="allowExtended">Allow Extended Code 39 (Full Ascii mode).</param>
         public Code39(string input, bool allowExtended)
         {
-            Raw_Data = input;
+            _RawData = input;
             _allowExtended = allowExtended;
         }
 
@@ -41,7 +41,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// <param name="enableChecksum">Whether to calculate the Mod 43 checksum and encode it into the barcode</param>
         public Code39(string input, bool allowExtended, bool enableChecksum)
         {
-            Raw_Data = input;
+            _RawData = input;
             _allowExtended = allowExtended;
             _enableChecksum = enableChecksum;
         }
@@ -51,16 +51,17 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// </summary>
         private string Encode_Code39()
         {
-            init_Code39();
+            InitCode39();
             init_ExtendedCode39();
 
-            var strNoAstr = Raw_Data.Replace("*", "");
+            var strNoAstr = RawData.Replace("*", "");
             var strFormattedData = "*" + strNoAstr + (_enableChecksum ? GetChecksumChar(strNoAstr).ToString() : String.Empty) + "*";
 
             if (_allowExtended)
                 InsertExtendedCharsIfNeeded(ref strFormattedData);
 
             var result = "";
+
             //foreach (char c in this.FormattedData)
             foreach (var c in strFormattedData)
             {
@@ -75,8 +76,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
                         Error("EC39-1: Invalid data.");
                     else
                         Error("EC39-1: Invalid data. (Try using Extended Code39)");
-                }//catch
-            }//foreach
+                }
+            }
 
             result = result.Substring(0, result.Length - 1);
 
@@ -84,8 +85,9 @@ namespace Genocs.BarcodeLibrary.Symbologies
             C39_Code.Clear();
 
             return result;
-        }//Encode_Code39
-        private void init_Code39()
+        }
+
+        private void InitCode39()
         {
             C39_Code.Clear();
             C39_Code.Add('0', "101001101101");
@@ -132,7 +134,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
             C39_Code.Add('+', "100101001001");
             C39_Code.Add('%', "101001001001");
             C39_Code.Add('*', "100101101101");
-        }//init_Code39
+        }
+
         private void init_ExtendedCode39()
         {
             ExtC39_Translation.Clear();
@@ -235,14 +238,14 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 {
                     var s = C39_Code[c].ToString();
                     output += c;
-                }//try
+                }
                 catch
                 {
                     //insert extended substitution
                     var oTrans = ExtC39_Translation[c.ToString()];
                     output += oTrans.ToString();
-                }//catch
-            }//foreach
+                }
+            }
 
             formattedData = output;
         }
@@ -261,11 +264,9 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
             //return the checksum char
             return Code39_Charset[sum % 43];
-        }
-        #region IBarcode Members
+        } 
 
-        public string Encoded_Value => Encode_Code39();
-
-        #endregion
-    }//class
-}//namespace
+        public string EncodedValue => Encode_Code39();
+ 
+    }
+}

@@ -17,23 +17,24 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         public EAN13(string input)
         {
-            Raw_Data = input;
+            _RawData = input;
 
             CheckDigit();
         }
+
         /// <summary>
         /// Encode the raw data using the EAN-13 algorithm. (Can include the checksum already.  If it doesnt exist in the data then it will calculate it for you.  Accepted data lengths are 12 + 1 checksum or just the 12 data digits)
         /// </summary>
         private string Encode_EAN13()
         {
             //check length of input
-            if (Raw_Data.Length < 12 || Raw_Data.Length > 13)
+            if (RawData.Length < 12 || RawData.Length > 13)
                 Error("EEAN13-1: Data length invalid. (Length must be 12 or 13)");
 
-            if (!CheckNumericOnly(Raw_Data))
+            if (!CheckNumericOnly(RawData))
                 Error("EEAN13-2: Numeric Data Only");
 
-            var patterncode = EAN_Pattern[Int32.Parse(Raw_Data[0].ToString())];
+            var patterncode = EAN_Pattern[Int32.Parse(RawData[0].ToString())];
             var result = "101";
 
             //first
@@ -44,11 +45,11 @@ namespace Genocs.BarcodeLibrary.Symbologies
             while (pos < 6)
             {
                 if (patterncode[pos] == 'a')
-                    result += EAN_CodeA[Int32.Parse(Raw_Data[pos + 1].ToString())];
+                    result += EAN_CodeA[Int32.Parse(RawData[pos + 1].ToString())];
                 if (patterncode[pos] == 'b')
-                    result += EAN_CodeB[Int32.Parse(Raw_Data[pos + 1].ToString())];
+                    result += EAN_CodeB[Int32.Parse(RawData[pos + 1].ToString())];
                 pos++;
-            }//while
+            }
 
 
             //add divider bars
@@ -58,11 +59,11 @@ namespace Genocs.BarcodeLibrary.Symbologies
             pos = 1;
             while (pos <= 5)
             {
-                result += EAN_CodeC[Int32.Parse(Raw_Data[(pos++) + 6].ToString())];
-            }//while
+                result += EAN_CodeC[Int32.Parse(RawData[(pos++) + 6].ToString())];
+            }
 
             //checksum digit
-            var cs = Int32.Parse(Raw_Data[Raw_Data.Length - 1].ToString());
+            var cs = Int32.Parse(RawData[RawData.Length - 1].ToString());
 
             //add checksum
             result += EAN_CodeC[cs];
@@ -73,8 +74,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
             //get the manufacturer assigning country
             Init_CountryCodes();
             _countryAssigningManufacturerCode = "N/A";
-            var twodigitCode = Raw_Data.Substring(0, 2);
-            var threedigitCode = Raw_Data.Substring(0, 3);
+            var twodigitCode = RawData.Substring(0, 2);
+            var threedigitCode = RawData.Substring(0, 3);
 
             var cc = _countryCodes[threedigitCode];
             if (cc == null)
@@ -97,15 +98,15 @@ namespace Genocs.BarcodeLibrary.Symbologies
             _countryCodes.Clear();
 
             return result;
-        }//Encode_EAN13
+        }
 
         private void Create_CountryCodeRange(int startingNumber, int endingNumber, string countryDescription)
         {
             for (var i = startingNumber; i <= endingNumber; i++)
             {
                 _countryCodes.Add(i.ToString("00"), countryDescription);
-            }   // for
-        }   // create_CountryCodeRange
+            }
+        }
 
         private void Init_CountryCodes()
         {
@@ -248,7 +249,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         {
             try
             {
-                var rawDataHolder = Raw_Data.Substring(0, 12);
+                var rawDataHolder = RawData.Substring(0, 12);
 
                 var even = 0;
                 var odd = 0;
@@ -259,7 +260,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                         odd += Int32.Parse(rawDataHolder.Substring(i, 1));
                     else
                         even += Int32.Parse(rawDataHolder.Substring(i, 1)) * 3;
-                }//for
+                }
 
                 var total = even + odd;
                 var cs = total % 10;
@@ -267,7 +268,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 if (cs == 10)
                     cs = 0;
 
-                Raw_Data = rawDataHolder + cs.ToString()[0];
+                _RawData = rawDataHolder + cs.ToString()[0];
             }
             catch
             {
@@ -275,10 +276,6 @@ namespace Genocs.BarcodeLibrary.Symbologies
             }
         }
 
-        #region IBarcode Members
-
-        public string Encoded_Value => Encode_EAN13();
-
-        #endregion
+        public string EncodedValue => Encode_EAN13();
     }
 }

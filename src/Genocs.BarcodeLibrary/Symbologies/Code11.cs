@@ -12,30 +12,30 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         public Code11(string input)
         {
-            Raw_Data = input;
+            _RawData = input;
         }
 
         /// <summary>
         /// Encode the raw data using the Code 11 algorithm.
         /// </summary>
-        private string Encode_Code11()
+        private string EncodeCode11()
         {
-            if (!CheckNumericOnly(Raw_Data.Replace("-", "")))
+            if (!CheckNumericOnly(RawData.Replace("-", "")))
                 Error("EC11-1: Numeric data and '-' Only");
 
             //calculate the checksums
             var weight = 1;
             var cTotal = 0;
-            var dataToEncodeWithChecksums = Raw_Data;
+            var dataToEncodeWithChecksums = RawData;
 
             //figure the C checksum
-            for (var i = Raw_Data.Length - 1; i >= 0; i--)
+            for (var i = RawData.Length - 1; i >= 0; i--)
             {
                 //C checksum weights go 1-10
                 if (weight == 10) weight = 1;
 
-                if (Raw_Data[i] != '-')
-                    cTotal += Int32.Parse(Raw_Data[i].ToString()) * weight++;
+                if (RawData[i] != '-')
+                    cTotal += Int32.Parse(RawData[i].ToString()) * weight++;
                 else
                     cTotal += 10 * weight++;
             }
@@ -44,7 +44,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
             dataToEncodeWithChecksums += checksumC.ToString();
 
             //K checksums are recommended on any message length greater than or equal to 10
-            if (Raw_Data.Length >= 10)
+            if (RawData.Length >= 10)
             {
                 weight = 1;
                 var kTotal = 0;
@@ -84,10 +84,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
             return result;
         }
 
-        #region IBarcode Members
+        public string EncodedValue => EncodeCode11();
 
-        public string Encoded_Value => Encode_Code11();
-
-        #endregion
     }
 }

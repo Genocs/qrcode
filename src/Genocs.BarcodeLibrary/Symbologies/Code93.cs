@@ -16,8 +16,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// <param name="input">Data to encode.</param>
         public Code93(string input)
         {
-            Raw_Data = input;
-        }//Code93
+            _RawData = input;
+        }
 
         /// <summary>
         /// Encode the raw data using the Code 93 algorithm.
@@ -26,7 +26,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         {
             init_Code93();
 
-            var formattedData = Add_CheckDigits(Raw_Data);
+            var formattedData = Add_CheckDigits(RawData);
 
             var result = C93_Code.Select("Character = '*'")[0]["Encoding"].ToString();
             foreach (var c in formattedData)
@@ -34,11 +34,11 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 try
                 {
                     result += C93_Code.Select("Character = '" + c + "'")[0]["Encoding"].ToString();
-                }//try
+                }
                 catch
                 {
                     Error("EC93-1: Invalid data.");
-                }//catch
+                }
             }//foreach
 
             result += C93_Code.Select("Character = '*'")[0]["Encoding"].ToString();
@@ -50,7 +50,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
             C93_Code.Clear();
 
             return result;
-        }//Encode_Code93
+        }
+
         private void init_Code93()
         {
             C93_Code.Rows.Clear();
@@ -106,7 +107,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
             C93_Code.Rows.Add(new object[] { "45", "#", "111010110" });//dont know what character actually goes here
             C93_Code.Rows.Add(new object[] { "46", "@", "100110010" });//dont know what character actually goes here
             C93_Code.Rows.Add(new object[] { "-", "*", "101011110" });
-        }//init_Code93
+        }
+
         private string Add_CheckDigits(string input)
         {
             //populate the C weights
@@ -118,7 +120,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     curweight = 1;
                 aryCWeights[i] = curweight;
                 curweight++;
-            }//for
+            }
 
             //populate the K weights
             var aryKWeights = new int[input.Length + 1];
@@ -129,14 +131,15 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     curweight = 1;
                 aryKWeights[i] = curweight;
                 curweight++;
-            }//for
+            }
 
             //calculate C checksum
             var sum = 0;
             for (var i = 0; i < input.Length; i++)
             {
                 sum += aryCWeights[i] * Int32.Parse(C93_Code.Select("Character = '" + input[i] + "'")[0]["Value"].ToString());
-            }//for
+            }
+
             var checksumValue = sum % 47;
 
             input += C93_Code.Select("Value = '" + checksumValue + "'")[0]["Character"].ToString();
@@ -146,18 +149,19 @@ namespace Genocs.BarcodeLibrary.Symbologies
             for (var i = 0; i < input.Length; i++)
             {
                 sum += aryKWeights[i] * Int32.Parse(C93_Code.Select("Character = '" + input[i] + "'")[0]["Value"].ToString());
-            }//for
+            }
+
             checksumValue = sum % 47;
 
             input += C93_Code.Select("Value = '" + checksumValue + "'")[0]["Character"].ToString();
 
             return input;
-        }//Calculate_CheckDigits
+        }
 
         #region IBarcode Members
 
-        public string Encoded_Value => Encode_Code93();
+        public string EncodedValue => Encode_Code93();
 
         #endregion
-    }//class
-}//namespace
+    }
+}

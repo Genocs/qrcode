@@ -22,7 +22,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// <param name="input"></param>
         public Telepen(string input)
         {
-            Raw_Data = input;
+            _RawData = input;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     {
                         EncodeSwitchMode(ref result);
                         EncodeASCII(RawData.Substring(_switchModeIndex), ref result);
-                    }//if
+                    }
                     break;
                 //ascii --> numeric
                 case StartStopCode.START3:
@@ -125,11 +125,11 @@ namespace Genocs.BarcodeLibrary.Symbologies
             //reset to full ascii
             _startCode = StartStopCode.START1;
             _stopCode = StartStopCode.STOP1;
-            _switchModeIndex = Raw_Data.Length;
+            _switchModeIndex = RawData.Length;
 
             //starting number of 'numbers'
             var StartNumerics = 0;
-            foreach (var c in Raw_Data)
+            foreach (var c in RawData)
             {
                 if (Char.IsNumber(c))
                     StartNumerics++;
@@ -137,22 +137,22 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     break;
             }//foreach
 
-            if (StartNumerics == Raw_Data.Length)
+            if (StartNumerics == RawData.Length)
             {
                 //Numeric only mode due to only numbers being present
                 _startCode = StartStopCode.START2;
                 _stopCode = StartStopCode.STOP2;
 
-                if ((Raw_Data.Length % 2) > 0)
+                if ((RawData.Length % 2) > 0)
                     _switchModeIndex = RawData.Length - 1;
-            }//if
+            }
             else
             {
                 //ending number of numbers
                 var EndNumerics = 0;
-                for (var i = Raw_Data.Length - 1; i >= 0; i--)
+                for (var i = RawData.Length - 1; i >= 0; i--)
                 {
-                    if (Char.IsNumber(Raw_Data[i]))
+                    if (Char.IsNumber(RawData[i]))
                         EndNumerics++;
                     else
                         break;
@@ -167,15 +167,15 @@ namespace Genocs.BarcodeLibrary.Symbologies
                         _startCode = StartStopCode.START2;
                         _stopCode = StartStopCode.STOP2;
                         _switchModeIndex = (StartNumerics % 2) == 1 ? StartNumerics - 1 : StartNumerics;
-                    }//if
+                    }
                     else
                     {
                         //start in ascii switching to numeric
                         _startCode = StartStopCode.START3;
                         _stopCode = StartStopCode.STOP3;
-                        _switchModeIndex = (EndNumerics % 2) == 1 ? Raw_Data.Length - EndNumerics + 1 : Raw_Data.Length - EndNumerics;
+                        _switchModeIndex = (EndNumerics % 2) == 1 ? RawData.Length - EndNumerics + 1 : RawData.Length - EndNumerics;
                     }//else
-                }//if
+                }
             }//else
         }//SetEncodingSequence
 
@@ -319,7 +319,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         #region IBarcode Members
 
-        public string Encoded_Value => Encode_Telepen();
+        public string EncodedValue => Encode_Telepen();
 
         #endregion
     }

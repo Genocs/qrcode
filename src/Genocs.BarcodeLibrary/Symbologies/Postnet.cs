@@ -8,12 +8,23 @@ namespace Genocs.BarcodeLibrary.Symbologies
     /// </summary>
     class Postnet : BarcodeCommon, IBarcode
     {
-        private readonly string[] POSTNET_Code = { "11000", "00011", "00101", "00110", "01001", "01010", "01100", "10001", "10010", "10100" };
+        private readonly string[] POSTNET_Code = {
+            "11000",
+            "00011",
+            "00101",
+            "00110",
+            "01001",
+            "01010",
+            "01100",
+            "10001",
+            "10010",
+            "10100"
+        };
 
         public Postnet(string input)
         {
-            Raw_Data = input;
-        }//Postnet
+            _RawData = input;
+        }
 
         /// <summary>
         /// Encode the raw data using the PostNet algorithm.
@@ -21,9 +32,9 @@ namespace Genocs.BarcodeLibrary.Symbologies
         private string Encode_Postnet()
         {
             //remove dashes if present
-            Raw_Data = Raw_Data.Replace("-", "");
+            _RawData = RawData.Replace("-", "");
 
-            switch (Raw_Data.Length)
+            switch (RawData.Length)
             {
                 case 5:
                 case 6:
@@ -32,26 +43,26 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 default:
                     Error("EPOSTNET-2: Invalid data length. (5, 6, 9, or 11 digits only)");
                     break;
-            }//switch
+            }
 
             //Note: 0 = half bar and 1 = full bar
             //initialize the result with the starting bar
             var result = "1";
             var checkdigitsum = 0;
 
-            foreach (var c in Raw_Data)
+            foreach (var c in RawData)
             {
                 try
                 {
                     var index = Convert.ToInt32(c.ToString());
                     result += POSTNET_Code[index];
                     checkdigitsum += index;
-                }//try
+                }
                 catch (Exception ex)
                 {
                     Error("EPOSTNET-2: Invalid data. (Numeric only) --> " + ex.Message);
-                }//catch
-            }//foreach
+                }
+            }
 
             //calculate and add check digit
             var temp = checkdigitsum % 10;
@@ -63,12 +74,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
             result += "1";
 
             return result;
-        }//Encode_PostNet
+        }
 
-        #region IBarcode Members
-
-        public string Encoded_Value => Encode_Postnet();
-
-        #endregion
-    }//class
-}//namespace
+        public string EncodedValue => Encode_Postnet();
+    }
+}

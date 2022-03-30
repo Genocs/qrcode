@@ -103,27 +103,27 @@ namespace Genocs.QRCodeLibrary.WebApi.Controllers
         /// <param name="height">The Barcode height</param>
 
         /// <returns>Barcode image result</returns>
-        //[Route("BuildBarcode"), HttpGet]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        ////[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //public IActionResult GetBuildBarCode([FromQuery] string payload = "038000356216", int width = 290, int height = 120)
-        //{
-        //    try
-        //    {
-        //        BarcodeLibrary.Barcode barcodeGenerator = new BarcodeLibrary.Barcode();
+        [Route("BuildBarcode"), HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult GetBuildBarCode([FromQuery] BarcodeLibrary.TYPE barcodeType = BarcodeLibrary.TYPE.UPCA, string payload = "038000356216", int width = 290, int height = 120)
+        {
+            try
+            {
+                BarcodeLibrary.Barcode barcodeGenerator = new BarcodeLibrary.Barcode();
 
-        //        Image img = barcodeGenerator.Encode(BarcodeLibrary.TYPE.UPCA, payload, width, height);
+                Image img = barcodeGenerator.Encode(barcodeType, payload, width, height);
 
-        //        using MemoryStream ms = new MemoryStream();
-        //        img.Save(ms, new PngEncoder());
-        //        return File(ms.ToArray(), "image/png");
+                using MemoryStream ms = new MemoryStream();
+                img.Save(ms, new PngEncoder());
+                return File(ms.ToArray(), "image/png");
 
-        //    }
-        //    catch (Exception exp)
-        //    {
-        //        string message = $"Error on processing file. Message: '{exp.Message}'!";
-        //        return Ok(message);
-        //    }
-        //}
+            }
+            catch (Exception exp)
+            {
+                string message = $"Error on processing file. Message: '{exp.Message}'!";
+                return Ok(message);
+            }
+        }
     }
 }
