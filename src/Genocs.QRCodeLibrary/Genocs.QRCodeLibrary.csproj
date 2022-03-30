@@ -6,14 +6,15 @@
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Company>[Genocs] Nocco Giovanni Emanuele</Company>
 		<Authors>Nocco Giovanni Emanuele</Authors>
-		<Title>The base library useful to build .NET Core projects.</Title>
-		<Description>QRCode library for .NET Core.</Description>
-		<Copyright>Genocs 2021</Copyright>
+		<Title>Simple library to build QRCode</Title>
+		<Description>QRCode library for .NET Core</Description>
+		<Copyright>Copyright 2022 Nocco Giovanni Emanuele</Copyright>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/Genocs/qrcode</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<PackageTags>QRCode reader QRCode writer</PackageTags>
 	</PropertyGroup>
 
