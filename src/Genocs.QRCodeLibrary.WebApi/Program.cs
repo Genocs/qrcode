@@ -1,46 +1,25 @@
-using Convey;
-using Convey.Docs.Swagger;
-using Convey.Logging;
-using Convey.WebApi;
-using Convey.WebApi.CQRS;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
-using System.Threading.Tasks;
+var builder = WebApplication.CreateBuilder(args);
 
-namespace Genocs.QRCodeLibrary.WebApi
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static Task Main(string[] args)
-            => CreateHostBuilder(args).Build().RunAsync();
-
-        public static IHostBuilder CreateHostBuilder(string[] args)
-            => Host.CreateDefaultBuilder(args)
-                    .ConfigureWebHostDefaults(webBuilder =>
-                    {
-                        webBuilder.ConfigureServices(services => services
-                            .AddConvey()
-//                            .AddErrorHandler<ExceptionToResponseMapper>()
-                            .AddServices()
-//                            .AddHttpClient()
-                            .AddWebApi()
-                            .AddSwaggerDocs()
-                            .Build())
-                            .Configure(app => app
-                                .UseConvey()
-//                                .UseErrorHandler()
-                                .UseRouting()
-                                .UseEndpoints(r => r.MapControllers())
-                                .UseDispatcherEndpoints(endpoints => endpoints
-                                    .Get("", ctx => ctx.Response.WriteAsync("QRCode Service. Go to ./docs to get informations."))
-                                    .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
-                                )
-                                .UseSwaggerDocs())
-                            .UseLogging();
-                    });
-
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

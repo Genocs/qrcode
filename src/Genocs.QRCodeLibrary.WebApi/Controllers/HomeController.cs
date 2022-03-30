@@ -1,18 +1,13 @@
 ﻿using Genocs.QRCodeLibrary.Decoder;
 using Genocs.QRCodeLibrary.Encoder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Genocs.QRCodeLibrary.WebApi.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("")]
     [ApiController]
     public class HomeController : ControllerBase
     {
