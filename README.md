@@ -1,13 +1,14 @@
-![QRCode Library](https://raw.githubusercontent.com/genocs/clean-architecture-template/master/images/genocs-icon.png) QRCode scanner and builder
+![QRCode Library](https://raw.githubusercontent.com/genocs/qrcode/master/icon.png) QRCode scanner and builder
 =========
 
-This is simple library can be used to scan images containing QR code.
+This library can be used to build and scan images containing QR code.
 
-The library allows to build a QR code image as well.
+The library allows to build a different type of Barcode.
+
+The library do not contains reference to System.Drawing.Common library, so it can be used into Docker Image Linux native
 
 
-
-[![.NET](https://github.com/Genocs/qrcode/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Genocs/qrcode/actions/workflows/dotnet.yml) [![Build Status](https://app.travis-ci.com/Genocs/qrcode.svg?branch=master)](https://app.travis-ci.com/github/Genocs/qrcode) <a href="https://www.nuget.org/packages/Genocs.QRCodeLibrary/" rel="Genocs.QRCodeLibrary">![NuGet](https://buildstats.info/nuget/genocs.qrcodelibrary)</a> <a href="https://hub.docker.com/repository/docker/genocs/qrcode.api/" rel="Genocs.QRCodeLibrary">![Docker Automated build](https://img.shields.io/docker/automated/genocs/qrcode.api)</a> [![Gitter](https://img.shields.io/badge/chat-on%20gitter-blue.svg)](https://gitter.im/genocs/)
+[![.NET](https://github.com/Genocs/qrcode/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Genocs/qrcode/actions/workflows/dotnet.yml) [![Build Status](https://app.travis-ci.com/Genocs/qrcode.svg?branch=master)](https://app.travis-ci.com/github/Genocs/qrcode) <a href="https://www.nuget.org/packages/Genocs.QRCodeLibrary/" rel="Genocs.QRCodeLibrary">![NuGet](https://buildstats.info/nuget/genocs.qrcodelibrary)</a> <a href="https://hub.docker.com/repository/docker/genocs/qrcode/" rel="Genocs.QRCodeLibrary">![Docker Automated build](https://img.shields.io/docker/automated/genocs/qrcode)</a> [![Gitter](https://img.shields.io/badge/chat-on%20gitter-blue.svg)](https://gitter.im/genocs/)
 
 
 
