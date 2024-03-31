@@ -99,17 +99,16 @@ public class HomeController : ControllerBase
     [Route("BuildBarcode")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult GetBuildBarCode([FromQuery] BarcodeLibrary.TYPE barcodeType = BarcodeLibrary.TYPE.UPCA, string payload = "038000356216", int width = 290, int height = 120)
+    public IActionResult GetBuildBarCode([FromQuery] BarcodeLibrary.Type barcodeType = BarcodeLibrary.Type.UpcA, string payload = "038000356216", int width = 290, int height = 120)
     {
         try
         {
             BarcodeLibrary.Barcode barcodeGenerator = new BarcodeLibrary.Barcode();
 
-            Image img = barcodeGenerator.Encode(barcodeType, payload, width, height);
+            var img = barcodeGenerator.Encode(barcodeType, payload, width, height);
 
-            using MemoryStream ms = new MemoryStream();
-            img.Save(ms, new PngEncoder());
-            return File(ms.ToArray(), "image/png");
+
+            return File(img.Encode().AsStream(), "image/png");
         }
         catch (Exception exp)
         {

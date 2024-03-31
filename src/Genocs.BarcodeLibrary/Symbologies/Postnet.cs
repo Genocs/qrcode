@@ -23,7 +23,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         public Postnet(string input)
         {
-            _RawData = input;
+            _rawData = input;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         private string Encode_Postnet()
         {
             //remove dashes if present
-            _RawData = RawData.Replace("-", "");
+            _rawData = RawData.Replace("-", "");
 
             switch (RawData.Length)
             {

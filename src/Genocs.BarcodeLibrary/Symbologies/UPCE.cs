@@ -20,7 +20,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// <param name="input">Data to encode.</param>
         public UPCE(string input)
         {
-            _RawData = input;
+            _rawData = input;
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 else
                     Error("EUPCE-4: Illegal UPC-A entered for conversion.  Unable to convert.");
 
-                _RawData = UPCECode;
+                _rawData = UPCECode;
             }
 
             //get encoding pattern 

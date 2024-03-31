@@ -17,7 +17,7 @@ class Code39 : BarcodeCommon, IBarcode
     /// <param name="input">Data to encode.</param>
     public Code39(string input)
     {
-        _RawData = input;
+        _rawData = input;
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ class Code39 : BarcodeCommon, IBarcode
     /// <param name="allowExtended">Allow Extended Code 39 (Full Ascii mode).</param>
     public Code39(string input, bool allowExtended)
     {
-        _RawData = input;
+        _rawData = input;
         _allowExtended = allowExtended;
     }
 
@@ -39,7 +39,7 @@ class Code39 : BarcodeCommon, IBarcode
     /// <param name="enableChecksum">Whether to calculate the Mod 43 checksum and encode it into the barcode</param>
     public Code39(string input, bool allowExtended, bool enableChecksum)
     {
-        _RawData = input;
+        _rawData = input;
         _allowExtended = allowExtended;
         _enableChecksum = enableChecksum;
     }

@@ -1,3 +1,5 @@
+using BarcodeLib.Symbologies;
+
 namespace Genocs.BarcodeLibrary.Symbologies
 {
     /// <summary>
@@ -8,8 +10,9 @@ namespace Genocs.BarcodeLibrary.Symbologies
     {
         public ISBN(string input)
         {
-            _RawData = input;
+            _rawData = input;
         }
+
         /// <summary>
         /// Encode the raw data using the Bookland/ISBN algorithm.
         /// </summary>
@@ -24,17 +27,18 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 case 10:
                 case 9:
                     {
-                        if (RawData.Length == 10) _RawData = RawData.Remove(9, 1);
-                        _RawData = "978" + RawData;
-                        type = "ISBN"; 
+                        if (RawData.Length == 10) _rawData = RawData.Remove(9, 1);
+                        _rawData = "978" + RawData;
+                        type = "ISBN";
                         break;
                     }
+
                 case 12 when RawData.StartsWith("978"):
                     type = "BOOKLAND-NOCHECKDIGIT"; //else if
                     break;
                 case 13 when RawData.StartsWith("978"):
                     type = "BOOKLAND-CHECKDIGIT";
-                    _RawData = RawData.Remove(12, 1); //else if
+                    _rawData = RawData.Remove(12, 1); //else if
                     break;
             }
 

@@ -13,7 +13,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         public EAN8(string input)
         {
-            _RawData = input;
+            _rawData = input;
 
             //check numeric only
             if (!CheckNumericOnly(RawData)) Error("EEAN8-2: Numeric only.");
@@ -79,8 +79,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 if (checksum == 10)
                     checksum = 0;
 
-                //add the checksum to the end of the 
-                _RawData += checksum.ToString();
+                // add the checksum to the end of the
+                _rawData += checksum.ToString();
             }
         }
 

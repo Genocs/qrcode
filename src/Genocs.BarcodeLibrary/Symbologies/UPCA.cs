@@ -16,7 +16,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         public UPCA(string input)
         {
-            _RawData = input;
+            _rawData = input;
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 int cs = (10 - sum % 10) % 10;
 
                 //replace checksum if provided by the user and replace with the calculated checksum
-                _RawData = rawDataHolder + cs;
+                _rawData = rawDataHolder + cs;
             }//try
             catch
             {

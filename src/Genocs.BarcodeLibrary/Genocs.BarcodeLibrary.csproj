@@ -1,48 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<Version>3.0.0</Version>
-		<MinClientVersion>5.0.0</MinClientVersion>
-		<Company>[Genocs] Nocco Giovanni Emanuele</Company>
-		<Authors>Nocco Giovanni Emanuele</Authors>
-		<Title>Simple library to build QRCode</Title>
-		<Description>Barcode library for .NET Core</Description>
-		<Copyright>Copyright 2022 Nocco Giovanni Emanuele</Copyright>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Version>3.0.0</Version>
+        <MinClientVersion>5.0.0</MinClientVersion>
+        <Company>[Genocs] Nocco Giovanni Emanuele</Company>
+        <Authors>Nocco Giovanni Emanuele</Authors>
+        <Title>Simple library to build QRCode</Title>
+        <Description>Barcode library for .NET Core</Description>
+        <Copyright>Copyright 2022 Nocco Giovanni Emanuele</Copyright>
         <LangVersion>10.0</LangVersion>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageProjectUrl>https://github.com/Genocs/qrcode</PackageProjectUrl>
-		<PackageIcon>icon.png</PackageIcon>
-		<RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<PackageId>BarcodeLib</PackageId>
-		<Product>BarcodeLib</Product>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<PackageIconUrl />
-		<AssemblyVersion>3.0.0.0</AssemblyVersion>
-		<FileVersion>3.0.0.0</FileVersion>
+        <PackageProjectUrl>https://github.com/Genocs/qrcode</PackageProjectUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageId>BarcodeLib</PackageId>
+        <Product>BarcodeLib</Product>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageIconUrl />
+        <AssemblyVersion>3.0.0.0</AssemblyVersion>
+        <FileVersion>3.0.0.0</FileVersion>
 
-		<PackageTags>QRCode reader QRCode writer</PackageTags>		
-		
-	</PropertyGroup>
+        <PackageTags>QRCode reader QRCode writer</PackageTags>
 
-	<ItemGroup>
-		<PackageReference Include="SixLabors.ImageSharp" Version="2.1.7" />
-		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
-		<PackageReference Include="System.Text.Json" Version="6.0.2" />
-	</ItemGroup>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\..\LICENSE">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-		<None Include="..\..\icon.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp" Version="2.88.6" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.6" />
+        <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
+        <PackageReference Include="System.Text.Json" Version="7.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="..\..\icon.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
 
 </Project>

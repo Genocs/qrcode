@@ -14,7 +14,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         public UPCSupplement5(string input)
         {
-            _RawData = input;
+            _rawData = input;
         }
 
         /// <summary>

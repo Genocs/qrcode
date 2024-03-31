@@ -2,9 +2,9 @@ namespace Genocs.BarcodeLibrary;
 
 /// <summary>
 ///  Barcode interface for symbology layout.
-///  Written by: Brad Barnhill
+///  Written by: Brad Barnhill.
 /// </summary>
-interface IBarcode
+internal interface IBarcode
 {
     string EncodedValue { get; }
 

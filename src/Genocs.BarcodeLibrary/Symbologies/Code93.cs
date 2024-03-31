@@ -16,7 +16,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// <param name="input">Data to encode.</param>
         public Code93(string input)
         {
-            _RawData = input;
+            _rawData = input;
         }
 
         /// <summary>

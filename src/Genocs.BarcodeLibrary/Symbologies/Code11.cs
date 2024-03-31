@@ -10,7 +10,7 @@ class Code11 : BarcodeCommon, IBarcode
 
     public Code11(string input)
     {
-        _RawData = input;
+        _rawData = input;
     }
 
     /// <summary>

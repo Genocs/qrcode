@@ -10,7 +10,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         public Codabar(string input)
         {
-            _RawData = input;
+            _rawData = input;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
             CodabarCode.Clear();
 
             //change the Raw_Data to strip out the start stop chars for label purposes
-            _RawData = RawData.Trim().Substring(1, RawData.Trim().Length - 2);
+            _rawData = RawData.Trim().Substring(1, RawData.Trim().Length - 2);
 
             return result;
         }

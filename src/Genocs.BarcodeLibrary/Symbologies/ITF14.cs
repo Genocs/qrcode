@@ -12,7 +12,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
 
         public ITF14(string input)
         {
-            _RawData = input;
+            _rawData = input;
 
             CheckDigit();
         }
@@ -87,14 +87,11 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 if (cs == 10)
                     cs = 0;
 
-                _RawData += cs.ToString();
+                _rawData += cs.ToString();
             }
         }
 
-        #region IBarcode Members
-
-        public string EncodedValue => Encode_ITF14();
-
-        #endregion
+        public string EncodedValue
+            => Encode_ITF14();
     }
 }

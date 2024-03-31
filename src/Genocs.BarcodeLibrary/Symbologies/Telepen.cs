@@ -22,7 +22,7 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// <param name="input"></param>
         public Telepen(string input)
         {
-            _RawData = input;
+            _rawData = input;
         }
 
         /// <summary>
