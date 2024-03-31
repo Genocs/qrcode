@@ -1,6 +1,6 @@
 ﻿using SkiaSharp;
 
-namespace BarcodeStandard;
+namespace Genocs.BarcodeLibrary;
 
 internal static class Utils
 {

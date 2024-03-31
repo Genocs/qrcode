@@ -3,6 +3,7 @@ using Genocs.QRCodeLibrary.Encoder;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
+using SkiaSharp;
 
 namespace Genocs.QRCodeLibrary.WebApi.Controllers;
 
@@ -99,14 +100,14 @@ public class HomeController : ControllerBase
     [Route("BuildBarcode")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult GetBuildBarCode([FromQuery] BarcodeLibrary.Type barcodeType = BarcodeLibrary.Type.UpcA, string payload = "038000356216", int width = 290, int height = 120)
+    public IActionResult GetBuildBarCode([FromQuery] BarcodeLibrary.Type barcodeType = BarcodeLibrary.Type.UpcA, string payload = "038000356216", int width = 2900, int height = 1200)
     {
         try
         {
             BarcodeLibrary.Barcode barcodeGenerator = new BarcodeLibrary.Barcode();
-
+            barcodeGenerator.IncludeLabel = true;
+            barcodeGenerator.LabelFont = new SKFont(SKTypeface.FromFamilyName("Arial"), 100f);
             var img = barcodeGenerator.Encode(barcodeType, payload, width, height);
-
 
             return File(img.Encode().AsStream(), "image/png");
         }

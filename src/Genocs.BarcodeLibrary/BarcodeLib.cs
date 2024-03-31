@@ -1,6 +1,3 @@
-using BarcodeLib;
-using BarcodeLib.Symbologies;
-using BarcodeStandard;
 using Genocs.BarcodeLibrary.Symbologies;
 using SkiaSharp;
 using System.Drawing;
@@ -65,35 +62,32 @@ public enum AlignmentPositions
 [SecuritySafeCritical]
 public class Barcode : IDisposable
 {
-    #region Variables
+
     private IBarcode _iBarcode = new Blank();
     private static readonly XmlSerializer SaveDataXmlSerializer = new XmlSerializer(typeof(SaveData));
-    #endregion
 
-    #region Constructors
     /// <summary>
-    /// Default constructor.  Does not populate the raw data.  MUST be done via the RawData property before encoding.
+    /// Default constructor. Does not populate the raw data.  MUST be done via the RawData property before encoding.
     /// </summary>
     public Barcode()
     {
-        //constructor
-    }//Barcode
+    }
+
     /// <summary>
     /// Constructor. Populates the raw data. No whitespace will be added before or after the barcode.
     /// </summary>
     /// <param name="data">String to be encoded.</param>
     public Barcode(string data)
     {
-        //constructor
         RawData = data;
-    }//Barcode
+    }
+
     public Barcode(string data, Type iType)
     {
         RawData = data;
         EncodedType = iType;
         GenerateBarcode();
     }
-    #endregion
 
     #region Properties
     /// <summary>
@@ -695,32 +689,34 @@ public class Barcode : IDisposable
                                             y = ilHeight - ilHeight * 0.4f;
 
                                         canvas.DrawLine(new SKPoint(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight), new SKPoint(pos * iBarWidth + shiftAdjustment + halfBarWidth, y), forePaint);
-                                    }//if
+                                    }
                                     else
                                     {
                                         if (EncodedValue[pos] == '1')
                                             canvas.DrawLine(new SKPoint(pos * iBarWidth + shiftAdjustment + halfBarWidth, 0f), new SKPoint(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight), forePaint);
                                     }
+
                                     pos++;
-                                }//while
-                            }//using
-                        }//using
-                    }//using
+                                }
+                            }
+                        }
+                    }
+
                     if (IncludeLabel)
                     {
                         Labels.Label_Generic(this, bitmap);
-                    }//if
+                    }
 
                     break;
-                }//switch
-        }//switch
+                }
+        }
 
         EncodedImage = SKImage.FromBitmap(bitmap);
 
         EncodingTime += (DateTime.Now - dtStartTime).TotalMilliseconds;
 
         return bitmap;
-    }//Generate_Image
+    }
 
     /// <summary>
     /// Gets the bytes that represent the image.
@@ -729,28 +725,28 @@ public class Barcode : IDisposable
     /// <returns>Bytes representing the encoded image.</returns>
     public byte[] GetImageData(SaveTypes savetype)
     {
-        byte[] imageData = null;
+        byte[]? imageData = null;
 
         try
         {
             if (EncodedImage != null)
             {
-                //Save the image to a memory stream so that we can get a byte array!      
-                using (var ms = new MemoryStream())
-                {
-                    SaveImage(ms, savetype);
-                    imageData = ms.ToArray();
-                    ms.Flush();
-                    ms.Close();
-                }//using
-            }//if
-        }//try
+                // Save the image to a memory stream so that we can get a byte array!
+                using var ms = new MemoryStream();
+                SaveImage(ms, savetype);
+                imageData = ms.ToArray();
+                ms.Flush();
+                ms.Close();
+            }
+        }
         catch (Exception ex)
         {
             throw new Exception("EGETIMAGEDATA-1: Could not retrieve image data. " + ex.Message);
-        }//catch  
+        }
+
         return imageData;
     }
+
     /// <summary>
     /// Saves an encoded image to a specified file and type.
     /// </summary>
@@ -761,18 +757,18 @@ public class Barcode : IDisposable
         try
         {
             if (EncodedImage == null) return;
-            using (Stream fs = File.OpenWrite(filename))
-            {
-                var data = EncodedImage.Encode(GetSaveType(fileType), 100);
-                data.SaveTo(fs);
-            }
-            //if
-        }//try
+
+            using Stream fs = File.OpenWrite(filename);
+            var data = EncodedImage.Encode(GetSaveType(fileType), 100);
+            data.SaveTo(fs);
+
+        }
         catch (Exception ex)
         {
             throw new Exception("ESAVEIMAGE-1: Could not save image.\n\n=======================\n\n" + ex.Message);
-        }//catch
-    }//SaveImage(string, SaveTypes)
+        }
+    }
+
     /// <summary>
     /// Saves an encoded image to a specified stream.
     /// </summary>
@@ -783,12 +779,12 @@ public class Barcode : IDisposable
         try
         {
             EncodedImage?.Encode(GetSaveType(fileType), 100).SaveTo(stream);
-        }//try
+        }
         catch (Exception ex)
         {
             throw new Exception("ESAVEIMAGE-2: Could not save image.\n\n=======================\n\n" + ex.Message);
-        }//catch
-    }//SaveImage(Stream, SaveTypes)
+        }
+    }
 
     private SKEncodedImageFormat GetSaveType(SaveTypes fileType)
     {
@@ -799,7 +795,7 @@ public class Barcode : IDisposable
             case SaveTypes.Webp: return SKEncodedImageFormat.Webp;
             case SaveTypes.Unspecified:
             default: return ImageFormat;
-        }//switch
+        }
     }
 
     #endregion
@@ -825,18 +821,20 @@ public class Barcode : IDisposable
 
         // get image in base 64
         if (!includeImage) return saveData;
+
         using (var ms = new MemoryStream())
         {
             EncodedImage.Encode(ImageFormat, 100).SaveTo(ms);
             saveData.Image = Convert.ToBase64String(ms.ToArray(), Base64FormattingOptions.None);
         }
+
         return saveData;
     }
 
-    public string ToJson(Boolean includeImage = true)
+    public string ToJson(bool includeImage = true)
     {
         var bytes = JsonSerializer.SerializeToUtf8Bytes(GetSaveData(includeImage));
-        return (new UTF8Encoding(false)).GetString(bytes); //no BOM
+        return (new UTF8Encoding(false)).GetString(bytes);
     }
 
     public string ToXml(bool includeImage = true)
@@ -879,6 +877,7 @@ public class Barcode : IDisposable
             }
         }
     }
+
     public static SaveData FromXml(Stream xmlStream)
     {
         try
@@ -887,26 +886,27 @@ public class Barcode : IDisposable
             {
                 return (SaveData)SaveDataXmlSerializer.Deserialize(reader);
             }
-        }//try
+        }
         catch (Exception ex)
         {
             throw new Exception("EGETIMAGEFROMXML-1: " + ex.Message);
-        }//catch
+        }
     }
+
     public static SKImage GetImageFromSaveData(SaveData saveData)
     {
         try
         {
-            //loading it to memory stream and then to image object
+            // loading it to memory stream and then to image object
             using (var ms = new MemoryStream(Convert.FromBase64String(saveData.Image)))
             {
                 return SKImage.FromBitmap(SKBitmap.Decode(ms));
-            }//using
-        }//try
+            }
+        }
         catch (Exception ex)
         {
             throw new Exception("EGETIMAGEFROMXML-1: " + ex.Message);
-        }//catch
+        }
     }
 
     public class Utf8StringWriter : StringWriter
@@ -929,6 +929,7 @@ public class Barcode : IDisposable
             return b.Encode(iType, data);
         }//using
     }
+
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
@@ -945,6 +946,7 @@ public class Barcode : IDisposable
             return i;
         }//using
     }
+
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
@@ -960,6 +962,7 @@ public class Barcode : IDisposable
             return b.Encode(iType, data);
         }//using
     }
+
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
@@ -977,6 +980,7 @@ public class Barcode : IDisposable
             return b.Encode(iType, data, width, height);
         }//using
     }
+
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
@@ -994,6 +998,7 @@ public class Barcode : IDisposable
             return b.Encode(iType, data, new SKColor(drawColor.R, drawColor.G, drawColor.B, drawColor.A), new SKColor(backColor.R, backColor.G, backColor.B, backColor.A));
         }//using
     }
+
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
@@ -1013,6 +1018,7 @@ public class Barcode : IDisposable
             return b.Encode(iType, data, new SKColor(drawColor.R, drawColor.G, drawColor.B, drawColor.A), new SKColor(backColor.R, backColor.G, backColor.B, backColor.A), width, height);
         }//using
     }
+
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
@@ -1033,7 +1039,7 @@ public class Barcode : IDisposable
             var i = b.Encode(iType, data, new SKColor(drawColor.R, drawColor.G, drawColor.B, drawColor.A), new SKColor(backColor.R, backColor.G, backColor.B, backColor.A), width, height);
             xml = b.ToXml();
             return i;
-        }//using
+        }
     }
 
     #region IDisposable Support
@@ -1073,11 +1079,11 @@ public class Barcode : IDisposable
     {
         // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
         Dispose(true);
-        // Call GC.SuppressFinalize(object). This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.	
+
+        // Call GC.SuppressFinalize(object). This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.
         GC.SuppressFinalize(this);
     }
     #endregion
 
     #endregion
-}//Barcode Class
- //Barcode namespace
+}

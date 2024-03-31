@@ -1,5 +1,3 @@
-using BarcodeLib.Symbologies;
-
 namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>

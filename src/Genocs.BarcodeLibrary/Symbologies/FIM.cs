@@ -1,15 +1,13 @@
-﻿using Genocs.BarcodeLibrary;
-
-namespace BarcodeLib.Symbologies;
+﻿namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
 ///  FIM encoding
 ///  Written by: Brad Barnhill
 /// </summary>
-class FIM: BarcodeCommon, IBarcode
+class FIM : BarcodeCommon, IBarcode
 {
     private readonly string[] FIM_Codes = { "110010011", "101101101", "110101011", "111010111", "101000101" };
-    public enum FIMTypes {FIM_A = 0, FIM_B, FIM_C, FIM_D, FIM_E};
+    public enum FIMTypes { FIM_A = 0, FIM_B, FIM_C, FIM_D, FIM_E };
 
     public FIM(string input)
     {
@@ -18,10 +16,12 @@ class FIM: BarcodeCommon, IBarcode
         switch (input)
         {
             case "A":
-            case "a": _rawData = FIM_Codes[(int)FIMTypes.FIM_A];
+            case "a":
+                _rawData = FIM_Codes[(int)FIMTypes.FIM_A];
                 break;
             case "B":
-            case "b": _rawData = FIM_Codes[(int)FIMTypes.FIM_B];
+            case "b":
+                _rawData = FIM_Codes[(int)FIMTypes.FIM_B];
                 break;
             case "C":
             case "c":
@@ -35,7 +35,8 @@ class FIM: BarcodeCommon, IBarcode
             case "e":
                 _rawData = FIM_Codes[(int)FIMTypes.FIM_E];
                 break;
-            default: Error("EFIM-1: Could not determine encoding type. (Only pass in A, B, C, D, or E)");
+            default:
+                Error("EFIM-1: Could not determine encoding type. (Only pass in A, B, C, D, or E)");
                 break;
         }//switch
     }

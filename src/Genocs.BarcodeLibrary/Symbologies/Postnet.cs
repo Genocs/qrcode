@@ -1,10 +1,8 @@
-using System;
-
 namespace Genocs.BarcodeLibrary.Symbologies
 {
     /// <summary>
     ///  Postnet encoding
-    ///  Written by: Brad Barnhill
+    ///  Written by: Brad Barnhill.
     /// </summary>
     class Postnet : BarcodeCommon, IBarcode
     {
@@ -31,8 +29,8 @@ namespace Genocs.BarcodeLibrary.Symbologies
         /// </summary>
         private string Encode_Postnet()
         {
-            //remove dashes if present
-            _rawData = RawData.Replace("-", "");
+            // remove dashes if present
+            _rawData = RawData.Replace("-", string.Empty);
 
             switch (RawData.Length)
             {
@@ -45,18 +43,18 @@ namespace Genocs.BarcodeLibrary.Symbologies
                     break;
             }
 
-            //Note: 0 = half bar and 1 = full bar
-            //initialize the result with the starting bar
-            var result = "1";
-            var checkdigitsum = 0;
+            // Note: 0 = half bar and 1 = full bar
+            // initialize the result with the starting bar
+            string result = "1";
+            int checkDigitSum = 0;
 
-            foreach (var c in RawData)
+            foreach (char c in RawData)
             {
                 try
                 {
-                    var index = Convert.ToInt32(c.ToString());
+                    int index = Convert.ToInt32(c.ToString());
                     result += POSTNET_Code[index];
-                    checkdigitsum += index;
+                    checkDigitSum += index;
                 }
                 catch (Exception ex)
                 {
@@ -64,13 +62,13 @@ namespace Genocs.BarcodeLibrary.Symbologies
                 }
             }
 
-            //calculate and add check digit
-            var temp = checkdigitsum % 10;
-            var checkdigit = 10 - (temp == 0 ? 10 : temp);
+            // calculate and add check digit
+            int temp = checkDigitSum % 10;
+            int checkDigit = 10 - (temp == 0 ? 10 : temp);
 
-            result += POSTNET_Code[checkdigit];
+            result += POSTNET_Code[checkDigit];
 
-            //ending bar
+            // ending bar
             result += "1";
 
             return result;

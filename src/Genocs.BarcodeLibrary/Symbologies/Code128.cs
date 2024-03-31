@@ -1,6 +1,4 @@
-using Genocs.BarcodeLibrary;
-
-namespace BarcodeLib.Symbologies;
+namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
 ///  Code 128 encoding
@@ -182,7 +180,7 @@ class Code128 : BarcodeCommon, IBarcode
         var rows = new List<int>();
 
         //if two chars are numbers (or FNC1) then START_C or CODE_C
-        if (s.Length > 1 && (Char.IsNumber(s[0]) || s[0] == FNC1) && (Char.IsNumber(s[1]) || s[1] == FNC1))
+        if (s.Length > 1 && (char.IsNumber(s[0]) || s[0] == FNC1) && (char.IsNumber(s[1]) || s[1] == FNC1))
         {
             if (!_startCharacterIndex.HasValue)
             {
@@ -249,7 +247,7 @@ class Code128 : BarcodeCommon, IBarcode
             //try to find value in the C column
                 || C128_CodeIndexByC.TryGetValue(s, out index) ? (uint)index : throw new InvalidOperationException($"Unable to find character “{s}”");
 
-            var addition = value * ((i == 0) ? 1 : i);
+            var addition = value * (i == 0 ? 1 : i);
             checkSum += addition;
         }//for
 
@@ -279,7 +277,7 @@ class Code128 : BarcodeCommon, IBarcode
                     for (var x = 0; x < RawData.Length; x++)
                     {
                         var c = RawData[x];
-                        if (Char.IsNumber(c))
+                        if (char.IsNumber(c))
                         {
                             numericCount++;
                             if (indexOfFirstNumeric == -1)
@@ -302,7 +300,7 @@ class Code128 : BarcodeCommon, IBarcode
 
         foreach (var c in tempRawData)
         {
-            if (Char.IsNumber(c))
+            if (char.IsNumber(c))
             {
                 if (temp == "")
                 {
@@ -428,7 +426,7 @@ class Code128 : BarcodeCommon, IBarcode
         //insert the start characters
         InsertStartandCodeCharacters();
 
-        var Encoded_Data = "";
+        var Encoded_Data = string.Empty;
         foreach (var s in _FormattedData)
         {
             //handle exception with apostrophes in select statements
@@ -456,8 +454,9 @@ class Code128 : BarcodeCommon, IBarcode
                         if (E_Row == null)
                         {
                             E_Row = C128_TryByC(s);
-                        }//if
-                    }//if
+                        }
+                    }
+
                     break;
                 default:
                     E_Row = null;
@@ -469,14 +468,14 @@ class Code128 : BarcodeCommon, IBarcode
 
             Encoded_Data += E_Row;
             _EncodedData.Add(E_Row);
-        }//foreach
+        }
 
-        //add the check digit
+        // add the check digit
         string checkDigit = CalculateCheckDigit();
         Encoded_Data += checkDigit;
         _EncodedData.Add(checkDigit);
 
-        //add the stop character
+        // add the stop character
         var stop = C128_ByA("STOP");
         Encoded_Data += stop;
         _EncodedData.Add(stop);
