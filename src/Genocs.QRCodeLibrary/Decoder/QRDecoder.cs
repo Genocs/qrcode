@@ -2,8 +2,6 @@
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices;
 
 namespace Genocs.QRCodeLibrary.Decoder
 {

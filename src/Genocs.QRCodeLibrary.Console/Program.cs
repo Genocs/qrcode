@@ -2,50 +2,49 @@
 using System;
 
 
-namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp
+namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp;
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello Genocs!");
-            EncodeBarcode();
+        Console.WriteLine("Hello Genocs!");
+        EncodeBarcode();
 
-            DecodeQrCode();
-            //read();
-            Console.WriteLine("Done!");
+        DecodeQrCode();
+        //read();
+        Console.WriteLine("Done!");
+    }
+
+
+    private static void DecodeQrCode()
+    {
+        try
+        {
+            Image image = Image.Load("C:\\dev\\image4_out.jpg");
+            QRDecoder decoder = new QRDecoder();
+            var qrCode = decoder.ImageDecoder(image);
         }
-
-
-        private static void DecodeQrCode()
+        catch (Exception)
         {
-            try
-            {
-                Image image = Image.Load("C:\\dev\\image4_out.jpg");
-                QRDecoder decoder = new QRDecoder();
-                var qrCode = decoder.ImageDecoder(image);
-            }
-            catch (Exception)
-            {
-                // handle exception here;
-            }
+            // handle exception here;
         }
+    }
 
 
-        private static void EncodeBarcode()
+    private static void EncodeBarcode()
+    {
+        try
         {
-            try
-            {
-                //BarcodeLibrary.Barcode b = new();
-                //Image img = b.Encode(BarcodeLibrary.TYPE.UPCA, "038000356216", Color.Black, Color.White, 290, 120);
+            //BarcodeLibrary.Barcode b = new();
+            //Image img = b.Encode(BarcodeLibrary.TYPE.UPCA, "038000356216", Color.Black, Color.White, 290, 120);
 
-                //img.Save("C:\\dev\\image4_out.jpg");
+            //img.Save("C:\\dev\\image4_out.jpg");
 
-            }
-            catch (Exception)
-            {
-                // handle exception here;
-            }
+        }
+        catch (Exception)
+        {
+            // handle exception here;
         }
     }
 }
