@@ -1,0 +1,58 @@
+# This is a manually triggered dockerhub build and publish
+
+name: Publish to Dockerhub
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      version:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: "Image Version"
+
+        # Default value if no value is explicitly provided
+        default: "5.0.0"
+
+        # Input has to be provided for the workflow to run
+        required: true
+
+
+jobs:
+  build:
+    name: Publish Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+  
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+  
+      - name: Restore dependencies
+        run: dotnet restore
+  
+      - name: Build
+        run: dotnet build -c Debug --no-restore
+  
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+  
+      - name: Pack
+        run: dotnet pack --no-build --verbosity normal
+
+      - name: Docker Hub Log in
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push image to Dockerhub
+        run: |
+          docker build -f webapi.dockerfile -t genocs/demo-webapi:${{ github.event.inputs.version }} -t genocs/demo-webapi:latest .
+          docker push genocs/demo-webapi:${{ github.event.inputs.version }}
+          docker push genocs/demo-webapi:latest

@@ -1,0 +1,33 @@
+name: Build test and pack
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build test and pack
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+  
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+  
+      - name: Restore dependencies
+        run: dotnet restore
+  
+      - name: Build
+        run: dotnet build -c Debug --no-restore
+  
+      - name: Test
+        run: dotnet test -c Debug --no-build --verbosity normal
+  
+      - name: Pack
+        run: dotnet pack -c Debug --no-build --verbosity normal

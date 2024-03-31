@@ -9,7 +9,8 @@
 		<Title>Simple library to build QRCode</Title>
 		<Description>QRCode library for .NET Core</Description>
 		<Copyright>Copyright 2022 Nocco Giovanni Emanuele</Copyright>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <LangVersion>10.0</LangVersion>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/Genocs/qrcode</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>

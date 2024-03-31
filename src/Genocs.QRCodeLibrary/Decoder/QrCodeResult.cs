@@ -1,19 +1,16 @@
-﻿using System.Collections.Generic;
+﻿namespace Genocs.QRCodeLibrary.Decoder;
 
-namespace Genocs.QRCodeLibrary.Decoder
+public class QrCodeResult
 {
-    public class QrCodeResult
+    public List<string> Results { get; set; }
+
+    public QrCodeResult()
     {
-        public List<string> Results { get; set; }
+        Results = new List<string>();
+    }
 
-        public QrCodeResult()
-        {
-            Results = new List<string>();
-        }
-
-        public QrCodeResult(List<string> items)
-        {
-            Results = items;
-        }
+    public QrCodeResult(List<string> items)
+    {
+        Results = items;
     }
 }

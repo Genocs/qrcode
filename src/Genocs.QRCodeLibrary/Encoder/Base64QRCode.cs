@@ -1,11 +1,8 @@
-﻿
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
-using System;
-using System.IO;
 using static Genocs.QRCodeLibrary.Encoder.Base64QRCode;
 using static Genocs.QRCodeLibrary.Encoder.QRCodeGenerator;
 
@@ -23,7 +20,8 @@ namespace Genocs.QRCodeLibrary.Encoder
             _qrCode = new QRCode();
         }
 
-        public Base64QRCode(QRCodeData data) : base(data)
+        public Base64QRCode(QRCodeData data)
+            : base(data)
         {
             _qrCode = new QRCode(data);
         }
@@ -61,9 +59,9 @@ namespace Genocs.QRCodeLibrary.Encoder
             {
                 base64 = BitmapToBase64(image, imgType);
             }
+
             return base64;
         }
-
 
         private string BitmapToBase64(Image image, ImageType imgType)
         {

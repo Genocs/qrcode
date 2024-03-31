@@ -1,33 +1,30 @@
-using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Genocs.BarcodeLibrary
+namespace Genocs.BarcodeLibrary;
+
+abstract class BarcodeCommon
 {
-    abstract class BarcodeCommon
+    protected string _RawData = "";
+    protected List<string> _Errors = new List<string>();
+
+    public string RawData
     {
-        protected string _RawData = "";
-        protected List<string> _Errors = new List<string>();
+        get { return _RawData; }
+    }
 
-        public string RawData
-        {
-            get { return _RawData; }
-        }
+    public List<string> Errors
+    {
+        get { return this._Errors; }
+    }
 
-        public List<string> Errors
-        {
-            get { return this._Errors; }
-        }
+    public void Error(string errorMessage)
+    {
+        this._Errors.Add(errorMessage);
+        throw new Exception(errorMessage);
+    }
 
-        public void Error(string errorMessage)
-        {
-            this._Errors.Add(errorMessage);
-            throw new Exception(errorMessage);
-        }
-
-        internal static bool CheckNumericOnly(string data)
-        {
-            return Regex.IsMatch(data, @"^\d+$", RegexOptions.Compiled);
-        }
+    internal static bool CheckNumericOnly(string data)
+    {
+        return Regex.IsMatch(data, @"^\d+$", RegexOptions.Compiled);
     }
 }

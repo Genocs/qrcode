@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Genocs.QRCodeLibrary.Decoder
+﻿namespace Genocs.QRCodeLibrary.Decoder
 {
     /////////////////////////////////////////////////////////////////////
     // QR corner three finders pattern class
