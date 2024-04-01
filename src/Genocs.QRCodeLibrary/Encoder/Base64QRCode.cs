@@ -1,6 +1,4 @@
 ﻿using SkiaSharp;
-using static Genocs.QRCodeLibrary.Encoder.Base64QRCode;
-using static Genocs.QRCodeLibrary.Encoder.QRCodeGenerator;
 
 namespace Genocs.QRCodeLibrary.Encoder;
 
@@ -62,6 +60,7 @@ public class Base64QRCode : AbstractQRCode, IDisposable
     private string BitmapToBase64(SKImage image, ImageType imgType)
     {
         string base64 = string.Empty;
+
         //IImageEncoder iFormat;
         //switch (imgType)
         //{
@@ -103,12 +102,11 @@ public class Base64QRCode : AbstractQRCode, IDisposable
 
 public static class Base64QRCodeHelper
 {
-    public static string GetQRCode(string plainText, int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, EciMode eciMode = EciMode.Default, int requestedVersion = -1, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
+    public static string GetQRCode(string plainText, int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, QRCodeGenerator.Encoder.QRCodeGenerator.EciMode eciMode = QRCodeGenerator.Encoder.QRCodeGenerator.EciMode.Default, int requestedVersion = -1, bool drawQuietZones = true, Base64QRCode.ImageType imgType = Base64QRCode.ImageType.Png)
     {
-        using (var qrGenerator = new QRCodeGenerator())
+        using (var qrGenerator = new QRCodeGenerator.Encoder.QRCodeGenerator())
         using (var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion))
         using (var qrCode = new Base64QRCode(qrCodeData))
             return qrCode.GetGraphic(pixelsPerModule, darkColorHtmlHex, lightColorHtmlHex, drawQuietZones, imgType);
     }
 }
-

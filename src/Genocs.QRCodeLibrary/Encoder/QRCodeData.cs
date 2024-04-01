@@ -1,4 +1,4 @@
-using Genocs.QRCodeLibrary.Encoder.Framework4._0Methods;
+using Genocs.QRCodeGenerator.Encoder.Helpers;
 using System.Collections;
 using System.IO.Compression;
 
@@ -10,14 +10,15 @@ public class QRCodeData : IDisposable
 
     public QRCodeData(int version)
     {
-        this.Version = version;
-        var size = ModulesPerSideFromVersion(version);
-        this.ModuleMatrix = new List<BitArray>();
-        for (var i = 0; i < size; i++)
-            this.ModuleMatrix.Add(new BitArray(size));
+        Version = version;
+        int size = ModulesPerSideFromVersion(version);
+        ModuleMatrix = new List<BitArray>();
+        for (int i = 0; i < size; i++)
+            ModuleMatrix.Add(new BitArray(size));
     }
 
-    public QRCodeData(string pathToRawData, Compression compressMode) : this(File.ReadAllBytes(pathToRawData), compressMode)
+    public QRCodeData(string pathToRawData, Compression compressMode)
+        : this(File.ReadAllBytes(pathToRawData), compressMode)
     {
     }
 
@@ -30,9 +31,9 @@ public class QRCodeData : IDisposable
         {
             using var input = new MemoryStream(bytes.ToArray());
             using var output = new MemoryStream();
-            using (var dstream = new DeflateStream(input, CompressionMode.Decompress))
+            using (var dstStream = new DeflateStream(input, CompressionMode.Decompress))
             {
-                Stream4Methods.CopyTo(dstream, output);
+                Stream4Methods.CopyTo(dstStream, output);
             }
 
             bytes = new List<byte>(output.ToArray());
@@ -41,9 +42,9 @@ public class QRCodeData : IDisposable
         {
             using var input = new MemoryStream(bytes.ToArray());
             using var output = new MemoryStream();
-            using (var dstream = new GZipStream(input, CompressionMode.Decompress))
+            using (var dstStream = new GZipStream(input, CompressionMode.Decompress))
             {
-                Stream4Methods.CopyTo(dstream, output);
+                Stream4Methods.CopyTo(dstStream, output);
             }
 
             bytes = new List<byte>(output.ToArray());
@@ -53,13 +54,13 @@ public class QRCodeData : IDisposable
             throw new Exception("Invalid raw data file. Filetype doesn't match \"QRR\".");
 
         // Set QR code version
-        var sideLen = (int)bytes[4];
+        int sideLen = bytes[4];
         bytes.RemoveRange(0, 5);
-        this.Version = (sideLen - 21 - 8) / 4 + 1;
+        Version = ((sideLen - 21 - 8) / 4) + 1;
 
         // Unpack
         var modules = new Queue<bool>(8 * bytes.Count);
-        foreach (var b in bytes)
+        foreach (byte b in bytes)
         {
             for (int i = 7; i >= 0; i--)
             {
@@ -68,13 +69,13 @@ public class QRCodeData : IDisposable
         }
 
         // Build module matrix
-        this.ModuleMatrix = new List<BitArray>(sideLen);
+        ModuleMatrix = new List<BitArray>(sideLen);
         for (int y = 0; y < sideLen; y++)
         {
-            this.ModuleMatrix.Add(new BitArray(sideLen));
+            ModuleMatrix.Add(new BitArray(sideLen));
             for (int x = 0; x < sideLen; x++)
             {
-                this.ModuleMatrix[y][x] = modules.Dequeue();
+                ModuleMatrix[y][x] = modules.Dequeue();
             }
         }
     }
@@ -83,27 +84,28 @@ public class QRCodeData : IDisposable
     {
         var bytes = new List<byte>();
 
-        //Add header - signature ("QRR")
+        // Add header - signature ("QRR")
         bytes.AddRange(new byte[] { 0x51, 0x52, 0x52, 0x00 });
 
-        //Add header - rowsize
+        // Add header - row size
         bytes.Add((byte)ModuleMatrix.Count);
 
-        //Build data queue
+        // Build data queue
         var dataQueue = new Queue<int>();
         foreach (var row in ModuleMatrix)
         {
-            foreach (var module in row)
+            foreach (object? module in row)
             {
                 dataQueue.Enqueue((bool)module ? 1 : 0);
             }
         }
+
         for (int i = 0; i < 8 - (ModuleMatrix.Count * ModuleMatrix.Count) % 8; i++)
         {
             dataQueue.Enqueue(0);
         }
 
-        //Process queue
+        // Process queue
         while (dataQueue.Count > 0)
         {
             byte b = 0;
@@ -111,11 +113,13 @@ public class QRCodeData : IDisposable
             {
                 b += (byte)(dataQueue.Dequeue() << i);
             }
+
             bytes.Add(b);
         }
-        var rawData = bytes.ToArray();
 
-        //Compress stream (optional)
+        byte[] rawData = bytes.ToArray();
+
+        // Compress stream (optional)
         if (compressMode == Compression.Deflate)
         {
             using (var output = new MemoryStream())
@@ -124,6 +128,7 @@ public class QRCodeData : IDisposable
                 {
                     dstream.Write(rawData, 0, rawData.Length);
                 }
+
                 rawData = output.ToArray();
             }
         }
@@ -134,29 +139,29 @@ public class QRCodeData : IDisposable
             {
                 gzipStream.Write(rawData, 0, rawData.Length);
             }
+
             rawData = output.ToArray();
         }
+
         return rawData;
     }
-
 
     public void SaveRawData(string filePath, Compression compressMode)
     {
         File.WriteAllBytes(filePath, GetRawData(compressMode));
     }
 
-
     public int Version { get; private set; }
 
     private static int ModulesPerSideFromVersion(int version)
     {
-        return 21 + (version - 1) * 4;
+        return 21 + ((version - 1) * 4);
     }
 
     public void Dispose()
     {
-        this.ModuleMatrix = null;
-        this.Version = 0;
+        ModuleMatrix.Clear();
+        Version = 0;
 
     }
 

@@ -1,4 +1,4 @@
-﻿namespace Genocs.QRCodeLibrary.Encoder.Framework4._0Methods;
+﻿namespace Genocs.QRCodeGenerator.Encoder.Helpers;
 
 internal class Stream4Methods
 {

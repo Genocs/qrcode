@@ -202,6 +202,7 @@ namespace Genocs.QRCodeLibrary.Decoder
                 for (int j = 2; j < ErrorCount; j += 2) SigmaTotal ^= MultiplyIntByExp(Sigma[j + 1], (zlog * j) % 255);
                 ReceivedData[DataLength - 1 - StaticTables.IntToExp[ps]] ^= (byte)MultiplyDivide(ps, OmegaTotal, SigmaTotal);
             }
+
             return;
         }
 
@@ -224,16 +225,13 @@ namespace Genocs.QRCodeLibrary.Decoder
                     Polynomial[Index + 1 + GeneratorIndex] = (byte)(Polynomial[Index + 1 + GeneratorIndex] ^ StaticTables.ExpToInt[Generator[GeneratorIndex] + Multiplier]);
                 }
             }
+
             return;
         }
 
-        internal static int Multiply
-                (
-                int Int1,
-                int Int2
-                )
+        internal static int Multiply(int int1, int int2)
         {
-            return (Int1 == 0 || Int2 == 0) ? 0 : StaticTables.ExpToInt[StaticTables.IntToExp[Int1] + StaticTables.IntToExp[Int2]];
+            return (int1 == 0 || int2 == 0) ? 0 : StaticTables.ExpToInt[StaticTables.IntToExp[int1] + StaticTables.IntToExp[int2]];
         }
 
         internal static int MultiplyIntByExp
@@ -276,6 +274,7 @@ namespace Genocs.QRCodeLibrary.Decoder
                 for (int index2 = 0; index2 < index2End; index2++)
                     if (poly2[index2] != 0) result[index1 + index2] ^= StaticTables.ExpToInt[loga + StaticTables.IntToExp[poly2[index2]]];
             }
+
             return;
         }
     }

@@ -35,10 +35,10 @@ public class HomeController : ControllerBase
             {
                 await file.CopyToAsync(memory);
 
-                //Image image = Image.Load(memory);
+                SKImage image = SKImage.FromEncodedData(memory);
 
-                //QRDecoder decoder = new QRDecoder();
-                //result = decoder.ImageDecoder(image);
+                QRDecoder decoder = new QRDecoder();
+                result = decoder.ImageDecoder(image);
             }
 
             // process uploaded files
@@ -71,9 +71,9 @@ public class HomeController : ControllerBase
     {
         try
         {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeGenerator.Encoder.QRCodeGenerator qrGenerator = new QRCodeGenerator.Encoder.QRCodeGenerator();
 
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
             using var image = qrCode.GetGraphic(size);
             return File(image.Encode().AsStream(), "image/png");
@@ -96,7 +96,7 @@ public class HomeController : ControllerBase
     [Route("BuildBarcode")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult GetBuildBarCode([FromQuery] BarcodeLibrary.Type barcodeType = BarcodeLibrary.Type.UpcA, string payload = "038000356216", int width = 2900, int height = 1200)
+    public IActionResult GetBuildBarCode([FromQuery] BarcodeLibrary.Type barcodeType = BarcodeLibrary.Type.UpcA, string payload = "038000356216", int width = 290, int height = 120)
     {
         try
         {

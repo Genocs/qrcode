@@ -1,5 +1,5 @@
 using SkiaSharp;
-using static Genocs.QRCodeLibrary.Encoder.QRCodeGenerator;
+using static Genocs.QRCodeGenerator.Encoder.QRCodeGenerator;
 
 namespace Genocs.QRCodeLibrary.Encoder;
 
@@ -40,6 +40,8 @@ public class QRCode : AbstractQRCode, IDisposable
             Style = SKPaintStyle.Fill
         };
 
+        int padding = 1;
+
         // Create an image and fill it blue
         SKBitmap image = new(size, size);
         using SKCanvas canvas = new(image);
@@ -53,7 +55,6 @@ public class QRCode : AbstractQRCode, IDisposable
 
                 if (module)
                 {
-                    int padding = 1;
                     float fL = x - offset + padding;
                     float fT = y - offset + padding;
                     float fR = pixelsPerModule + (x - offset) - padding;
@@ -167,7 +168,7 @@ public static class QRCodeHelper
 {
     public static SKImage GetQRCode(string plainText, int pixelsPerModule, SKColor darkColor, SKColor lightColor, ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, EciMode eciMode = EciMode.Default, int requestedVersion = -1, SKImage? icon = null, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true)
     {
-        using var qrGenerator = new QRCodeGenerator();
+        using var qrGenerator = new Genocs.QRCodeGenerator.Encoder.QRCodeGenerator();
         using var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion);
         using var qrCode = new QRCode(qrCodeData);
         return qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, icon, iconSizePercent, iconBorderWidth, drawQuietZones);

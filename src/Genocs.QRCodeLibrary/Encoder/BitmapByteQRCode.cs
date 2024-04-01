@@ -1,4 +1,4 @@
-﻿using static Genocs.QRCodeLibrary.Encoder.QRCodeGenerator;
+﻿using static Genocs.QRCodeGenerator.Encoder.QRCodeGenerator;
 
 namespace Genocs.QRCodeLibrary.Encoder;
 
@@ -115,15 +115,15 @@ public static class BitmapByteQRCodeHelper
                                     EciMode eciMode = EciMode.Default,
                                     int requestedVersion = -1)
     {
-        using (var qrGenerator = new QRCodeGenerator())
+        using (var qrGenerator = new QRCodeGenerator.Encoder.QRCodeGenerator())
         using (var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion))
         using (var qrCode = new BitmapByteQRCode(qrCodeData))
             return qrCode.GetGraphic(pixelsPerModule, darkColorHtmlHex, lightColorHtmlHex);
     }
 
-    public static byte[] GetQRCode(string txt, QRCodeGenerator.ECCLevel eccLevel, int size)
+    public static byte[] GetQRCode(string txt, Genocs.QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel eccLevel, int size)
     {
-        using (var qrGen = new QRCodeGenerator())
+        using (var qrGen = new Genocs.QRCodeGenerator.Encoder.QRCodeGenerator())
         using (var qrCode = qrGen.CreateQrCode(txt, eccLevel))
         using (var qrBmp = new BitmapByteQRCode(qrCode))
             return qrBmp.GetGraphic(size);

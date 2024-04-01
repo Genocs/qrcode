@@ -1,48 +1,55 @@
-﻿using System.Drawing;
-using static Genocs.QRCodeLibrary.Encoder.QRCodeGenerator;
+﻿using Genocs.QRCodeLibrary.Encoder;
+using System.Drawing;
 
-namespace Genocs.QRCodeLibrary.Encoder;
+namespace Genocs.QRCodeGenerator.Encoder;
 
 public class PostscriptQRCode : AbstractQRCode, IDisposable
 {
     /// <summary>
-    /// Constructor without params to be used in COM Objects connections
+    /// Constructor without params to be used in COM Objects connections.
     /// </summary>
-    public PostscriptQRCode() { }
-    public PostscriptQRCode(QRCodeData data) : base(data) { }
+    public PostscriptQRCode()
+    {
+    }
+
+    public PostscriptQRCode(QRCodeData data)
+        : base(data)
+    {
+    }
 
     public string GetGraphic(int pointsPerModule, bool epsFormat = false)
     {
-        var viewBox = new Size(pointsPerModule * this.QrCodeData.ModuleMatrix.Count, pointsPerModule * this.QrCodeData.ModuleMatrix.Count);
-        return this.GetGraphic(viewBox, Color.Black, Color.White, true, epsFormat);
+        var viewBox = new Size(pointsPerModule * QrCodeData.ModuleMatrix.Count, pointsPerModule * QrCodeData.ModuleMatrix.Count);
+        return GetGraphic(viewBox, Color.Black, Color.White, true, epsFormat);
     }
+
     public string GetGraphic(int pointsPerModule, Color darkColor, Color lightColor, bool drawQuietZones = true, bool epsFormat = false)
     {
-        var viewBox = new Size(pointsPerModule * this.QrCodeData.ModuleMatrix.Count, pointsPerModule * this.QrCodeData.ModuleMatrix.Count);
-        return this.GetGraphic(viewBox, darkColor, lightColor, drawQuietZones, epsFormat);
+        var viewBox = new Size(pointsPerModule * QrCodeData.ModuleMatrix.Count, pointsPerModule * QrCodeData.ModuleMatrix.Count);
+        return GetGraphic(viewBox, darkColor, lightColor, drawQuietZones, epsFormat);
     }
 
     public string GetGraphic(int pointsPerModule, string darkColorHex, string lightColorHex, bool drawQuietZones = true, bool epsFormat = false)
     {
-        var viewBox = new Size(pointsPerModule * this.QrCodeData.ModuleMatrix.Count, pointsPerModule * this.QrCodeData.ModuleMatrix.Count);
-        return this.GetGraphic(viewBox, darkColorHex, lightColorHex, drawQuietZones, epsFormat);
+        var viewBox = new Size(pointsPerModule * QrCodeData.ModuleMatrix.Count, pointsPerModule * QrCodeData.ModuleMatrix.Count);
+        return GetGraphic(viewBox, darkColorHex, lightColorHex, drawQuietZones, epsFormat);
     }
 
     public string GetGraphic(Size viewBox, bool drawQuietZones = true, bool epsFormat = false)
     {
-        return this.GetGraphic(viewBox, Color.Black, Color.White, drawQuietZones, epsFormat);
+        return GetGraphic(viewBox, Color.Black, Color.White, drawQuietZones, epsFormat);
     }
 
     public string GetGraphic(Size viewBox, string darkColorHex, string lightColorHex, bool drawQuietZones = true, bool epsFormat = false)
     {
-        return this.GetGraphic(viewBox, FromHtml(darkColorHex), FromHtml(lightColorHex), drawQuietZones, epsFormat);
+        return GetGraphic(viewBox, FromHtml(darkColorHex), FromHtml(lightColorHex), drawQuietZones, epsFormat);
     }
 
     public string GetGraphic(Size viewBox, Color darkColor, Color lightColor, bool drawQuietZones = true, bool epsFormat = false)
     {
         var offset = drawQuietZones ? 0 : 4;
-        var drawableModulesCount = this.QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : offset * 2);
-        var pointsPerModule = (double)Math.Min(viewBox.Width, viewBox.Height) / (double)drawableModulesCount;
+        var drawableModulesCount = QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : offset * 2);
+        var pointsPerModule = Math.Min(viewBox.Width, viewBox.Height) / (double)drawableModulesCount;
 
         string psFile = string.Format(psHeader, new object[] {
             DateTime.Now.ToString("s"), CleanSvgVal(viewBox.Width), CleanSvgVal(pointsPerModule),
@@ -60,16 +67,18 @@ public class PostscriptQRCode : AbstractQRCode, IDisposable
                 psFile += "nl\n";
             for (int yi = offset; yi < offset + drawableModulesCount; yi++)
             {
-                psFile += (this.QrCodeData.ModuleMatrix[xi][yi] ? "f " : "b ");
+                psFile += QrCodeData.ModuleMatrix[xi][yi] ? "f " : "b ";
             }
+
             psFile += "\n";
         }
+
         return psFile + psFooter;
     }
 
     private string CleanSvgVal(double input)
     {
-        //Clean double values for international use/formats
+        // Clean double values for international use/formats
         return input.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
@@ -144,7 +153,7 @@ showpage
 
 public static class PostscriptQRCodeHelper
 {
-    public static string GetQRCode(string plainText, int pointsPerModule, string darkColorHex, string lightColorHex, ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, EciMode eciMode = EciMode.Default, int requestedVersion = -1, bool drawQuietZones = true, bool epsFormat = false)
+    public static string GetQRCode(string plainText, int pointsPerModule, string darkColorHex, string lightColorHex, QRCodeGenerator.ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, QRCodeGenerator.EciMode eciMode = QRCodeGenerator.EciMode.Default, int requestedVersion = -1, bool drawQuietZones = true, bool epsFormat = false)
     {
         using (var qrGenerator = new QRCodeGenerator())
         using (var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion))

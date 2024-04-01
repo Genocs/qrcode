@@ -1,7 +1,7 @@
 ﻿namespace Genocs.QRCodeLibrary.Decoder;
 
 /// <summary>
-/// QR code finder class
+/// QR code finder class.
 /// </summary>
 internal class Finder
 {
@@ -21,7 +21,7 @@ internal class Finder
     internal double _moduleSize;
 
     /// <summary>
-    /// Constructor during horizontal scan
+    /// Constructor during horizontal scan.
     /// </summary>
     internal Finder(int row, int col1, int col2, double hModule)
     {
@@ -33,7 +33,7 @@ internal class Finder
     }
 
     /// <summary>
-    /// Match during vertical scan
+    /// Match during vertical scan.
     /// </summary>
     internal void Match(int col, int row1, int row2, double vModule)
     {
@@ -61,11 +61,12 @@ internal class Finder
             _moduleSize = 0.5 * (_hModule + vModule);
             _distance = delta;
         }
+
         return;
     }
 
     /// <summary>
-    /// Horizontal and vertical scans overlap
+    /// Horizontal and vertical scans overlap.
     /// </summary>
     internal bool Overlap(Finder other)
     {
@@ -73,7 +74,7 @@ internal class Finder
     }
 
     /// <summary>
-    /// Finder to string
+    /// Finder to string.
     /// </summary>
     public override string ToString()
     {

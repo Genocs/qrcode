@@ -9,8 +9,8 @@ public static class PayloadGenerator
     public abstract class Payload
     {
         public virtual int Version { get { return -1; } }
-        public virtual QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.ECCLevel.M; } }
-        public virtual QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.EciMode.Default; } }
+        public virtual QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel.M; } }
+        public virtual QRCodeGenerator.Encoder.QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.Encoder.QRCodeGenerator.EciMode.Default; } }
         public abstract override string ToString();
     }
 
@@ -268,9 +268,9 @@ public static class PayloadGenerator
         private readonly string number;
 
         /// <summary>
-        /// Generates a phone call payload
+        /// Generates a phone call payload.
         /// </summary>
-        /// <param name="number">Phonenumber of the receiver</param>
+        /// <param name="number">Phone Number of the receiver.</param>
         public PhoneNumber(string number)
         {
             this.number = number;
@@ -319,7 +319,6 @@ public static class PayloadGenerator
             return (!this.url.StartsWith("http") ? "http://" + this.url : this.url);
         }
     }
-
 
     public class WhatsAppMessage : Payload
     {
@@ -2285,8 +2284,8 @@ public static class PayloadGenerator
 
     public class SlovenianUpnQr : Payload
     {
-        //Keep in mind, that the ECC level has to be set to "M", version to 15 and ECI to EciMode.Iso8859_2 when generating a SlovenianUpnQr!
-        //SlovenianUpnQr specification: https://www.upn-qr.si/uploads/files/NavodilaZaProgramerjeUPNQR.pdf
+        // Keep in mind, that the ECC level has to be set to "M", version to 15 and ECI to EciMode.Iso8859_2 when generating a SlovenianUpnQr!
+        // SlovenianUpnQr specification: https://www.upn-qr.si/uploads/files/NavodilaZaProgramerjeUPNQR.pdf
 
         private string _payerName = "";
         private string _payerAddress = "";
@@ -2303,8 +2302,8 @@ public static class PayloadGenerator
         private string _recipientSiReference = "";
 
         public override int Version { get { return 15; } }
-        public override QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.ECCLevel.M; } }
-        public override QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.EciMode.Iso8859_2; } }
+        public override QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel.M; } }
+        public override QRCodeGenerator.Encoder.QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.Encoder.QRCodeGenerator.EciMode.Iso8859_2; } }
 
         private string LimitLength(string value, int maxLength)
         {

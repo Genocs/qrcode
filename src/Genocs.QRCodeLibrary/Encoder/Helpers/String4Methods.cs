@@ -1,4 +1,4 @@
-namespace Genocs.QRCodeLibrary.Encoder;
+namespace Genocs.QRCodeGenerator.Encoder.Helpers;
 
 internal static class String40Methods
 {
