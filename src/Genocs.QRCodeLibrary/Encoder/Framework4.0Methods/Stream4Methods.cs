@@ -1,15 +1,14 @@
-﻿namespace Genocs.QRCodeLibrary.Encoder.Framework4._0Methods
+﻿namespace Genocs.QRCodeLibrary.Encoder.Framework4._0Methods;
+
+internal class Stream4Methods
 {
-    class Stream4Methods
+    public static void CopyTo(Stream input, Stream output)
     {
-        public static void CopyTo(System.IO.Stream input, System.IO.Stream output)
+        byte[] buffer = new byte[16 * 1024];
+        int bytesRead;
+        while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0)
         {
-            byte[] buffer = new byte[16 * 1024];
-            int bytesRead;
-            while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                output.Write(buffer, 0, bytesRead);
-            }
+            output.Write(buffer, 0, bytesRead);
         }
     }
 }

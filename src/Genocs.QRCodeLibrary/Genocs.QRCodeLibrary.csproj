@@ -17,12 +17,17 @@
 		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<PackageTags>QRCode reader QRCode writer</PackageTags>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="SixLabors.ImageSharp" Version="2.1.7" />
-		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp" Version="2.88.6" />
+        <PackageReference Include="System.Text.Json" Version="7.0.3" />
+    </ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\..\LICENSE">

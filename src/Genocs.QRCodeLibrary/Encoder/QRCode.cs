@@ -1,8 +1,4 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-
+using SkiaSharp;
 using static Genocs.QRCodeLibrary.Encoder.QRCodeGenerator;
 
 namespace Genocs.QRCodeLibrary.Encoder;
@@ -21,55 +17,74 @@ public class QRCode : AbstractQRCode, IDisposable
     {
     }
 
-    public Image GetGraphic(int pixelsPerModule)
+    public SKImage GetGraphic(int pixelsPerModule)
     {
-        return this.GetGraphic(pixelsPerModule, Color.Black, Color.White, true);
+        return this.GetGraphic(pixelsPerModule, SKColors.Black, SKColors.White, true);
     }
 
-    public Image GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, bool drawQuietZones = true)
+    public SKImage GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, bool drawQuietZones = true)
     {
         return this.GetGraphic(pixelsPerModule, FromHtml(darkColorHtmlHex), FromHtml(lightColorHtmlHex), drawQuietZones);
     }
 
-    public Image GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, bool drawQuietZones = true)
+    public SKImage GetGraphic(int pixelsPerModule, SKColor darkColor, SKColor lightColor, bool drawQuietZones = true)
     {
-        int size = (this.QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : 8)) * pixelsPerModule;
+        int size = (QrCodeData!.ModuleMatrix.Count - (drawQuietZones ? 0 : 8)) * pixelsPerModule;
         int offset = drawQuietZones ? 0 : 4 * pixelsPerModule;
 
-        IBrush lightBrush = Brushes.Solid(lightColor);
-        IBrush darkBrush = Brushes.Solid(darkColor);
+        var darkBrush = new SKPaint
+        {
+            Color = darkColor,
+            StrokeWidth = 1,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill
+        };
 
-        var image = new Image<Rgba32>(size, size);
+        // Create an image and fill it blue
+        SKBitmap image = new(size, size);
+        using SKCanvas canvas = new(image);
+        canvas.Clear(lightColor);
 
         for (int x = 0; x < size + offset; x = x + pixelsPerModule)
         {
             for (int y = 0; y < size + offset; y = y + pixelsPerModule)
             {
-                bool module = this.QrCodeData.ModuleMatrix[(y + pixelsPerModule) / pixelsPerModule - 1][(x + pixelsPerModule) / pixelsPerModule - 1];
+                bool module = QrCodeData.ModuleMatrix[((y + pixelsPerModule) / pixelsPerModule) - 1][((x + pixelsPerModule) / pixelsPerModule) - 1];
 
                 if (module)
                 {
-                    image.Mutate(i => i.Fill(darkBrush, new Rectangle(x - offset, y - offset, pixelsPerModule, pixelsPerModule)));
-                }
-                else
-                {
-                    image.Mutate(i => i.Fill(lightBrush, new Rectangle(x - offset, y - offset, pixelsPerModule, pixelsPerModule)));
+                    int padding = 1;
+                    float fL = x - offset + padding;
+                    float fT = y - offset + padding;
+                    float fR = pixelsPerModule + (x - offset) - padding;
+                    float fB = pixelsPerModule + (y - offset) - padding;
+
+                    SKRect rect = new SKRect(fL, fT, fR, fB);
+                    canvas.DrawRect(rect, darkBrush);
                 }
             }
         }
 
-        return image;
+        return SKImage.FromBitmap(image);
     }
 
-    public Image GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, Image icon = null, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true)
+    public SKImage GetGraphic(int pixelsPerModule, SKColor darkColor, SKColor lightColor, SKImage? icon = null, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true)
     {
-        int size = (this.QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : 8)) * pixelsPerModule;
+        int size = (QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : 8)) * pixelsPerModule;
         int offset = drawQuietZones ? 0 : 4 * pixelsPerModule;
 
-        var image = new Image<Argb32>(size, size);
+        // Create an image and fill it blue
+        SKBitmap image = new(size, size);
+        using SKCanvas canvas = new(image);
+        canvas.Clear(lightColor);
 
-        IBrush lightBrush = Brushes.Solid(lightColor);
-        IBrush darkBrush = Brushes.Solid(darkColor);
+        var darkBrush = new SKPaint
+        {
+            Color = darkColor,
+            StrokeWidth = 1,
+            IsAntialias = true,
+            Style = SKPaintStyle.Stroke
+        };
 
         bool drawIconFlag = icon != null && iconSizePercent > 0 && iconSizePercent <= 100;
 
@@ -83,7 +98,7 @@ public class QRCode : AbstractQRCode, IDisposable
             iconX = (image.Width - iconDestWidth) / 2;
             iconY = (image.Height - iconDestHeight) / 2;
 
-            var centerDest = new SixLabors.ImageSharp.RectangleF(iconX - iconBorderWidth, iconY - iconBorderWidth, iconDestWidth + iconBorderWidth * 2, iconDestHeight + iconBorderWidth * 2);
+            // var centerDest = new SixLabors.ImageSharp.RectangleF(iconX - iconBorderWidth, iconY - iconBorderWidth, iconDestWidth + iconBorderWidth * 2, iconDestHeight + iconBorderWidth * 2);
             // iconPath = this.CreateRoundedRectanglePath(centerDest, iconBorderWidth * 2);
         }
 
@@ -91,11 +106,11 @@ public class QRCode : AbstractQRCode, IDisposable
         {
             for (int y = 0; y < size + offset; y = y + pixelsPerModule)
             {
-                bool module = this.QrCodeData.ModuleMatrix[(y + pixelsPerModule) / pixelsPerModule - 1][(x + pixelsPerModule) / pixelsPerModule - 1];
+                bool module = this.QrCodeData.ModuleMatrix[((y + pixelsPerModule) / pixelsPerModule) - 1][((x + pixelsPerModule) / pixelsPerModule) - 1];
 
                 if (module)
                 {
-                    var r = new Rectangle(x - offset, y - offset, pixelsPerModule, pixelsPerModule);
+                    var r = new SKRect(x - offset, y - offset, pixelsPerModule, pixelsPerModule);
 
                     if (drawIconFlag)
                     {
@@ -105,24 +120,26 @@ public class QRCode : AbstractQRCode, IDisposable
                     }
                     else
                     {
-                        image.Mutate(c => c.Fill(darkBrush, r));
+                        canvas.DrawRect(r, darkBrush);
                     }
                 }
-                else
-                {
-                    image.Mutate(c => c.Fill(lightBrush, new Rectangle(x - offset, y - offset, pixelsPerModule, pixelsPerModule)));
-                }
+
+                //else
+                //{
+                //    canvas.DrawRect(r, darkBrush);
+
+                //    image.Mutate(c => c.Fill(lightBrush, new Rectangle(x - offset, y - offset, pixelsPerModule, pixelsPerModule)));
+                //}
             }
         }
 
         if (drawIconFlag)
         {
-            var iconDestRect = new RectangleF(iconX, iconY, iconDestWidth, iconDestHeight);
+            var iconDestRect = new SKRect(iconX, iconY, iconDestWidth, iconDestHeight);
             //gfx.DrawImage(icon, iconDestRect, new RectangleF(0, 0, icon.Width, icon.Height), GraphicsUnit.Pixel);
         }
 
-
-        return image;
+        return SKImage.FromBitmap(image);
     }
 
     //internal GraphicsPath CreateRoundedRectanglePath(RectangleF rect, int cornerRadius)
@@ -140,15 +157,15 @@ public class QRCode : AbstractQRCode, IDisposable
     //    return roundedRect;
     //}
 
-    public static Color FromHtml(string color)
+    public static SKColor FromHtml(string color)
     {
-        return Color.Gainsboro;
+        return SKColor.Parse(color);
     }
 }
 
 public static class QRCodeHelper
 {
-    public static Image GetQRCode(string plainText, int pixelsPerModule, Color darkColor, Color lightColor, ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, EciMode eciMode = EciMode.Default, int requestedVersion = -1, Image icon = null, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true)
+    public static SKImage GetQRCode(string plainText, int pixelsPerModule, SKColor darkColor, SKColor lightColor, ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, EciMode eciMode = EciMode.Default, int requestedVersion = -1, SKImage? icon = null, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true)
     {
         using var qrGenerator = new QRCodeGenerator();
         using var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion);

@@ -1,8 +1,6 @@
 ﻿using Genocs.QRCodeLibrary.Decoder;
 using Genocs.QRCodeLibrary.Encoder;
 using Microsoft.AspNetCore.Mvc;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
 using SkiaSharp;
 
 namespace Genocs.QRCodeLibrary.WebApi.Controllers;
@@ -37,10 +35,10 @@ public class HomeController : ControllerBase
             {
                 await file.CopyToAsync(memory);
 
-                Image image = Image.Load(memory);
+                //Image image = Image.Load(memory);
 
-                QRDecoder decoder = new QRDecoder();
-                result = decoder.ImageDecoder(image);
+                //QRDecoder decoder = new QRDecoder();
+                //result = decoder.ImageDecoder(image);
             }
 
             // process uploaded files
@@ -77,10 +75,8 @@ public class HomeController : ControllerBase
 
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
-            using Image image = qrCode.GetGraphic(size);
-            using MemoryStream ms = new MemoryStream();
-            image.Save(ms, new PngEncoder());
-            return File(ms.ToArray(), "image/png");
+            using var image = qrCode.GetGraphic(size);
+            return File(image.Encode().AsStream(), "image/png");
         }
         catch (Exception exp)
         {

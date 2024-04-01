@@ -64,22 +64,23 @@ public class AsciiQRCode : AbstractQRCode, IDisposable
         // We need to adjust the repeatPerModule based on number of characters in darkColorString
         // (we assume whiteSpaceString has the same number of characters)
         // to keep the QR code as square as possible.
-        var adjustmentValueForNumberOfCharacters = darkColorString.Length / 2 != 1 ? darkColorString.Length / 2 : 0;
-        var verticalNumberOfRepeats = repeatPerModule + adjustmentValueForNumberOfCharacters;
-        var sideLength = QrCodeData.ModuleMatrix.Count * verticalNumberOfRepeats;
-        for (var y = 0; y < sideLength; y++)
+        int adjustmentValueForNumberOfCharacters = darkColorString.Length / 2 != 1 ? darkColorString.Length / 2 : 0;
+        int verticalNumberOfRepeats = repeatPerModule + adjustmentValueForNumberOfCharacters;
+        int sideLength = QrCodeData!.ModuleMatrix.Count * verticalNumberOfRepeats;
+        for (int y = 0; y < sideLength; y++)
         {
             bool emptyLine = true;
             var lineBuilder = new StringBuilder();
 
-            for (var x = 0; x < QrCodeData.ModuleMatrix.Count; x++)
+            for (int x = 0; x < QrCodeData.ModuleMatrix.Count; x++)
             {
-                var module = QrCodeData.ModuleMatrix[x][(y + verticalNumberOfRepeats) / verticalNumberOfRepeats - 1];
+                bool module = QrCodeData.ModuleMatrix[x][((y + verticalNumberOfRepeats) / verticalNumberOfRepeats) - 1];
 
-                for (var i = 0; i < repeatPerModule; i++)
+                for (int i = 0; i < repeatPerModule; i++)
                 {
                     lineBuilder.Append(module ? darkColorString : whiteSpaceString);
                 }
+
                 if (module)
                 {
                     emptyLine = false;
