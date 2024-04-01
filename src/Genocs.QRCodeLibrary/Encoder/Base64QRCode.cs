@@ -1,6 +1,6 @@
 ﻿using SkiaSharp;
 
-namespace Genocs.QRCodeLibrary.Encoder;
+namespace Genocs.QRCodeGenerator.Encoder;
 
 public class Base64QRCode : AbstractQRCode, IDisposable
 {
@@ -27,18 +27,18 @@ public class Base64QRCode : AbstractQRCode, IDisposable
 
     public string GetGraphic(int pixelsPerModule)
     {
-        return this.GetGraphic(pixelsPerModule, SKColor.Parse("0x000000"), SKColor.Parse("0xFFFFFF"), true);
+        return GetGraphic(pixelsPerModule, SKColor.Parse("0x000000"), SKColor.Parse("0xFFFFFF"), true);
     }
 
     public string GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
     {
-        return this.GetGraphic(pixelsPerModule, FromHtml(darkColorHtmlHex), FromHtml(lightColorHtmlHex), drawQuietZones, imgType);
+        return GetGraphic(pixelsPerModule, FromHtml(darkColorHtmlHex), FromHtml(lightColorHtmlHex), drawQuietZones, imgType);
     }
 
     public string GetGraphic(int pixelsPerModule, SKColor darkColor, SKColor lightColor, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
     {
         string base64 = string.Empty;
-        using (SKImage image = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, drawQuietZones))
+        using (var image = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, drawQuietZones))
         {
             base64 = BitmapToBase64(image, imgType);
         }
@@ -49,7 +49,7 @@ public class Base64QRCode : AbstractQRCode, IDisposable
     public string GetGraphic(int pixelsPerModule, SKColor darkColor, SKColor lightColor, SKImage icon, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
     {
         string base64 = string.Empty;
-        using (SKImage image = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, icon, iconSizePercent, iconBorderWidth, drawQuietZones))
+        using (var image = _qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, icon, iconSizePercent, iconBorderWidth, drawQuietZones))
         {
             base64 = BitmapToBase64(image, imgType);
         }
@@ -102,9 +102,9 @@ public class Base64QRCode : AbstractQRCode, IDisposable
 
 public static class Base64QRCodeHelper
 {
-    public static string GetQRCode(string plainText, int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, QRCodeGenerator.Encoder.QRCodeGenerator.EciMode eciMode = QRCodeGenerator.Encoder.QRCodeGenerator.EciMode.Default, int requestedVersion = -1, bool drawQuietZones = true, Base64QRCode.ImageType imgType = Base64QRCode.ImageType.Png)
+    public static string GetQRCode(string plainText, int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, QRCodeGenerator.ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, QRCodeGenerator.EciMode eciMode = QRCodeGenerator.EciMode.Default, int requestedVersion = -1, bool drawQuietZones = true, Base64QRCode.ImageType imgType = Base64QRCode.ImageType.Png)
     {
-        using (var qrGenerator = new QRCodeGenerator.Encoder.QRCodeGenerator())
+        using (var qrGenerator = new QRCodeGenerator())
         using (var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion))
         using (var qrCode = new Base64QRCode(qrCodeData))
             return qrCode.GetGraphic(pixelsPerModule, darkColorHtmlHex, lightColorHtmlHex, drawQuietZones, imgType);

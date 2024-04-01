@@ -2,15 +2,15 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Genocs.QRCodeLibrary.Encoder;
+namespace Genocs.QRCodeGenerator.Encoder;
 
 public static class PayloadGenerator
 {
     public abstract class Payload
     {
         public virtual int Version { get { return -1; } }
-        public virtual QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel.M; } }
-        public virtual QRCodeGenerator.Encoder.QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.Encoder.QRCodeGenerator.EciMode.Default; } }
+        public virtual QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.ECCLevel.M; } }
+        public virtual QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.EciMode.Default; } }
         public abstract override string ToString();
     }
 
@@ -33,13 +33,13 @@ public static class PayloadGenerator
             this.password = EscapeInput(password);
             this.password = isHexStyle(this.password) ? "\"" + this.password + "\"" : this.password;
             this.authenticationMode = authenticationMode.ToString();
-            this.isHiddenSsid = isHiddenSSID;
+            isHiddenSsid = isHiddenSSID;
         }
 
         public override string ToString()
         {
             return
-                $"WIFI:T:{this.authenticationMode};S:{this.ssid};P:{this.password};{(this.isHiddenSsid ? "H:true" : string.Empty)};";
+                $"WIFI:T:{authenticationMode};S:{ssid};P:{password};{(isHiddenSsid ? "H:true" : string.Empty)};";
         }
 
         public enum Authentication
@@ -63,7 +63,7 @@ public static class PayloadGenerator
         public Mail(string mailReceiver, MailEncoding encoding = MailEncoding.MAILTO)
         {
             this.mailReceiver = mailReceiver;
-            this.subject = this.message = string.Empty;
+            subject = message = string.Empty;
             this.encoding = encoding;
         }
 
@@ -77,7 +77,7 @@ public static class PayloadGenerator
         {
             this.mailReceiver = mailReceiver;
             this.subject = subject;
-            this.message = string.Empty;
+            message = string.Empty;
             this.encoding = encoding;
         }
 
@@ -98,19 +98,19 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            switch (this.encoding)
+            switch (encoding)
             {
                 case MailEncoding.MAILTO:
                     return
-                        $"mailto:{this.mailReceiver}?subject={System.Uri.EscapeDataString(this.subject)}&body={System.Uri.EscapeDataString(this.message)}";
+                        $"mailto:{mailReceiver}?subject={Uri.EscapeDataString(subject)}&body={Uri.EscapeDataString(message)}";
                 case MailEncoding.MATMSG:
                     return
-                        $"MATMSG:TO:{this.mailReceiver};SUB:{EscapeInput(this.subject)};BODY:{EscapeInput(this.message)};;";
+                        $"MATMSG:TO:{mailReceiver};SUB:{EscapeInput(subject)};BODY:{EscapeInput(message)};;";
                 case MailEncoding.SMTP:
                     return
-                        $"SMTP:{this.mailReceiver}:{EscapeInput(this.subject, true)}:{EscapeInput(this.message, true)}";
+                        $"SMTP:{mailReceiver}:{EscapeInput(subject, true)}:{EscapeInput(message, true)}";
                 default:
-                    return this.mailReceiver;
+                    return mailReceiver;
             }
         }
 
@@ -135,7 +135,7 @@ public static class PayloadGenerator
         public SMS(string number, SMSEncoding encoding = SMSEncoding.SMS)
         {
             this.number = number;
-            this.subject = string.Empty;
+            subject = string.Empty;
             this.encoding = encoding;
         }
 
@@ -154,14 +154,14 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            switch (this.encoding)
+            switch (encoding)
             {
                 case SMSEncoding.SMS:
-                    return $"sms:{this.number}?body={System.Uri.EscapeDataString(this.subject)}";
+                    return $"sms:{number}?body={Uri.EscapeDataString(subject)}";
                 case SMSEncoding.SMS_iOS:
-                    return $"sms:{this.number};body={System.Uri.EscapeDataString(this.subject)}";
+                    return $"sms:{number};body={Uri.EscapeDataString(subject)}";
                 case SMSEncoding.SMSTO:
-                    return $"SMSTO:{this.number}:{this.subject}";
+                    return $"SMSTO:{number}:{subject}";
                 default:
                     return "sms:";
             }
@@ -188,7 +188,7 @@ public static class PayloadGenerator
         public MMS(string number, MMSEncoding encoding = MMSEncoding.MMS)
         {
             this.number = number;
-            this.subject = string.Empty;
+            subject = string.Empty;
             this.encoding = encoding;
         }
 
@@ -207,12 +207,12 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            switch (this.encoding)
+            switch (encoding)
             {
                 case MMSEncoding.MMSTO:
-                    return $"mmsto:{this.number}?subject={System.Uri.EscapeDataString(this.subject)}";
+                    return $"mmsto:{number}?subject={Uri.EscapeDataString(subject)}";
                 case MMSEncoding.MMS:
-                    return $"mms:{this.number}?body={System.Uri.EscapeDataString(this.subject)}";
+                    return $"mms:{number}?body={Uri.EscapeDataString(subject)}";
                 default:
                     return "mms:";
             }
@@ -245,12 +245,12 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            switch (this.encoding)
+            switch (encoding)
             {
                 case GeolocationEncoding.GEO:
-                    return $"geo:{this.latitude},{this.longitude}";
+                    return $"geo:{latitude},{longitude}";
                 case GeolocationEncoding.GoogleMaps:
-                    return $"http://maps.google.com/maps?q={this.latitude},{this.longitude}";
+                    return $"http://maps.google.com/maps?q={latitude},{longitude}";
                 default:
                     return "geo:";
             }
@@ -278,7 +278,7 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            return $"tel:{this.number}";
+            return $"tel:{number}";
         }
     }
 
@@ -297,7 +297,7 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            return $"skype:{this.skypeUsername}?call";
+            return $"skype:{skypeUsername}?call";
         }
     }
 
@@ -316,7 +316,7 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            return (!this.url.StartsWith("http") ? "http://" + this.url : this.url);
+            return !url.StartsWith("http") ? "http://" + url : url;
         }
     }
 
@@ -341,13 +341,13 @@ public static class PayloadGenerator
         /// <param name="message">The message</param>
         public WhatsAppMessage(string message)
         {
-            this.number = string.Empty;
+            number = string.Empty;
             this.message = message;
         }
 
         public override string ToString()
         {
-            return ($"whatsapp://send?phone={this.number}&text={Uri.EscapeDataString(message)}");
+            return $"whatsapp://send?phone={number}&text={Uri.EscapeDataString(message)}";
         }
     }
 
@@ -369,7 +369,7 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            return $"MEBKM:TITLE:{this.title};URL:{this.url};;";
+            return $"MEBKM:TITLE:{title};URL:{url};;";
         }
     }
 
@@ -710,11 +710,11 @@ public static class PayloadGenerator
             /// <param name="billInformation">Bill information</param>
             public AdditionalInformation(string unstructuredMessage = null, string billInformation = null)
             {
-                if (((unstructuredMessage != null ? unstructuredMessage.Length : 0) + (billInformation != null ? billInformation.Length : 0)) > 140)
+                if ((unstructuredMessage != null ? unstructuredMessage.Length : 0) + (billInformation != null ? billInformation.Length : 0) > 140)
                     throw new SwissQrCodeAdditionalInformationException("Unstructured message and bill information must be shorter than 141 chars in total/combined.");
                 this.unstructuredMessage = unstructuredMessage;
                 this.billInformation = billInformation;
-                this.trailer = "EPD";
+                trailer = "EPD";
             }
 
             public string UnstructureMessage
@@ -772,13 +772,13 @@ public static class PayloadGenerator
                     throw new SwissQrCodeReferenceException("Reference is only allowed when referenceType not equals \"NON\"");
                 if (referenceType != ReferenceType.NON && reference != null && referenceTextType == null)
                     throw new SwissQrCodeReferenceException("You have to set an ReferenceTextType when using the reference text.");
-                if (referenceTextType == ReferenceTextType.QrReference && reference != null && (reference.Length > 27))
+                if (referenceTextType == ReferenceTextType.QrReference && reference != null && reference.Length > 27)
                     throw new SwissQrCodeReferenceException("QR-references have to be shorter than 28 chars.");
                 if (referenceTextType == ReferenceTextType.QrReference && reference != null && !Regex.IsMatch(reference, @"^[0-9]+$"))
                     throw new SwissQrCodeReferenceException("QR-reference must exist out of digits only.");
                 if (referenceTextType == ReferenceTextType.QrReference && reference != null && !ChecksumMod10(reference))
                     throw new SwissQrCodeReferenceException("QR-references is invalid. Checksum error.");
-                if (referenceTextType == ReferenceTextType.CreditorReferenceIso11649 && reference != null && (reference.Length > 25))
+                if (referenceTextType == ReferenceTextType.CreditorReferenceIso11649 && reference != null && reference.Length > 25)
                     throw new SwissQrCodeReferenceException("Creditor references (ISO 11649) have to be shorter than 26 chars.");
 
                 this.reference = reference;
@@ -846,8 +846,8 @@ public static class PayloadGenerator
                     throw new SwissQrCodeIbanException("The QR-IBAN entered isn't valid.");
                 if (!iban.StartsWith("CH") && !iban.StartsWith("LI"))
                     throw new SwissQrCodeIbanException("The IBAN must start with \"CH\" or \"LI\".");
-                this._iban = iban;
-                this._ibanType = ibanType;
+                _iban = iban;
+                _ibanType = ibanType;
             }
 
             public bool IsQrIban
@@ -934,7 +934,7 @@ public static class PayloadGenerator
                 //Pattern extracted from https://qr-validation.iso-payments.ch as explained in https://github.com/codebude/QRCoder/issues/97
                 var charsetPattern = @"^([a-zA-Z0-9\.,;:'\ \+\-/\(\)?\*\[\]\{\}\\`´~ ]|[!""#%&<>÷=@_$£]|[àáâäçèéêëìíîïñòóôöùúûüýßÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜÑ])*$";
 
-                this.adrType = addressType;
+                adrType = addressType;
 
                 if (string.IsNullOrEmpty(name))
                     throw new SwissQrCodeContactException("Name must not be empty.");
@@ -944,9 +944,9 @@ public static class PayloadGenerator
                     throw new SwissQrCodeContactException($"Name must match the following pattern as defined in pain.001: {charsetPattern}");
                 this.name = name;
 
-                if (AddressType.StructuredAddress == this.adrType)
+                if (AddressType.StructuredAddress == adrType)
                 {
-                    if (!string.IsNullOrEmpty(streetOrAddressline1) && (streetOrAddressline1.Length > 70))
+                    if (!string.IsNullOrEmpty(streetOrAddressline1) && streetOrAddressline1.Length > 70)
                         throw new SwissQrCodeContactException("Street must be shorter than 71 chars.");
                     if (!string.IsNullOrEmpty(streetOrAddressline1) && !Regex.IsMatch(streetOrAddressline1, charsetPattern))
                         throw new SwissQrCodeContactException($"Street must match the following pattern as defined in pain.001: {charsetPattern}");
@@ -958,7 +958,7 @@ public static class PayloadGenerator
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(streetOrAddressline1) && (streetOrAddressline1.Length > 70))
+                    if (!string.IsNullOrEmpty(streetOrAddressline1) && streetOrAddressline1.Length > 70)
                         throw new SwissQrCodeContactException("Address line 1 must be shorter than 71 chars.");
                     if (!string.IsNullOrEmpty(streetOrAddressline1) && !Regex.IsMatch(streetOrAddressline1, charsetPattern))
                         throw new SwissQrCodeContactException($"Address line 1 must match the following pattern as defined in pain.001: {charsetPattern}");
@@ -966,14 +966,14 @@ public static class PayloadGenerator
 
                     if (string.IsNullOrEmpty(houseNumberOrAddressline2))
                         throw new SwissQrCodeContactException("Address line 2 must be provided for combined addresses (address line-based addresses).");
-                    if (!string.IsNullOrEmpty(houseNumberOrAddressline2) && (houseNumberOrAddressline2.Length > 70))
+                    if (!string.IsNullOrEmpty(houseNumberOrAddressline2) && houseNumberOrAddressline2.Length > 70)
                         throw new SwissQrCodeContactException("Address line 2 must be shorter than 71 chars.");
                     if (!string.IsNullOrEmpty(houseNumberOrAddressline2) && !Regex.IsMatch(houseNumberOrAddressline2, charsetPattern))
                         throw new SwissQrCodeContactException($"Address line 2 must match the following pattern as defined in pain.001: {charsetPattern}");
                     this.houseNumberOrAddressline2 = houseNumberOrAddressline2;
                 }
 
-                if (AddressType.StructuredAddress == this.adrType)
+                if (AddressType.StructuredAddress == adrType)
                 {
                     if (string.IsNullOrEmpty(zipCode))
                         throw new SwissQrCodeContactException("Zip code must not be empty.");
@@ -1194,7 +1194,7 @@ public static class PayloadGenerator
         public override string ToString()
         {
             var girocodePayload = "BCD" + br;
-            girocodePayload += ((version == GirocodeVersion.Version1) ? "001" : "002") + br;
+            girocodePayload += (version == GirocodeVersion.Version1 ? "001" : "002") + br;
             girocodePayload += (int)encoding + 1 + br;
             girocodePayload += "SCT" + br;
             girocodePayload += bic + br;
@@ -1202,10 +1202,10 @@ public static class PayloadGenerator
             girocodePayload += iban + br;
             girocodePayload += $"EUR{amount:0.00}".Replace(",", ".") + br;
             girocodePayload += purposeOfCreditTransfer + br;
-            girocodePayload += ((typeOfRemittance == TypeOfRemittance.Structured)
+            girocodePayload += (typeOfRemittance == TypeOfRemittance.Structured
                 ? remittanceInformation
                 : string.Empty) + br;
-            girocodePayload += ((typeOfRemittance == TypeOfRemittance.Unstructured)
+            girocodePayload += (typeOfRemittance == TypeOfRemittance.Unstructured
                 ? remittanceInformation
                 : string.Empty) + br;
             girocodePayload += messageToGirocodeUser;
@@ -1263,7 +1263,7 @@ public static class PayloadGenerator
         private readonly decimal amount;
         private readonly int postingKey, periodicTimeunitRotation;
         private readonly Currency currency;
-        private readonly AuthorityType authority;
+        private readonly PayloadGenerator.BezahlCode.AuthorityType authority;
         private readonly DateTime executionDate, dateOfSignature, periodicFirstExecutionDate, periodicLastExecutionDate;
 
 
@@ -1277,7 +1277,7 @@ public static class PayloadGenerator
         /// <param name="iban">IBAN</param>
         /// <param name="bic">BIC</param>
         /// <param name="reason">Reason (Verwendungszweck)</param>
-        public BezahlCode(AuthorityType authority, string name, string account = "", string bnc = "", string iban = "", string bic = "", string reason = "") : this(authority, name, account, bnc, iban, bic, 0, string.Empty, 0, null, null, string.Empty, string.Empty, null, reason, 0, string.Empty, Currency.EUR, null, 1)
+        public BezahlCode(PayloadGenerator.BezahlCode.AuthorityType authority, string name, string account = "", string bnc = "", string iban = "", string bic = "", string reason = "") : this(authority, name, account, bnc, iban, bic, 0, string.Empty, 0, null, null, string.Empty, string.Empty, null, reason, 0, string.Empty, Currency.EUR, null, 1)
         {
         }
 
@@ -1298,7 +1298,7 @@ public static class PayloadGenerator
         /// <param name="postingKey">Transfer Key (Textschlüssel, z.B. Spendenzahlung = 69)</param>
         /// <param name="currency">Currency (Währung)</param>
         /// <param name="executionDate">Execution date (Ausführungsdatum)</param>
-        public BezahlCode(AuthorityType authority, string name, string account, string bnc, decimal amount, string periodicTimeunit = "", int periodicTimeunitRotation = 0, DateTime? periodicFirstExecutionDate = null, DateTime? periodicLastExecutionDate = null, string reason = "", int postingKey = 0, Currency currency = Currency.EUR, DateTime? executionDate = null) : this(authority, name, account, bnc, string.Empty, string.Empty, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, string.Empty, string.Empty, null, reason, postingKey, string.Empty, currency, executionDate, 2)
+        public BezahlCode(PayloadGenerator.BezahlCode.AuthorityType authority, string name, string account, string bnc, decimal amount, string periodicTimeunit = "", int periodicTimeunitRotation = 0, DateTime? periodicFirstExecutionDate = null, DateTime? periodicLastExecutionDate = null, string reason = "", int postingKey = 0, Currency currency = Currency.EUR, DateTime? executionDate = null) : this(authority, name, account, bnc, string.Empty, string.Empty, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, string.Empty, string.Empty, null, reason, postingKey, string.Empty, currency, executionDate, 2)
         {
         }
 
@@ -1322,7 +1322,7 @@ public static class PayloadGenerator
         /// <param name="sepaReference">SEPA reference (SEPA-Referenz)</param>
         /// <param name="currency">Currency (Währung)</param>
         /// <param name="executionDate">Execution date (Ausführungsdatum)</param>
-        public BezahlCode(AuthorityType authority, string name, string iban, string bic, decimal amount, string periodicTimeunit = "", int periodicTimeunitRotation = 0, DateTime? periodicFirstExecutionDate = null, DateTime? periodicLastExecutionDate = null, string creditorId = "", string mandateId = "", DateTime? dateOfSignature = null, string reason = "", string sepaReference = "", Currency currency = Currency.EUR, DateTime? executionDate = null) : this(authority, name, string.Empty, string.Empty, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, creditorId, mandateId, dateOfSignature, reason, 0, sepaReference, currency, executionDate, 3)
+        public BezahlCode(PayloadGenerator.BezahlCode.AuthorityType authority, string name, string iban, string bic, decimal amount, string periodicTimeunit = "", int periodicTimeunitRotation = 0, DateTime? periodicFirstExecutionDate = null, DateTime? periodicLastExecutionDate = null, string creditorId = "", string mandateId = "", DateTime? dateOfSignature = null, string reason = "", string sepaReference = "", Currency currency = Currency.EUR, DateTime? executionDate = null) : this(authority, name, string.Empty, string.Empty, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, creditorId, mandateId, dateOfSignature, reason, 0, sepaReference, currency, executionDate, 3)
         {
         }
 
@@ -1352,37 +1352,37 @@ public static class PayloadGenerator
         /// <param name="currency">Currency (Währung)</param>
         /// <param name="executionDate">Execution date (Ausführungsdatum)</param>
         /// <param name="internalMode">Only used for internal state handdling</param>
-        public BezahlCode(AuthorityType authority, string name, string account, string bnc, string iban, string bic, decimal amount, string periodicTimeunit = "", int periodicTimeunitRotation = 0, DateTime? periodicFirstExecutionDate = null, DateTime? periodicLastExecutionDate = null, string creditorId = "", string mandateId = "", DateTime? dateOfSignature = null, string reason = "", int postingKey = 0, string sepaReference = "", Currency currency = Currency.EUR, DateTime? executionDate = null, int internalMode = 0)
+        public BezahlCode(PayloadGenerator.BezahlCode.AuthorityType authority, string name, string account, string bnc, string iban, string bic, decimal amount, string periodicTimeunit = "", int periodicTimeunitRotation = 0, DateTime? periodicFirstExecutionDate = null, DateTime? periodicLastExecutionDate = null, string creditorId = "", string mandateId = "", DateTime? dateOfSignature = null, string reason = "", int postingKey = 0, string sepaReference = "", Currency currency = Currency.EUR, DateTime? executionDate = null, int internalMode = 0)
         {
             //Loaded via "contact-constructor"
             if (internalMode == 1)
             {
-                if (authority != AuthorityType.contact && authority != AuthorityType.contact_v2)
+                if (authority != PayloadGenerator.BezahlCode.AuthorityType.contact && authority != PayloadGenerator.BezahlCode.AuthorityType.contact_v2)
                     throw new BezahlCodeException("The constructor without an amount may only ne used with authority types 'contact' and 'contact_v2'.");
-                if (authority == AuthorityType.contact && (string.IsNullOrEmpty(account) || string.IsNullOrEmpty(bnc)))
+                if (authority == PayloadGenerator.BezahlCode.AuthorityType.contact && (string.IsNullOrEmpty(account) || string.IsNullOrEmpty(bnc)))
                     throw new BezahlCodeException("When using authority type 'contact' the parameters 'account' and 'bnc' must be set.");
 
-                if (authority != AuthorityType.contact_v2)
+                if (authority != PayloadGenerator.BezahlCode.AuthorityType.contact_v2)
                 {
-                    var oldFilled = (!string.IsNullOrEmpty(account) && !string.IsNullOrEmpty(bnc));
-                    var newFilled = (!string.IsNullOrEmpty(iban) && !string.IsNullOrEmpty(bic));
-                    if ((!oldFilled && !newFilled) || (oldFilled && newFilled))
+                    var oldFilled = !string.IsNullOrEmpty(account) && !string.IsNullOrEmpty(bnc);
+                    var newFilled = !string.IsNullOrEmpty(iban) && !string.IsNullOrEmpty(bic);
+                    if (!oldFilled && !newFilled || oldFilled && newFilled)
                         throw new BezahlCodeException("When using authority type 'contact_v2' either the parameters 'account' and 'bnc' or the parameters 'iban' and 'bic' must be set. Leave the other parameter pair empty.");
                 }
             }
             else if (internalMode == 2)
             {
-                if (authority != AuthorityType.periodicsinglepayment && authority != AuthorityType.singledirectdebit && authority != AuthorityType.singlepayment)
+                if (authority != PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepayment && authority != PayloadGenerator.BezahlCode.AuthorityType.singledirectdebit && authority != PayloadGenerator.BezahlCode.AuthorityType.singlepayment)
                     throw new BezahlCodeException("The constructor with 'account' and 'bnc' may only be used with 'non SEPA' authority types. Either choose another authority type or switch constructor.");
-                if (authority == AuthorityType.periodicsinglepayment && (string.IsNullOrEmpty(periodicTimeunit) || periodicTimeunitRotation == 0))
+                if (authority == PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepayment && (string.IsNullOrEmpty(periodicTimeunit) || periodicTimeunitRotation == 0))
                     throw new BezahlCodeException("When using 'periodicsinglepayment' as authority type, the parameters 'periodicTimeunit' and 'periodicTimeunitRotation' must be set.");
 
             }
             else if (internalMode == 3)
             {
-                if (authority != AuthorityType.periodicsinglepaymentsepa && authority != AuthorityType.singledirectdebitsepa && authority != AuthorityType.singlepaymentsepa)
+                if (authority != PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa && authority != PayloadGenerator.BezahlCode.AuthorityType.singledirectdebitsepa && authority != PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa)
                     throw new BezahlCodeException("The constructor with 'iban' and 'bic' may only be used with 'SEPA' authority types. Either choose another authority type or switch constructor.");
-                if (authority == AuthorityType.periodicsinglepaymentsepa && (string.IsNullOrEmpty(periodicTimeunit) || periodicTimeunitRotation == 0))
+                if (authority == PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa && (string.IsNullOrEmpty(periodicTimeunit) || periodicTimeunitRotation == 0))
                     throw new BezahlCodeException("When using 'periodicsinglepaymentsepa' as authority type, the parameters 'periodicTimeunit' and 'periodicTimeunitRotation' must be set.");
             }
 
@@ -1396,11 +1396,11 @@ public static class PayloadGenerator
                 throw new BezahlCodeException("Reasons texts have to be shorter than 28 chars.");
             this.reason = reason;
 
-            var oldWayFilled = (!string.IsNullOrEmpty(account) && !string.IsNullOrEmpty(bnc));
-            var newWayFilled = (!string.IsNullOrEmpty(iban) && !string.IsNullOrEmpty(bic));
+            var oldWayFilled = !string.IsNullOrEmpty(account) && !string.IsNullOrEmpty(bnc);
+            var newWayFilled = !string.IsNullOrEmpty(iban) && !string.IsNullOrEmpty(bic);
 
             //Non-SEPA payment types
-            if (authority == AuthorityType.periodicsinglepayment || authority == AuthorityType.singledirectdebit || authority == AuthorityType.singlepayment || authority == AuthorityType.contact || (authority == AuthorityType.contact_v2 && oldWayFilled))
+            if (authority == PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepayment || authority == PayloadGenerator.BezahlCode.AuthorityType.singledirectdebit || authority == PayloadGenerator.BezahlCode.AuthorityType.singlepayment || authority == PayloadGenerator.BezahlCode.AuthorityType.contact || authority == PayloadGenerator.BezahlCode.AuthorityType.contact_v2 && oldWayFilled)
             {
                 if (!Regex.IsMatch(account.Replace(" ", ""), @"^[0-9]{1,9}$"))
                     throw new BezahlCodeException("The account entered isn't valid.");
@@ -1409,7 +1409,7 @@ public static class PayloadGenerator
                     throw new BezahlCodeException("The bnc entered isn't valid.");
                 this.bnc = bnc.Replace(" ", "").ToUpper();
 
-                if (authority != AuthorityType.contact && authority != AuthorityType.contact_v2)
+                if (authority != PayloadGenerator.BezahlCode.AuthorityType.contact && authority != PayloadGenerator.BezahlCode.AuthorityType.contact_v2)
                 {
                     if (postingKey < 0 || postingKey >= 100)
                         throw new BezahlCodeException("PostingKey must be within 0 and 99.");
@@ -1418,7 +1418,7 @@ public static class PayloadGenerator
             }
 
             //SEPA payment types
-            if (authority == AuthorityType.periodicsinglepaymentsepa || authority == AuthorityType.singledirectdebitsepa || authority == AuthorityType.singlepaymentsepa || (authority == AuthorityType.contact_v2 && newWayFilled))
+            if (authority == PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa || authority == PayloadGenerator.BezahlCode.AuthorityType.singledirectdebitsepa || authority == PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa || authority == PayloadGenerator.BezahlCode.AuthorityType.contact_v2 && newWayFilled)
             {
                 if (!IsValidIban(iban))
                     throw new BezahlCodeException("The IBAN entered isn't valid.");
@@ -1427,7 +1427,7 @@ public static class PayloadGenerator
                     throw new BezahlCodeException("The BIC entered isn't valid.");
                 this.bic = bic.Replace(" ", "").ToUpper();
 
-                if (authority != AuthorityType.contact_v2)
+                if (authority != PayloadGenerator.BezahlCode.AuthorityType.contact_v2)
                 {
                     if (sepaReference.Length > 35)
                         throw new BezahlCodeException("SEPA reference texts have to be shorter than 36 chars.");
@@ -1445,7 +1445,7 @@ public static class PayloadGenerator
             }
 
             //Checks for all payment types
-            if (authority != AuthorityType.contact && authority != AuthorityType.contact_v2)
+            if (authority != PayloadGenerator.BezahlCode.AuthorityType.contact && authority != PayloadGenerator.BezahlCode.AuthorityType.contact_v2)
             {
                 if (amount.ToString().Replace(",", ".").Contains(".") && amount.ToString().Replace(",", ".").Split('.')[1].TrimEnd('0').Length > 2)
                     throw new BezahlCodeException("Amount must have less than 3 digits after decimal point.");
@@ -1464,7 +1464,7 @@ public static class PayloadGenerator
                     this.executionDate = (DateTime)executionDate;
                 }
 
-                if (authority == AuthorityType.periodicsinglepayment || authority == AuthorityType.periodicsinglepaymentsepa)
+                if (authority == PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepayment || authority == PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa)
                 {
                     if (periodicTimeunit.ToUpper() != "M" && periodicTimeunit.ToUpper() != "W")
                         throw new BezahlCodeException("The periodicTimeunit must be either 'M' (monthly) or 'W' (weekly).");
@@ -1490,11 +1490,11 @@ public static class PayloadGenerator
 
             bezahlCodePayload += $"name={Uri.EscapeDataString(name)}&";
 
-            if (authority != AuthorityType.contact && authority != AuthorityType.contact_v2)
+            if (authority != PayloadGenerator.BezahlCode.AuthorityType.contact && authority != PayloadGenerator.BezahlCode.AuthorityType.contact_v2)
             {
                 //Handle what is same for all payments
 
-                if (authority == AuthorityType.periodicsinglepayment || authority == AuthorityType.singledirectdebit || authority == AuthorityType.singlepayment)
+                if (authority == PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepayment || authority == PayloadGenerator.BezahlCode.AuthorityType.singledirectdebit || authority == PayloadGenerator.BezahlCode.AuthorityType.singlepayment)
                 {
                     bezahlCodePayload += $"account={account}&";
                     bezahlCodePayload += $"bnc={bnc}&";
@@ -1507,14 +1507,14 @@ public static class PayloadGenerator
                     bezahlCodePayload += $"bic={bic}&";
 
                     if (!string.IsNullOrEmpty(sepaReference))
-                        bezahlCodePayload += $"separeference={ Uri.EscapeDataString(sepaReference)}&";
+                        bezahlCodePayload += $"separeference={Uri.EscapeDataString(sepaReference)}&";
 
-                    if (authority == AuthorityType.singledirectdebitsepa)
+                    if (authority == PayloadGenerator.BezahlCode.AuthorityType.singledirectdebitsepa)
                     {
                         if (!string.IsNullOrEmpty(creditorId))
-                            bezahlCodePayload += $"creditorid={ Uri.EscapeDataString(creditorId)}&";
+                            bezahlCodePayload += $"creditorid={Uri.EscapeDataString(creditorId)}&";
                         if (!string.IsNullOrEmpty(mandateId))
-                            bezahlCodePayload += $"mandateid={ Uri.EscapeDataString(mandateId)}&";
+                            bezahlCodePayload += $"mandateid={Uri.EscapeDataString(mandateId)}&";
                         if (dateOfSignature != null)
                             bezahlCodePayload += $"dateofsignature={dateOfSignature.ToString("ddMMyyyy")}&";
                     }
@@ -1522,11 +1522,11 @@ public static class PayloadGenerator
                 bezahlCodePayload += $"amount={amount:0.00}&".Replace(".", ",");
 
                 if (!string.IsNullOrEmpty(reason))
-                    bezahlCodePayload += $"reason={ Uri.EscapeDataString(reason)}&";
+                    bezahlCodePayload += $"reason={Uri.EscapeDataString(reason)}&";
                 bezahlCodePayload += $"currency={currency}&";
                 bezahlCodePayload += $"executiondate={executionDate.ToString("ddMMyyyy")}&";
 
-                if (authority == AuthorityType.periodicsinglepayment || authority == AuthorityType.periodicsinglepaymentsepa)
+                if (authority == PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepayment || authority == PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa)
                 {
                     bezahlCodePayload += $"periodictimeunit={periodicTimeunit}&";
                     bezahlCodePayload += $"periodictimeunitrotation={periodicTimeunitRotation}&";
@@ -1539,12 +1539,12 @@ public static class PayloadGenerator
             else
             {
                 //Handle what is same for all contacts
-                if (authority == AuthorityType.contact)
+                if (authority == PayloadGenerator.BezahlCode.AuthorityType.contact)
                 {
                     bezahlCodePayload += $"account={account}&";
                     bezahlCodePayload += $"bnc={bnc}&";
                 }
-                else if (authority == AuthorityType.contact_v2)
+                else if (authority == PayloadGenerator.BezahlCode.AuthorityType.contact_v2)
                 {
                     if (!string.IsNullOrEmpty(account) && !string.IsNullOrEmpty(bnc))
                     {
@@ -1559,7 +1559,7 @@ public static class PayloadGenerator
                 }
 
                 if (!string.IsNullOrEmpty(reason))
-                    bezahlCodePayload += $"reason={ Uri.EscapeDataString(reason)}&";
+                    bezahlCodePayload += $"reason={Uri.EscapeDataString(reason)}&";
             }
 
             return bezahlCodePayload.Trim('&');
@@ -1840,14 +1840,14 @@ public static class PayloadGenerator
         public override string ToString()
         {
             var vEvent = $"BEGIN:VEVENT{Environment.NewLine}";
-            vEvent += $"SUMMARY:{this.subject}{Environment.NewLine}";
-            vEvent += !string.IsNullOrEmpty(this.description) ? $"DESCRIPTION:{this.description}{Environment.NewLine}" : "";
-            vEvent += !string.IsNullOrEmpty(this.location) ? $"LOCATION:{this.location}{Environment.NewLine}" : "";
-            vEvent += $"DTSTART:{this.start}{Environment.NewLine}";
-            vEvent += $"DTEND:{this.end}{Environment.NewLine}";
+            vEvent += $"SUMMARY:{subject}{Environment.NewLine}";
+            vEvent += !string.IsNullOrEmpty(description) ? $"DESCRIPTION:{description}{Environment.NewLine}" : "";
+            vEvent += !string.IsNullOrEmpty(location) ? $"LOCATION:{location}{Environment.NewLine}" : "";
+            vEvent += $"DTSTART:{start}{Environment.NewLine}";
+            vEvent += $"DTEND:{end}{Environment.NewLine}";
             vEvent += "END:VEVENT";
 
-            if (this.encoding == EventEncoding.iCalComplete)
+            if (encoding == EventEncoding.iCalComplete)
                 vEvent = $@"BEGIN:VCALENDAR{Environment.NewLine}VERSION:2.0{Environment.NewLine}{vEvent}{Environment.NewLine}END:VCALENDAR";
 
             return vEvent;
@@ -2134,11 +2134,11 @@ public static class PayloadGenerator
             this.port = port;
             this.password = password;
             this.method = method;
-            this.methodStr = encryptionTexts[method.ToString()];
+            methodStr = encryptionTexts[method.ToString()];
             this.tag = tag;
 
             if (parameters != null)
-                this.parameter =
+                parameter =
                     string.Join("&",
                     parameters.Select(
                         kv => $"{UrlEncode(kv.Key)}={UrlEncode(kv.Value)}"
@@ -2256,10 +2256,10 @@ public static class PayloadGenerator
         public override string ToString()
         {
             var moneroUri = $"monero://{address}{(!string.IsNullOrEmpty(txPaymentId) || !string.IsNullOrEmpty(recipientName) || !string.IsNullOrEmpty(txDescription) || txAmount != null ? "?" : string.Empty)}";
-            moneroUri += (!string.IsNullOrEmpty(txPaymentId) ? $"tx_payment_id={Uri.EscapeDataString(txPaymentId)}&" : string.Empty);
-            moneroUri += (!string.IsNullOrEmpty(recipientName) ? $"recipient_name={Uri.EscapeDataString(recipientName)}&" : string.Empty);
-            moneroUri += (txAmount != null ? $"tx_amount={txAmount.ToString().Replace(",", ".")}&" : string.Empty);
-            moneroUri += (!string.IsNullOrEmpty(txDescription) ? $"tx_description={Uri.EscapeDataString(txDescription)}" : string.Empty);
+            moneroUri += !string.IsNullOrEmpty(txPaymentId) ? $"tx_payment_id={Uri.EscapeDataString(txPaymentId)}&" : string.Empty;
+            moneroUri += !string.IsNullOrEmpty(recipientName) ? $"recipient_name={Uri.EscapeDataString(recipientName)}&" : string.Empty;
+            moneroUri += txAmount != null ? $"tx_amount={txAmount.ToString().Replace(",", ".")}&" : string.Empty;
+            moneroUri += !string.IsNullOrEmpty(txDescription) ? $"tx_description={Uri.EscapeDataString(txDescription)}" : string.Empty;
             return moneroUri.TrimEnd('&');
         }
 
@@ -2302,12 +2302,12 @@ public static class PayloadGenerator
         private string _recipientSiReference = "";
 
         public override int Version { get { return 15; } }
-        public override QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel.M; } }
-        public override QRCodeGenerator.Encoder.QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.Encoder.QRCodeGenerator.EciMode.Iso8859_2; } }
+        public override QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.ECCLevel.M; } }
+        public override QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.EciMode.Iso8859_2; } }
 
         private string LimitLength(string value, int maxLength)
         {
-            return (value.Length <= maxLength) ? value : value.Substring(0, maxLength);
+            return value.Length <= maxLength ? value : value.Substring(0, maxLength);
         }
 
         public SlovenianUpnQr(string payerName, string payerAddress, string payerPlace, string recipientName, string recipientAddress, string recipientPlace, string recipientIban, string description, double amount, string recipientSiModel = "SI00", string recipientSiReference = "", string code = "OTHR") :
@@ -2322,7 +2322,7 @@ public static class PayloadGenerator
             _amount = FormatAmount(amount);
             _code = LimitLength(code.Trim().ToUpper(), 4);
             _purpose = LimitLength(description.Trim(), 42);
-            _deadLine = (deadline == null) ? "" : deadline?.ToString("dd.MM.yyyy");
+            _deadLine = deadline == null ? "" : deadline?.ToString("dd.MM.yyyy");
             _recipientIban = LimitLength(recipientIban.Trim(), 34);
             _recipientName = LimitLength(recipientName.Trim(), 33);
             _recipientAddress = LimitLength(recipientAddress.Trim(), 33);
@@ -2334,7 +2334,7 @@ public static class PayloadGenerator
         private string FormatAmount(double amount)
         {
             int _amt = (int)Math.Round(amount * 100.0);
-            return String.Format("{0:00000000000}", _amt);
+            return string.Format("{0:00000000000}", _amt);
         }
 
         private int CalculateChecksum()
@@ -2391,7 +2391,7 @@ public static class PayloadGenerator
         decimal sumDec;
         if (!decimal.TryParse(sum, out sumDec))
             return false;
-        var checksumValid = (sumDec % 97) == 1;
+        var checksumValid = sumDec % 97 == 1;
 
         return structurallyValid && checksumValid;
     }
@@ -2417,8 +2417,8 @@ public static class PayloadGenerator
 
     private static string ConvertStringToEncoding(string message, string encoding)
     {
-        Encoding iso = Encoding.GetEncoding(encoding);
-        Encoding utf8 = Encoding.UTF8;
+        var iso = Encoding.GetEncoding(encoding);
+        var utf8 = Encoding.UTF8;
         byte[] utfBytes = utf8.GetBytes(message);
         byte[] isoBytes = Encoding.Convert(utf8, iso, utfBytes);
         return iso.GetString(isoBytes, 0, isoBytes.Length);
@@ -2459,6 +2459,6 @@ public static class PayloadGenerator
 
     private static bool isHexStyle(string inp)
     {
-        return (System.Text.RegularExpressions.Regex.IsMatch(inp, @"\A\b[0-9a-fA-F]+\b\Z") || System.Text.RegularExpressions.Regex.IsMatch(inp, @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z"));
+        return Regex.IsMatch(inp, @"\A\b[0-9a-fA-F]+\b\Z") || Regex.IsMatch(inp, @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z");
     }
 }

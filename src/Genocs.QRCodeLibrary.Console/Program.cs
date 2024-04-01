@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using Genocs.QRCodeGenerator.Decoder;
+using SkiaSharp;
 
 namespace Genocs.QRCodeLibrary.Decoder.ConsoleApp;
 

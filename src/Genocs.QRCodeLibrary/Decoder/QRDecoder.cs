@@ -1,6 +1,6 @@
 ﻿using SkiaSharp;
 
-namespace Genocs.QRCodeLibrary.Decoder;
+namespace Genocs.QRCodeGenerator.Decoder;
 
 /// <summary>
 /// QR Code error correction code enumeration.
@@ -204,7 +204,7 @@ public class QRDecoder
     /// <returns>Output string</returns>
     public static string ByteArrayToStr(byte[] bufferData)
     {
-        System.Text.Decoder decoder = System.Text.Encoding.UTF8.GetDecoder();
+        var decoder = System.Text.Encoding.UTF8.GetDecoder();
         int CharCount = decoder.GetCharCount(bufferData, 0, bufferData.Length);
         char[] chars = new char[CharCount];
         decoder.GetChars(bufferData, 0, bufferData.Length, chars, 0);
@@ -235,7 +235,7 @@ public class QRDecoder
 
         for (int index = 0; index < bufferData.Length; index++)
         {
-            result.Results.Add(ForDisplay(QRDecoder.ByteArrayToStr(bufferData[index])));
+            result.Results.Add(ForDisplay(ByteArrayToStr(bufferData[index])));
         }
 
         return result;
@@ -247,7 +247,7 @@ public class QRDecoder
         for (index = 0; index < result.Length && (result[index] >= ' ' && result[index] <= '~' || result[index] >= 160); index++) ;
         if (index == result.Length) return result;
 
-        System.Text.StringBuilder builder = new System.Text.StringBuilder(result.Substring(0, index));
+        var builder = new System.Text.StringBuilder(result.Substring(0, index));
         for (; index < result.Length; index++)
         {
             char OneChar = result[index];
@@ -320,7 +320,7 @@ public class QRDecoder
 
 #if DEBUG
             int MatchedCount = 0;
-            foreach (Finder HF in FinderList) if (HF._distance != double.MaxValue) MatchedCount++;
+            foreach (var HF in FinderList) if (HF._distance != double.MaxValue) MatchedCount++;
             QRCodeTrace.Format("Matched Finders count: {0}", MatchedCount);
             QRCodeTrace.Write("Remove all unused finders");
 #endif
@@ -330,7 +330,7 @@ public class QRDecoder
 
 #if DEBUG
             QRCodeTrace.Format("Time: {0}", Environment.TickCount - Start);
-            foreach (Finder HF in FinderList) QRCodeTrace.Write(HF.ToString());
+            foreach (var HF in FinderList) QRCodeTrace.Write(HF.ToString());
             QRCodeTrace.Write("Search for QR corners");
 #endif
         }
@@ -391,7 +391,7 @@ public class QRDecoder
                         if (!FindAlignmentMark(Corner)) continue;
 
                         // decode using 4 points
-                        foreach (Finder Align in AlignList)
+                        foreach (var Align in AlignList)
                         {
 #if DEBUG
                             QRCodeTrace.Format("Calculated alignment mark: Row {0}, Col {1}", Align._row, Align._col);
@@ -788,7 +788,7 @@ public class QRDecoder
     {
         // active columns
         bool[] ActiveColumn = new bool[ImageWidth];
-        foreach (Finder HF in FinderList)
+        foreach (var HF in FinderList)
         {
             for (int Col = HF._col1; Col < HF._col2; Col++) ActiveColumn[Col] = true;
         }
@@ -840,7 +840,7 @@ public class QRDecoder
             for (int SigPtr = 0; SigPtr < SigLen; SigPtr += 2)
             {
                 if (!TestFinderSig(RowPos, Len, SigPtr, out double ModuleSize)) continue;
-                foreach (Finder HF in FinderList)
+                foreach (var HF in FinderList)
                 {
                     HF.Match(Col, RowPos[SigPtr + 2], RowPos[SigPtr + 3], ModuleSize);
                 }
@@ -865,7 +865,7 @@ public class QRDecoder
     {
         // active columns
         bool[] ActiveColumn = new bool[AreaWidth];
-        foreach (Finder HF in AlignList)
+        foreach (var HF in AlignList)
         {
             for (int Col = HF._col1; Col < HF._col2; Col++) ActiveColumn[Col - AreaLeft] = true;
         }
@@ -921,7 +921,7 @@ public class QRDecoder
             for (int SigPtr = 0; SigPtr < SigLen; SigPtr += 2)
             {
                 if (!TestAlignSig(RowPos, Len, SigPtr, out double ModuleSize)) continue;
-                foreach (Finder HF in AlignList)
+                foreach (var HF in AlignList)
                 {
                     HF.Match(Col, RowPos[SigPtr + 2], RowPos[SigPtr + 3], ModuleSize);
                 }
@@ -960,10 +960,10 @@ public class QRDecoder
         // keep best entry for each overlapping area
         for (int Index = 0; Index < FinderList.Count; Index++)
         {
-            Finder Finder = FinderList[Index];
+            var Finder = FinderList[Index];
             for (int Index1 = Index + 1; Index1 < FinderList.Count; Index1++)
             {
-                Finder Finder1 = FinderList[Index1];
+                var Finder1 = FinderList[Index1];
                 if (!Finder.Overlap(Finder1)) continue;
                 if (Finder1._distance < Finder._distance)
                 {
@@ -1007,10 +1007,10 @@ public class QRDecoder
         // keep best entry for each overlapping area
         for (int Index = 0; Index < AlignList.Count; Index++)
         {
-            Finder Finder = AlignList[Index];
+            var Finder = AlignList[Index];
             for (int Index1 = Index + 1; Index1 < AlignList.Count; Index1++)
             {
-                Finder Finder1 = AlignList[Index1];
+                var Finder1 = AlignList[Index1];
                 if (!Finder.Overlap(Finder1)) continue;
                 if (Finder1._distance < Finder._distance)
                 {
@@ -1083,7 +1083,7 @@ public class QRDecoder
     internal List<Corner> BuildCornerList()
     {
         // empty list
-        List<Corner> Corners = new List<Corner>();
+        var Corners = new List<Corner>();
 
         // look for all possible 3 finder patterns
         int Index1End = FinderList.Count - 2;
@@ -1528,7 +1528,7 @@ public class QRDecoder
         int versionCode = 0;
         for (int index = 0; index < 18; index++)
         {
-            if (GetModule(index / 3, QRCodeDimension - 11 + (index % 3))) versionCode |= 1 << index;
+            if (GetModule(index / 3, QRCodeDimension - 11 + index % 3)) versionCode |= 1 << index;
         }
         return TestVersionCode(versionCode);
     }
@@ -1542,7 +1542,7 @@ public class QRDecoder
         int VersionCode = 0;
         for (int Index = 0; Index < 18; Index++)
         {
-            if (GetModule(QRCodeDimension - 11 + (Index % 3), Index / 3)) VersionCode |= 1 << Index;
+            if (GetModule(QRCodeDimension - 11 + Index % 3, Index / 3)) VersionCode |= 1 << Index;
         }
         return TestVersionCode(VersionCode);
     }
@@ -1761,7 +1761,7 @@ public class QRDecoder
             if ((MaskMatrix[Row, Col] & StaticTables.NonData) == 0)
             {
                 // unload current module with
-                if ((MaskMatrix[Row, Col] & 1) != 0) CodewordsArray[Ptr >> 3] |= (byte)(1 << (7 - (Ptr & 7)));
+                if ((MaskMatrix[Row, Col] & 1) != 0) CodewordsArray[Ptr >> 3] |= (byte)(1 << 7 - (Ptr & 7));
                 if (++Ptr == PtrEnd) break;
             }
 
@@ -1971,12 +1971,12 @@ public class QRDecoder
     internal byte[] DecodeData()
     {
         // bit buffer initial condition
-        BitBuffer = (UInt32)((CodewordsArray[0] << 24) | (CodewordsArray[1] << 16) | (CodewordsArray[2] << 8) | CodewordsArray[3]);
+        BitBuffer = (uint)(CodewordsArray[0] << 24 | CodewordsArray[1] << 16 | CodewordsArray[2] << 8 | CodewordsArray[3]);
         BitBufferLen = 32;
         CodewordsPtr = 4;
 
         // allocate data byte list
-        List<byte> DataSeg = new List<byte>();
+        var DataSeg = new List<byte>();
 
         // reset ECI assignment value
         ECIAssignValue = -1;
@@ -1985,7 +1985,7 @@ public class QRDecoder
         for (; ; )
         {
             // first 4 bits is mode indicator
-            EncodingMode EncodingMode = (EncodingMode)ReadBitsFromCodewordsArray(4);
+            var EncodingMode = (EncodingMode)ReadBitsFromCodewordsArray(4);
 
             // end of data
             if (EncodingMode <= 0) break;
@@ -1998,7 +1998,7 @@ public class QRDecoder
                 if ((ECIAssignValue & 0x80) == 0) continue;
 
                 // two bytes assinment value
-                ECIAssignValue = (ECIAssignValue << 8) | ReadBitsFromCodewordsArray(8);
+                ECIAssignValue = ECIAssignValue << 8 | ReadBitsFromCodewordsArray(8);
                 if ((ECIAssignValue & 0x4000) == 0)
                 {
                     ECIAssignValue &= 0x3fff;
@@ -2006,7 +2006,7 @@ public class QRDecoder
                 }
 
                 // three bytes assinment value
-                ECIAssignValue = (ECIAssignValue << 8) | ReadBitsFromCodewordsArray(8);
+                ECIAssignValue = ECIAssignValue << 8 | ReadBitsFromCodewordsArray(8);
                 if ((ECIAssignValue & 0x200000) == 0)
                 {
                     ECIAssignValue &= 0x1fffff;
@@ -2032,7 +2032,7 @@ public class QRDecoder
                 // numeric mode
                 case EncodingMode.Numeric:
                     // encode digits in groups of 2
-                    int NumericEnd = (DataLength / 3) * 3;
+                    int NumericEnd = DataLength / 3 * 3;
                     for (int Index = 0; Index < NumericEnd; Index += 3)
                     {
                         int Temp = ReadBitsFromCodewordsArray(10);
@@ -2041,7 +2041,7 @@ public class QRDecoder
                             throw new ApplicationException("Premature end of data (Numeric 1)");
                         }
                         DataSeg.Add(StaticTables.DecodingTable[Temp / 100]);
-                        DataSeg.Add(StaticTables.DecodingTable[(Temp % 100) / 10]);
+                        DataSeg.Add(StaticTables.DecodingTable[Temp % 100 / 10]);
                         DataSeg.Add(StaticTables.DecodingTable[Temp % 10]);
                     }
 
@@ -2072,7 +2072,7 @@ public class QRDecoder
                 // alphanumeric mode
                 case EncodingMode.AlphaNumeric:
                     // encode digits in groups of 2
-                    int AlphaNumEnd = (DataLength / 2) * 2;
+                    int AlphaNumEnd = DataLength / 2 * 2;
                     for (int Index = 0; Index < AlphaNumEnd; Index += 2)
                     {
                         int Temp = ReadBitsFromCodewordsArray(11);
@@ -2131,12 +2131,12 @@ public class QRDecoder
             )
     {
         if (Bits > BitBufferLen) return -1;
-        int Data = (int)(BitBuffer >> (32 - Bits));
+        int Data = (int)(BitBuffer >> 32 - Bits);
         BitBuffer <<= Bits;
         BitBufferLen -= Bits;
         while (BitBufferLen <= 24 && CodewordsPtr < MaxDataCodewords)
         {
-            BitBuffer |= (UInt32)(CodewordsArray[CodewordsPtr++] << (24 - BitBufferLen));
+            BitBuffer |= (uint)(CodewordsArray[CodewordsPtr++] << 24 - BitBufferLen);
             BitBufferLen += 8;
         }
         return Data;
@@ -2155,11 +2155,11 @@ public class QRDecoder
         {
             // numeric mode
             case EncodingMode.Numeric:
-                return QRCodeVersion < 10 ? 10 : (QRCodeVersion < 27 ? 12 : 14);
+                return QRCodeVersion < 10 ? 10 : QRCodeVersion < 27 ? 12 : 14;
 
             // alpha numeric mode
             case EncodingMode.AlphaNumeric:
-                return QRCodeVersion < 10 ? 9 : (QRCodeVersion < 27 ? 11 : 13);
+                return QRCodeVersion < 10 ? 9 : QRCodeVersion < 27 ? 11 : 13;
 
             // byte mode
             case EncodingMode.Byte:

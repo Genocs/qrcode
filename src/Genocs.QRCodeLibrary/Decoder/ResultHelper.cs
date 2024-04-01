@@ -1,4 +1,4 @@
-﻿namespace Genocs.QRCodeLibrary.Decoder
+﻿namespace Genocs.QRCodeGenerator.Decoder
 {
     public static class ResultHelper
     {

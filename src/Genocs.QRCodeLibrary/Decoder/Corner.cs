@@ -1,4 +1,4 @@
-﻿namespace Genocs.QRCodeLibrary.Decoder;
+﻿namespace Genocs.QRCodeGenerator.Decoder;
 
 /////////////////////////////////////////////////////////////////////
 // QR corner three finders pattern class
@@ -67,7 +67,7 @@ internal class Corner
             // rotate top left, top right and bottom left
             if (index != 0)
             {
-                Finder temp = topLeftFinder;
+                var temp = topLeftFinder;
                 topLeftFinder = topRightFinder;
                 topRightFinder = bottomLeftFinder;
                 bottomLeftFinder = temp;
@@ -106,7 +106,7 @@ internal class Corner
             if (newLeftY < 0)
             {
                 // swap top left with bottom right
-                Finder tempFinder = topRightFinder;
+                var tempFinder = topRightFinder;
                 topRightFinder = bottomLeftFinder;
                 bottomLeftFinder = tempFinder;
             }

@@ -1,5 +1,4 @@
-﻿using Genocs.QRCodeLibrary.Encoder;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Genocs.QRCodeGenerator.Encoder;
 

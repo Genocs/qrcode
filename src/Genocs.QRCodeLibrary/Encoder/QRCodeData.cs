@@ -2,7 +2,7 @@ using Genocs.QRCodeGenerator.Encoder.Helpers;
 using System.Collections;
 using System.IO.Compression;
 
-namespace Genocs.QRCodeLibrary.Encoder;
+namespace Genocs.QRCodeGenerator.Encoder;
 
 public class QRCodeData : IDisposable
 {
@@ -56,7 +56,7 @@ public class QRCodeData : IDisposable
         // Set QR code version
         int sideLen = bytes[4];
         bytes.RemoveRange(0, 5);
-        Version = ((sideLen - 21 - 8) / 4) + 1;
+        Version = (sideLen - 21 - 8) / 4 + 1;
 
         // Unpack
         var modules = new Queue<bool>(8 * bytes.Count);
@@ -64,7 +64,7 @@ public class QRCodeData : IDisposable
         {
             for (int i = 7; i >= 0; i--)
             {
-                modules.Enqueue((b & (1 << i)) != 0);
+                modules.Enqueue((b & 1 << i) != 0);
             }
         }
 
@@ -100,7 +100,7 @@ public class QRCodeData : IDisposable
             }
         }
 
-        for (int i = 0; i < 8 - (ModuleMatrix.Count * ModuleMatrix.Count) % 8; i++)
+        for (int i = 0; i < 8 - ModuleMatrix.Count * ModuleMatrix.Count % 8; i++)
         {
             dataQueue.Enqueue(0);
         }
@@ -135,7 +135,7 @@ public class QRCodeData : IDisposable
         else if (compressMode == Compression.GZip)
         {
             using var output = new MemoryStream();
-            using (GZipStream gzipStream = new GZipStream(output, CompressionMode.Compress, true))
+            using (var gzipStream = new GZipStream(output, CompressionMode.Compress, true))
             {
                 gzipStream.Write(rawData, 0, rawData.Length);
             }
@@ -155,7 +155,7 @@ public class QRCodeData : IDisposable
 
     private static int ModulesPerSideFromVersion(int version)
     {
-        return 21 + ((version - 1) * 4);
+        return 21 + (version - 1) * 4;
     }
 
     public void Dispose()

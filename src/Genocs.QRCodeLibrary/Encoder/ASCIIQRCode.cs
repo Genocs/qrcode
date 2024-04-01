@@ -1,7 +1,6 @@
 ﻿using System.Text;
-using static Genocs.QRCodeGenerator.Encoder.QRCodeGenerator;
 
-namespace Genocs.QRCodeLibrary.Encoder;
+namespace Genocs.QRCodeGenerator.Encoder;
 
 public class AsciiQRCode : AbstractQRCode, IDisposable
 {
@@ -74,7 +73,7 @@ public class AsciiQRCode : AbstractQRCode, IDisposable
 
             for (int x = 0; x < QrCodeData.ModuleMatrix.Count; x++)
             {
-                bool module = QrCodeData.ModuleMatrix[x][((y + verticalNumberOfRepeats) / verticalNumberOfRepeats) - 1];
+                bool module = QrCodeData.ModuleMatrix[x][(y + verticalNumberOfRepeats) / verticalNumberOfRepeats - 1];
 
                 for (int i = 0; i < repeatPerModule; i++)
                 {
@@ -99,9 +98,9 @@ public class AsciiQRCode : AbstractQRCode, IDisposable
 
 public static class AsciiQRCodeHelper
 {
-    public static string GetQRCode(string plainText, int pixelsPerModule, string darkColorString, string whiteSpaceString, ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, EciMode eciMode = EciMode.Default, int requestedVersion = -1, string endOfLine = "\n")
+    public static string GetQRCode(string plainText, int pixelsPerModule, string darkColorString, string whiteSpaceString, QRCodeGenerator.ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, QRCodeGenerator.EciMode eciMode = QRCodeGenerator.EciMode.Default, int requestedVersion = -1, string endOfLine = "\n")
     {
-        using var qrGenerator = new Genocs.QRCodeGenerator.Encoder.QRCodeGenerator();
+        using var qrGenerator = new QRCodeGenerator();
         using var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion);
         using var qrCode = new AsciiQRCode(qrCodeData);
         return qrCode.GetGraphic(pixelsPerModule, darkColorString, whiteSpaceString, endOfLine);

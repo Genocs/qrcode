@@ -1,4 +1,4 @@
-namespace Genocs.QRCodeLibrary.Decoder;
+namespace Genocs.QRCodeGenerator.Decoder;
 
 #if DEBUG
 /////////////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ static public class QRCodeTrace
         TestSize();
 
         // open existing or create new trace file
-        StreamWriter TraceFile = new StreamWriter(TraceFileName, true);
+        var TraceFile = new StreamWriter(TraceFileName, true);
 
         // write date and time
         TraceFile.Write(string.Format("{0:yyyy}/{0:MM}/{0:dd} {0:HH}:{0:mm}:{0:ss} ", DateTime.Now));
@@ -80,13 +80,13 @@ static public class QRCodeTrace
         if (isEmpty) return;
 
         // get trace file info
-        FileInfo TraceFileInfo = new FileInfo(TraceFileName);
+        var TraceFileInfo = new FileInfo(TraceFileName);
 
         // if file does not exist or file length less than max allowed file size do nothing
         if (TraceFileInfo.Exists == false || TraceFileInfo.Length <= MaxAllowedFileSize) return;
 
         // create file info class
-        FileStream TraceFile = new FileStream(TraceFileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+        var TraceFile = new FileStream(TraceFileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
 
         // seek to 25% length
         TraceFile.Seek(TraceFile.Length / 4, SeekOrigin.Begin);

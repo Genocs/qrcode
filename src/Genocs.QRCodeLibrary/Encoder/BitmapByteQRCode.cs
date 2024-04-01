@@ -1,6 +1,4 @@
-﻿using static Genocs.QRCodeGenerator.Encoder.QRCodeGenerator;
-
-namespace Genocs.QRCodeLibrary.Encoder;
+﻿namespace Genocs.QRCodeGenerator.Encoder;
 
 // ReSharper disable once InconsistentNaming
 public class BitmapByteQRCode : AbstractQRCode, IDisposable
@@ -34,7 +32,7 @@ public class BitmapByteQRCode : AbstractQRCode, IDisposable
         var moduleDark = darkColorRgb.Reverse();
         var moduleLight = lightColorRgb.Reverse();
 
-        List<byte> bmp = new List<byte>();
+        var bmp = new List<byte>();
 
         // header
         bmp.AddRange(new byte[] { 0x42, 0x4D, 0x4C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00 });
@@ -56,7 +54,7 @@ public class BitmapByteQRCode : AbstractQRCode, IDisposable
                 for (int y = 0; y < sideLength; y = y + pixelsPerModule)
                 {
                     bool module =
-                        QrCodeData.ModuleMatrix[((x + pixelsPerModule) / pixelsPerModule) - 1][((y + pixelsPerModule) / pixelsPerModule) - 1];
+                        QrCodeData.ModuleMatrix[(x + pixelsPerModule) / pixelsPerModule - 1][(y + pixelsPerModule) / pixelsPerModule - 1];
                     for (int i = 0; i < pixelsPerModule; i++)
                     {
                         bmp.AddRange(module ? moduleDark : moduleLight);
@@ -109,21 +107,21 @@ public static class BitmapByteQRCodeHelper
                                     int pixelsPerModule,
                                     string darkColorHtmlHex,
                                     string lightColorHtmlHex,
-                                    ECCLevel eccLevel,
+                                    QRCodeGenerator.ECCLevel eccLevel,
                                     bool forceUtf8 = false,
                                     bool utf8BOM = false,
-                                    EciMode eciMode = EciMode.Default,
+                                    QRCodeGenerator.EciMode eciMode = QRCodeGenerator.EciMode.Default,
                                     int requestedVersion = -1)
     {
-        using (var qrGenerator = new QRCodeGenerator.Encoder.QRCodeGenerator())
+        using (var qrGenerator = new QRCodeGenerator())
         using (var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion))
         using (var qrCode = new BitmapByteQRCode(qrCodeData))
             return qrCode.GetGraphic(pixelsPerModule, darkColorHtmlHex, lightColorHtmlHex);
     }
 
-    public static byte[] GetQRCode(string txt, Genocs.QRCodeGenerator.Encoder.QRCodeGenerator.ECCLevel eccLevel, int size)
+    public static byte[] GetQRCode(string txt, QRCodeGenerator.ECCLevel eccLevel, int size)
     {
-        using (var qrGen = new Genocs.QRCodeGenerator.Encoder.QRCodeGenerator())
+        using (var qrGen = new QRCodeGenerator())
         using (var qrCode = qrGen.CreateQrCode(txt, eccLevel))
         using (var qrBmp = new BitmapByteQRCode(qrCode))
             return qrBmp.GetGraphic(size);

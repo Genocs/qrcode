@@ -1,4 +1,4 @@
-﻿namespace Genocs.QRCodeLibrary.Decoder;
+﻿namespace Genocs.QRCodeGenerator.Decoder;
 
 /// <summary>
 /// QR code finder class.

@@ -1,4 +1,4 @@
-﻿namespace Genocs.QRCodeLibrary.Decoder
+﻿namespace Genocs.QRCodeGenerator.Decoder
 {
     internal class StaticTables
     {

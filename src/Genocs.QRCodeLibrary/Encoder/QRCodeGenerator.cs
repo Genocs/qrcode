@@ -1,4 +1,3 @@
-using Genocs.QRCodeLibrary.Encoder;
 using System.Collections;
 using System.Text;
 

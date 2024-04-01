@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Genocs.QRCodeLibrary.Decoder
+namespace Genocs.QRCodeGenerator.Decoder
 {
     internal class ReedSolomon
     {
@@ -163,7 +163,7 @@ namespace Genocs.QRCodeLibrary.Decoder
             {
                 int DataIndexInverse = 255 - DataIndex;
                 int Total = 1;
-                for (int Index = 1; Index <= ErrorCount; Index++) Total ^= MultiplyIntByExp(Sigma[Index], (DataIndexInverse * Index) % 255);
+                for (int Index = 1; Index <= ErrorCount; Index++) Total ^= MultiplyIntByExp(Sigma[Index], DataIndexInverse * Index % 255);
                 if (Total != 0) continue;
 
                 int Position = StaticTables.ExpToInt[DataIndex];
@@ -197,9 +197,9 @@ namespace Genocs.QRCodeLibrary.Decoder
                 int ps = ErrorPosition[ErrIndex];
                 int zlog = 255 - StaticTables.IntToExp[ps];
                 int OmegaTotal = Omega[0];
-                for (int Index = 1; Index < ErrorCount; Index++) OmegaTotal ^= MultiplyIntByExp(Omega[Index], (zlog * Index) % 255);
+                for (int Index = 1; Index < ErrorCount; Index++) OmegaTotal ^= MultiplyIntByExp(Omega[Index], zlog * Index % 255);
                 int SigmaTotal = Sigma[1];
-                for (int j = 2; j < ErrorCount; j += 2) SigmaTotal ^= MultiplyIntByExp(Sigma[j + 1], (zlog * j) % 255);
+                for (int j = 2; j < ErrorCount; j += 2) SigmaTotal ^= MultiplyIntByExp(Sigma[j + 1], zlog * j % 255);
                 ReceivedData[DataLength - 1 - StaticTables.IntToExp[ps]] ^= (byte)MultiplyDivide(ps, OmegaTotal, SigmaTotal);
             }
 
@@ -231,7 +231,7 @@ namespace Genocs.QRCodeLibrary.Decoder
 
         internal static int Multiply(int int1, int int2)
         {
-            return (int1 == 0 || int2 == 0) ? 0 : StaticTables.ExpToInt[StaticTables.IntToExp[int1] + StaticTables.IntToExp[int2]];
+            return int1 == 0 || int2 == 0 ? 0 : StaticTables.ExpToInt[StaticTables.IntToExp[int1] + StaticTables.IntToExp[int2]];
         }
 
         internal static int MultiplyIntByExp
@@ -250,7 +250,7 @@ namespace Genocs.QRCodeLibrary.Decoder
                 int int3
                 )
         {
-            return (int1 == 0 || int2 == 0) ? 0 : StaticTables.ExpToInt[(StaticTables.IntToExp[int1] + StaticTables.IntToExp[int2] - StaticTables.IntToExp[int3] + 255) % 255];
+            return int1 == 0 || int2 == 0 ? 0 : StaticTables.ExpToInt[(StaticTables.IntToExp[int1] + StaticTables.IntToExp[int2] - StaticTables.IntToExp[int3] + 255) % 255];
         }
 
         internal static int DivideIntByExp

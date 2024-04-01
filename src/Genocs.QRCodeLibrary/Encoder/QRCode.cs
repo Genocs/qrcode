@@ -1,7 +1,6 @@
 using SkiaSharp;
-using static Genocs.QRCodeGenerator.Encoder.QRCodeGenerator;
 
-namespace Genocs.QRCodeLibrary.Encoder;
+namespace Genocs.QRCodeGenerator.Encoder;
 
 public class QRCode : AbstractQRCode, IDisposable
 {
@@ -19,12 +18,12 @@ public class QRCode : AbstractQRCode, IDisposable
 
     public SKImage GetGraphic(int pixelsPerModule)
     {
-        return this.GetGraphic(pixelsPerModule, SKColors.Black, SKColors.White, true);
+        return GetGraphic(pixelsPerModule, SKColors.Black, SKColors.White, true);
     }
 
     public SKImage GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, bool drawQuietZones = true)
     {
-        return this.GetGraphic(pixelsPerModule, FromHtml(darkColorHtmlHex), FromHtml(lightColorHtmlHex), drawQuietZones);
+        return GetGraphic(pixelsPerModule, FromHtml(darkColorHtmlHex), FromHtml(lightColorHtmlHex), drawQuietZones);
     }
 
     public SKImage GetGraphic(int pixelsPerModule, SKColor darkColor, SKColor lightColor, bool drawQuietZones = true)
@@ -51,7 +50,7 @@ public class QRCode : AbstractQRCode, IDisposable
         {
             for (int y = 0; y < size + offset; y = y + pixelsPerModule)
             {
-                bool module = QrCodeData.ModuleMatrix[((y + pixelsPerModule) / pixelsPerModule) - 1][((x + pixelsPerModule) / pixelsPerModule) - 1];
+                bool module = QrCodeData.ModuleMatrix[(y + pixelsPerModule) / pixelsPerModule - 1][(x + pixelsPerModule) / pixelsPerModule - 1];
 
                 if (module)
                 {
@@ -60,7 +59,7 @@ public class QRCode : AbstractQRCode, IDisposable
                     float fR = pixelsPerModule + (x - offset) - padding;
                     float fB = pixelsPerModule + (y - offset) - padding;
 
-                    SKRect rect = new SKRect(fL, fT, fR, fB);
+                    var rect = new SKRect(fL, fT, fR, fB);
                     canvas.DrawRect(rect, darkBrush);
                 }
             }
@@ -107,7 +106,7 @@ public class QRCode : AbstractQRCode, IDisposable
         {
             for (int y = 0; y < size + offset; y = y + pixelsPerModule)
             {
-                bool module = this.QrCodeData.ModuleMatrix[((y + pixelsPerModule) / pixelsPerModule) - 1][((x + pixelsPerModule) / pixelsPerModule) - 1];
+                bool module = QrCodeData.ModuleMatrix[(y + pixelsPerModule) / pixelsPerModule - 1][(x + pixelsPerModule) / pixelsPerModule - 1];
 
                 if (module)
                 {
@@ -166,9 +165,9 @@ public class QRCode : AbstractQRCode, IDisposable
 
 public static class QRCodeHelper
 {
-    public static SKImage GetQRCode(string plainText, int pixelsPerModule, SKColor darkColor, SKColor lightColor, ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, EciMode eciMode = EciMode.Default, int requestedVersion = -1, SKImage? icon = null, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true)
+    public static SKImage GetQRCode(string plainText, int pixelsPerModule, SKColor darkColor, SKColor lightColor, QRCodeGenerator.ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, QRCodeGenerator.EciMode eciMode = QRCodeGenerator.EciMode.Default, int requestedVersion = -1, SKImage? icon = null, int iconSizePercent = 15, int iconBorderWidth = 6, bool drawQuietZones = true)
     {
-        using var qrGenerator = new Genocs.QRCodeGenerator.Encoder.QRCodeGenerator();
+        using var qrGenerator = new QRCodeGenerator();
         using var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion);
         using var qrCode = new QRCode(qrCodeData);
         return qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, icon, iconSizePercent, iconBorderWidth, drawQuietZones);

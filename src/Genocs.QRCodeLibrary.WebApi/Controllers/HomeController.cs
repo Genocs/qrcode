@@ -1,5 +1,5 @@
-﻿using Genocs.QRCodeLibrary.Decoder;
-using Genocs.QRCodeLibrary.Encoder;
+﻿using Genocs.QRCodeGenerator.Decoder;
+using Genocs.QRCodeGenerator.Encoder;
 using Microsoft.AspNetCore.Mvc;
 using SkiaSharp;
 

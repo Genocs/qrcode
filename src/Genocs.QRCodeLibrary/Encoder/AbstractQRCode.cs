@@ -1,4 +1,4 @@
-﻿namespace Genocs.QRCodeLibrary.Encoder;
+﻿namespace Genocs.QRCodeGenerator.Encoder;
 
 public abstract class AbstractQRCode
 {
