@@ -546,11 +546,11 @@ public class QRDecoder
             byte b = 0;
 
             // process raster line pixels
-            var p = src;
-            for (var x = 0; x < bitmap.Width; x++)
+            byte* p = src;
+            for (int x = 0; x < bitmap.Width; x++)
             {
                 // compute pixel average
-                var c = (*p + *(p + 1) + *(p + 2)) / 3;
+                int c = (*p + *(p + 1) + *(p + 2)) / 3;
                 p += 4;
 
                 // dither or threshold
