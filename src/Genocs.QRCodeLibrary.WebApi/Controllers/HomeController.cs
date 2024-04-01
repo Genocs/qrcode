@@ -14,6 +14,14 @@ public class HomeController : ControllerBase
     public HomeController(ILogger<HomeController> logger)
         => _logger = logger;
 
+    [Route("")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetHomeAsync()
+    {
+        return await Task.Run(() => Ok("Welcome to Genocs QRCode Library WebApi"));
+    }
+
     /// <summary>
     /// It allows to upload a file containing a QRCode.
     /// </summary>
