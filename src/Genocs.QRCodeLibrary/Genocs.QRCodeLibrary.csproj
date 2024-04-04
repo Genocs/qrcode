@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <TargetFrameworks>net8.0;net7.0;net6.0;netstandard2.1</TargetFrameworks>
-        <PackageId>Genocs.HTTP</PackageId>
-        <RootNamespace>Genocs.QRCodeGenerator</RootNamespace>
-        <AssemblyName>Genocs.QRCodeGenerator</AssemblyName>
+        <PackageId>Genocs.QRCodeLibrary</PackageId>
+        <RootNamespace>Genocs.QRCodeLibrary</RootNamespace>
+        <AssemblyName>Genocs.QRCodeLibrary</AssemblyName>
         <Title>Library to build QRCode for .NET Core projects.</Title>
         <Description>QRCode library for .NET Core.</Description>
         <LangVersion>10.0</LangVersion>
@@ -19,7 +19,7 @@
         <RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>
         <PackageIcon>icon.png</PackageIcon>
         <RepositoryType>git</RepositoryType>
-        <PackageTags>QRCode reader QRCode writer</PackageTags>
+        <PackageTags>QRCode reader writer</PackageTags>
         <PackageReleaseNotes>Removed reference</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
@@ -42,12 +42,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SkiaSharp" Version="2.88.6" />
-        <PackageReference Include="System.Text.Json" Version="7.0.3" />
+        <PackageReference Include="SkiaSharp" Version="2.88.7" />
     </ItemGroup>
 
 
