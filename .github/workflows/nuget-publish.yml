@@ -40,7 +40,7 @@ jobs:
         run: dotnet build -c Debug --no-restore
 
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test -c Debug --no-build --verbosity normal
 
       - name: Pack
         run: dotnet pack -c Debug -o out -p:PackageVersion=${{ github.event.inputs.version }} --no-build --verbosity normal
