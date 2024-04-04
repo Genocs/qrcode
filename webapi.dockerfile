@@ -5,19 +5,22 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /src
 COPY ["src/Genocs.QRCodeLibrary.WebApi/Genocs.QRCodeLibrary.WebApi.csproj", "Genocs.QRCodeLibrary.WebApi/"]
 COPY ["src/Genocs.QRCodeLibrary/Genocs.QRCodeLibrary.csproj", "Genocs.QRCodeLibrary/"]
 COPY ["src/Genocs.BarcodeLibrary/Genocs.BarcodeLibrary.csproj", "Genocs.BarcodeLibrary/"]
 
+COPY ["LICENSE", "LICENSE"]
+COPY ["icon.png", "icon.png"]
 
-RUN dotnet restore "src/Genocs.QRCodeLibrary.WebApi/Genocs.QRCodeLibrary.WebApi.csproj"
-COPY . .
-WORKDIR "/src/Genocs.QRCodeLibrary.WebApi"
+WORKDIR "/src/src/Genocs.QRCodeLibrary.WebApi"
+
+RUN dotnet restore "Genocs.QRCodeLibrary.WebApi.csproj"
+
 RUN dotnet build "Genocs.QRCodeLibrary.WebApi.csproj" -c Release -o /app/build
 
-FROM build AS publish
+FROM build-env AS publish
 RUN dotnet publish "Genocs.QRCodeLibrary.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final

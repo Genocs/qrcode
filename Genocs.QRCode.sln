@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		Makefile = Makefile
 		README.md = README.md
 		stylecop.json = stylecop.json
+		webapi.dockerfile = webapi.dockerfile
 	EndProjectSection
 EndProject
 Global

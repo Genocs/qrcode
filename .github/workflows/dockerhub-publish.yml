@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v4
   
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
   
@@ -53,6 +53,6 @@ jobs:
 
       - name: Build and push image to Dockerhub
         run: |
-          docker build -f webapi.dockerfile -t genocs/demo-webapi:${{ github.event.inputs.version }} -t genocs/demo-webapi:latest .
-          docker push genocs/demo-webapi:${{ github.event.inputs.version }}
-          docker push genocs/demo-webapi:latest
+          docker build -f webapi.dockerfile -t genocs/codes-webapi:${{ github.event.inputs.version }} -t genocs/codes-webapi:latest .
+          docker push genocs/codes-webapi:${{ github.event.inputs.version }}
+          docker push genocs/codes-webapi:latest
