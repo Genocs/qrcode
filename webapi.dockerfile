@@ -1,5 +1,6 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
+
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
@@ -7,14 +8,19 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /src
-COPY ["src/Genocs.QRCodeLibrary.WebApi/Genocs.QRCodeLibrary.WebApi.csproj", "Genocs.QRCodeLibrary.WebApi/"]
-COPY ["src/Genocs.QRCodeLibrary/Genocs.QRCodeLibrary.csproj", "Genocs.QRCodeLibrary/"]
-COPY ["src/Genocs.BarcodeLibrary/Genocs.BarcodeLibrary.csproj", "Genocs.BarcodeLibrary/"]
+COPY ["src/Genocs.QRCodeLibrary.WebApi", "Genocs.QRCodeLibrary.WebApi/"]
+COPY ["src/Genocs.QRCodeLibrary", "Genocs.QRCodeLibrary/"]
+COPY ["src/Genocs.BarcodeLibrary", "Genocs.BarcodeLibrary/"]
 
+COPY ["Directory.Build.props", "Directory.Build.props"]
+COPY ["Directory.Build.targets", "Directory.Build.targets"]
+COPY ["dotnet.ruleset", "dotnet.ruleset"]
+COPY ["global.json", "global.json"]
+COPY ["stylecop.json", "stylecop.json"]
 COPY ["LICENSE", "LICENSE"]
 COPY ["icon.png", "icon.png"]
 
-WORKDIR "/src/src/Genocs.QRCodeLibrary.WebApi"
+WORKDIR "/src/Genocs.QRCodeLibrary.WebApi"
 
 RUN dotnet restore "Genocs.QRCodeLibrary.WebApi.csproj"
 

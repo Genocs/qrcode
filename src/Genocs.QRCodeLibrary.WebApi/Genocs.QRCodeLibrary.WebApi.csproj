@@ -2,11 +2,15 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <IsPublishable>false</IsPublishable>
-        <IsPackable>false</IsPackable>
+        <PackageId>Genocs.QRCodeLibrary.WebApi</PackageId>
+        <RootNamespace>Genocs.QRCodeLibrary.WebApi</RootNamespace>
+        <AssemblyName>Genocs.QRCodeLibrary.WebApi</AssemblyName>
+        <Title>The QRCodeLibrary webapi service.</Title>
+        <Description>The QRCodeLibrary webapi service.</Description>
+        <DockerTargetOS>Linux</DockerTargetOS>
         <UserSecretsId>Genocs</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <DockerfileContext>..\..</DockerfileContext>
+        <DockerfileContext>..\..</DockerfileContext>        
     </PropertyGroup>
 
 	<ItemGroup>

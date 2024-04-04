@@ -76,7 +76,7 @@ Steps to build the Docker image and run the container
 
 ```ps
 # Build the Docker image
-docker build -t genocs.qrcode.api .
+docker build -f webapi.dockerfile -t genocs.qrcode.api .
 
 # Add a tag
 docker tag genocs.qrcode.api genocs/qrcode.api
