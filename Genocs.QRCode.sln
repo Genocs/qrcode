@@ -24,8 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		Directory.Build.targets = Directory.Build.targets
 		dotnet.ruleset = dotnet.ruleset
 		global.json = global.json
-		icon.png = icon.png
 		launchSettings.json = launchSettings.json
+		Makefile = Makefile
 		README.md = README.md
 		stylecop.json = stylecop.json
 	EndProjectSection

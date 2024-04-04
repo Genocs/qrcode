@@ -1,4 +1,4 @@
-# .NET Core QRCode generator library
+# .NET8 QRCode library
 
 PLACEHOLDER
 

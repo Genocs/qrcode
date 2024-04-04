@@ -20,13 +20,29 @@
         <Product>BarcodeLib</Product>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIconUrl />
         <AssemblyVersion>3.0.0.0</AssemblyVersion>
         <FileVersion>3.0.0.0</FileVersion>
 
-        <PackageTags>QRCode reader QRCode writer</PackageTags>
+        <PackageTags>QRCode reader writer</PackageTags>
 
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\icon.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>    
 
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
@@ -35,17 +51,6 @@
     <ItemGroup>
         <PackageReference Include="SkiaSharp" Version="2.88.6" />
         <PackageReference Include="System.Text.Json" Version="7.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="..\..\LICENSE">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
-        <None Include="..\..\icon.png">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
     </ItemGroup>
 
 </Project>
