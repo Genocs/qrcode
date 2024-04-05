@@ -96,15 +96,17 @@ public class HomeController : ControllerBase
     /// <summary>
     /// It allows to build an image containing a Barcode.
     /// </summary>
-    /// <param name="barcodeType">The Barcode type.</param>
+    /// <param name="barcodeType">The Barcode type <see cref="BarcodeLibrary.BarcodeType"/>.</param>
     /// <param name="payload">The Barcode payload data.</param>
     /// <param name="width">The Barcode width.</param>
     /// <param name="height">The Barcode height.</param>
-    /// <returns>Barcode image result.</returns>
+    /// <returns>Barcode image result as image PNG.</returns>
     [Route("BuildBarcode")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult GetBuildBarCode([FromQuery] BarcodeLibrary.Type barcodeType = BarcodeLibrary.Type.UpcA, string payload = "038000356216", int width = 290, int height = 120)
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+    public IActionResult GetBuildBarCode([FromQuery] BarcodeLibrary.BarcodeType barcodeType = BarcodeLibrary.BarcodeType.UpcA, string payload = "038000356216", int width = 290, int height = 120)
     {
         try
         {

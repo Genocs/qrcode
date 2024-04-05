@@ -7,9 +7,9 @@ internal class MSI : BarcodeCommon, IBarcode
     ///  Written by: Brad Barnhill
     /// </summary>
     private readonly string[] MSI_Code = { "100100100100", "100100100110", "100100110100", "100100110110", "100110100100", "100110100110", "100110110100", "100110110110", "110100100100", "110100100110" };
-    private Type Encoded_Type = Type.Unspecified;
+    private BarcodeType Encoded_Type = BarcodeType.Unspecified;
 
-    public MSI(string input, Type encodedType)
+    public MSI(string input, BarcodeType encodedType)
     {
         Encoded_Type = encodedType;
         _rawData = input;
@@ -27,10 +27,10 @@ internal class MSI : BarcodeCommon, IBarcode
         //get checksum
         string withChecksum = Encoded_Type switch
         {
-            Type.MsiMod10 => Mod10(RawData),
-            Type.Msi2Mod10 => Mod10(Mod10(RawData)),
-            Type.MsiMod11 => Mod11(RawData),
-            Type.MsiMod11Mod10 => Mod10(Mod11(RawData)),
+            BarcodeType.MsiMod10 => Mod10(RawData),
+            BarcodeType.Msi2Mod10 => Mod10(Mod10(RawData)),
+            BarcodeType.MsiMod11 => Mod11(RawData),
+            BarcodeType.MsiMod11Mod10 => Mod10(Mod11(RawData)),
             _ => null,
         };
 

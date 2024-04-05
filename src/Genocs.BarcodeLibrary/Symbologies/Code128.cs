@@ -34,7 +34,7 @@ class Code128 : BarcodeCommon, IBarcode
     /// Encodes data in Code128 format.
     /// </summary>
     /// <param name="input">Data to encode.</param>
-    /// <param name="type">Type of encoding to lock to. (Code 128A, Code 128B, Code 128C)</param>
+    /// <param name="type">BarcodeType of encoding to lock to. (Code 128A, Code 128B, Code 128C)</param>
     public Code128(string input, TYPES type)
     {
         this.type = type;
@@ -50,14 +50,15 @@ class Code128 : BarcodeCommon, IBarcode
 
     private string Encode_Code128()
     {
-        //initialize datastructure to hold encoding information
-        init_Code128();
+        // Initialize data structure to hold encoding information
+        InitCode128();
 
         return GetEncoding();
-    }//Encode_Code128
-    private void init_Code128()
+    }
+
+    private void InitCode128()
     {
-        //populate data
+        // Populate data
         void entry(string a, string b, string c, string encoding)
         {
             C128_CodeIndexByA.Add(a, C128_Code.Count);
@@ -65,6 +66,7 @@ class Code128 : BarcodeCommon, IBarcode
             C128_CodeIndexByC.Add(c, C128_Code.Count);
             C128_Code.Add(encoding);
         }
+
         entry(" ", " ", "00", "11011001100");
         entry("!", "!", "01", "11001101100");
         entry("\"", "\"", "02", "11001100110");
@@ -174,22 +176,25 @@ class Code128 : BarcodeCommon, IBarcode
         entry("START_C", "START_C", "START_C", "11010011100");
         entry("STOP", "STOP", "STOP", "11000111010");
 
-    }//init_Code128
+    }
+
     private List<int> FindStartorCodeCharacter(string s)
     {
         var rows = new List<int>();
 
-        //if two chars are numbers (or FNC1) then START_C or CODE_C
+        // If two chars are numbers (or FNC1) then START_C or CODE_C
         if (s.Length > 1 && (char.IsNumber(s[0]) || s[0] == FNC1) && (char.IsNumber(s[1]) || s[1] == FNC1))
         {
             if (!_startCharacterIndex.HasValue)
             {
                 _startCharacterIndex = C128_CodeIndexByA["START_C"];
                 rows.Add(_startCharacterIndex.Value);
-            }//if
+            }
             else
+            {
                 rows.Add(C128_CodeIndexByA["CODE_C"]);
-        }//if
+            }
+        }
         else
         {
             try
@@ -207,6 +212,7 @@ class Code128 : BarcodeCommon, IBarcode
                         rows.Add(C128_CodeIndexByB["CODE_A"]);//first column is FNC4 so use B
                     }//else
                 }
+
                 var BFound = C128_CodeIndexByB.TryGetValue(s, out var bIndex) && (!AFound || bIndex != aIndex);
                 if (BFound)
                 {
@@ -220,25 +226,26 @@ class Code128 : BarcodeCommon, IBarcode
                         rows.Add(C128_CodeIndexByA["CODE_B"]);
                     }//else
                 }
-            }//try
+            }
             catch (Exception ex)
             {
                 Error("EC128-1: " + ex.Message);
-            }//catch
+            }
 
             if (rows.Count <= 0)
                 Error("EC128-2: Could not determine start character.");
-        }//else
+        }
 
         return rows;
     }
+
     private string CalculateCheckDigit()
     {
         uint checkSum = 0;
 
         for (uint i = 0; i < _FormattedData.Count; i++)
         {
-            var s = _FormattedData[(int)i];
+            string s = _FormattedData[(int)i];
 
             //try to find value in the A column
             var value = C128_CodeIndexByA.TryGetValue(s, out var index)
@@ -254,6 +261,7 @@ class Code128 : BarcodeCommon, IBarcode
         var remainder = checkSum % 103;
         return C128_Code[(int)remainder];
     }
+
     private void BreakUpDataForEncoding()
     {
         var temp = "";

@@ -19,9 +19,9 @@ internal class Standard2of5 : BarcodeCommon, IBarcode
         "10111010111010"
     };
 
-    private readonly Type _encodedType = Type.Unspecified;
+    private readonly BarcodeType _encodedType = BarcodeType.Unspecified;
 
-    public Standard2of5(string input, Type encodedType)
+    public Standard2of5(string input, BarcodeType encodedType)
     {
         _rawData = input;
         _encodedType = encodedType;
@@ -42,7 +42,7 @@ internal class Standard2of5 : BarcodeCommon, IBarcode
             result += S25_Code[(int)char.GetNumericValue(RawData, i)];
         }
 
-        result += _encodedType == Type.Standard2Of5Mod10 ? S25_Code[CalculateMod10CheckDigit()] : "";
+        result += _encodedType == BarcodeType.Standard2Of5Mod10 ? S25_Code[CalculateMod10CheckDigit()] : "";
 
         //add ending bars
         result += "1101011";

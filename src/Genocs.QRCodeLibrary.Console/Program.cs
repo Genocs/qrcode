@@ -36,7 +36,7 @@ public class Program
         try
         {
             BarcodeLibrary.Barcode barcode = new();
-            var img = barcode.Encode(BarcodeLibrary.Type.UpcA, "038000356216", SKColors.Black, SKColors.White, 290, 120);
+            var img = barcode.Encode(BarcodeLibrary.BarcodeType.UpcA, "038000356216", SKColors.Black, SKColors.White, 290, 120);
 
             //img.Save("C:\\dev\\image4_out.jpg");
 

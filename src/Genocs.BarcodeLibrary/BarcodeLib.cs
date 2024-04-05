@@ -22,21 +22,135 @@ using System.Xml.Serialization;
 namespace Genocs.BarcodeLibrary;
 
 #region Enums
-public enum Type
+
+/// <summary>
+/// The enumeration that specifies the type of the barcode.
+/// </summary>
+public enum BarcodeType
 {
+    /// <summary>
+    /// Unspecified barcode type.
+    /// </summary>
     Unspecified,
+
+    /// <summary>
+    /// UPC-A barcode type.
+    /// </summary>
     UpcA,
+
+    /// <summary>
+    /// UPC-E barcode type.
+    /// </summary>
     UpcE,
+
+    /// <summary>
+    /// UPC Supplemental 2-digit barcode type.
+    /// </summary>
     UpcSupplemental2Digit,
+
+    /// <summary>
+    /// UPC Supplemental 5-digit barcode type.
+    /// </summary>
     UpcSupplemental5Digit,
+
+    /// <summary>
+    /// EAN-13 barcode type.
+    /// </summary>
     Ean13,
+
+    /// <summary>
+    /// EAN-8 barcode type.
+    /// </summary>
     Ean8,
+
+    /// <summary>
+    /// Interleaved 2 of 5 barcode type.
+    /// </summary>
     Interleaved2Of5,
+
+    /// <summary>
+    /// Interleaved 2 of 5 with Mod 10 Checksum barcode type.
+    /// </summary>
     Interleaved2Of5Mod10,
+
+    /// <summary>
+    /// Standard 2 of 5 barcode type.
+    /// </summary>
     Standard2Of5,
+
+    /// <summary>
+    /// Standard 2 of 5 with Mod 10 Checksum barcode type.
+    /// </summary>
     Standard2Of5Mod10,
+
+    /// <summary>
+    /// Industrial 2 of 5 barcode type.
+    /// </summary>
     Industrial2Of5,
-    Industrial2Of5Mod10, Code39, Code39Extended, Code39Mod43, Codabar, PostNet, Bookland, Isbn, Jan13, MsiMod10, Msi2Mod10, MsiMod11, MsiMod11Mod10, ModifiedPlessey, Code11, Usd8, Ucc12, Ucc13, Logmars, Code128, Code128A, Code128B, Code128C, Itf14, Code93, Telepen, Fim, Pharmacode
+
+    /// <summary>
+    /// Industrial 2 of 5 with Mod 10 Checksum barcode type.
+    /// </summary>
+    Industrial2Of5Mod10,
+
+    /// <summary>
+    /// Code 39 barcode type.
+    /// </summary>
+    Code39,
+
+    /// <summary>
+    /// Code 39 Extended barcode type.
+    /// </summary>
+    Code39Extended,
+
+    /// <summary>
+    /// Code 39 with Mod 43 Checksum barcode type.
+    /// </summary>
+    Code39Mod43,
+
+    /// <summary>
+    /// Codabar barcode type.
+    /// </summary>
+    Codabar,
+
+    /// <summary>
+    /// PostNet barcode type.
+    /// </summary>
+    PostNet,
+
+    /// <summary>
+    /// Bookland barcode type.
+    /// </summary>
+    Bookland,
+
+    /// <summary>
+    /// ISBN barcode type.
+    /// </summary>
+    Isbn,
+
+    /// <summary>
+    /// JAN-13 barcode type.
+    /// </summary>
+    Jan13,
+    MsiMod10,
+    Msi2Mod10,
+    MsiMod11,
+    MsiMod11Mod10,
+    ModifiedPlessey,
+    Code11,
+    Usd8,
+    Ucc12,
+    Ucc13,
+    Logmars,
+    Code128,
+    Code128A,
+    Code128B,
+    Code128C,
+    Itf14,
+    Code93,
+    Telepen,
+    Fim,
+    Pharmacode
 }
 
 public enum SaveTypes
@@ -82,7 +196,7 @@ public class Barcode : IDisposable
         RawData = data;
     }
 
-    public Barcode(string data, Type iType)
+    public Barcode(string data, BarcodeType iType)
     {
         RawData = data;
         EncodedType = iType;
@@ -105,9 +219,9 @@ public class Barcode : IDisposable
     public string CountryAssigningManufacturerCode { get; private set; } = "N/A";
 
     /// <summary>
-    /// Gets or sets the Encoded Type (ex. UPC-A, EAN-13 ... etc)
+    /// Gets or sets the Encoded BarcodeType (ex. UPC-A, EAN-13 ... etc)
     /// </summary>
-    public Type EncodedType { set; get; } = Type.Unspecified; //EncodedType
+    public BarcodeType EncodedType { set; get; } = BarcodeType.Unspecified; //EncodedType
     /// <summary>
     /// Gets the Image of the generated barcode.
     /// </summary>
@@ -219,12 +333,12 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="stringToEncode">Raw data to encode.</param>
     /// <param name="width">Width of the resulting barcode.(pixels)</param>
     /// <param name="height">Height of the resulting barcode.(pixels)</param>
     /// <returns>Image representing the barcode.</returns>
-    public SKImage Encode(Type iType, string stringToEncode, int width, int height)
+    public SKImage Encode(BarcodeType iType, string stringToEncode, int width, int height)
     {
         Width = width;
         Height = height;
@@ -234,14 +348,14 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="stringToEncode">Raw data to encode.</param>
     /// <param name="foreColor">Foreground color</param>
     /// <param name="backColor">Background color</param>
     /// <param name="width">Width of the resulting barcode.(pixels)</param>
     /// <param name="height">Height of the resulting barcode.(pixels)</param>
     /// <returns>Image representing the barcode.</returns>
-    public SKImage Encode(Type iType, string stringToEncode, SKColorF foreColor, SKColorF backColor, int width, int height)
+    public SKImage Encode(BarcodeType iType, string stringToEncode, SKColorF foreColor, SKColorF backColor, int width, int height)
     {
         Width = width;
         Height = height;
@@ -251,24 +365,24 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="stringToEncode">Raw data to encode.</param>
     /// <param name="foreColor">Foreground color</param>
     /// <param name="backColor">Background color</param>
     /// <returns>Image representing the barcode.</returns>
-    public SKImage Encode(Type iType, string stringToEncode, SKColorF foreColor, SKColorF backColor)
+    public SKImage Encode(BarcodeType iType, string stringToEncode, SKColorF foreColor, SKColorF backColor)
     {
         BackColor = backColor;
         ForeColor = foreColor;
         return Encode(iType, stringToEncode);
-    }//(Image)Encode(Type, string, Color, Color)
+    }//(Image)Encode(BarcodeType, string, Color, Color)
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="stringToEncode">Raw data to encode.</param>
     /// <returns>Image representing the barcode.</returns>
-    public SKImage Encode(Type iType, string stringToEncode)
+    public SKImage Encode(BarcodeType iType, string stringToEncode)
     {
         RawData = stringToEncode;
         return Encode(iType);
@@ -276,8 +390,8 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
-    internal SKImage Encode(Type iType)
+    /// <param name="iType">BarcodeType of encoding to use.</param>
+    internal SKImage Encode(BarcodeType iType)
     {
         EncodedType = iType;
         return Encode();
@@ -325,7 +439,7 @@ public class Barcode : IDisposable
         if (RawData.Trim() == "")
             throw new Exception("EENCODE-1: Input data not allowed to be blank.");
 
-        if (EncodedType == Type.Unspecified)
+        if (EncodedType == BarcodeType.Unspecified)
             throw new Exception("EENCODE-2: Symbology type not allowed to be unspecified.");
 
         EncodedValue = "";
@@ -333,95 +447,95 @@ public class Barcode : IDisposable
 
         switch (EncodedType)
         {
-            case Type.Ucc12:
-            case Type.UpcA: //Encode_UPCA();
+            case BarcodeType.Ucc12:
+            case BarcodeType.UpcA: //Encode_UPCA();
                 _iBarcode = new UPCA(RawData);
                 break;
-            case Type.Ucc13:
-            case Type.Ean13: //Encode_EAN13();
+            case BarcodeType.Ucc13:
+            case BarcodeType.Ean13: //Encode_EAN13();
                 _iBarcode = new EAN13(RawData, DisableEan13CountryException);
                 break;
-            case Type.Interleaved2Of5Mod10:
-            case Type.Interleaved2Of5: //Encode_Interleaved2of5();
+            case BarcodeType.Interleaved2Of5Mod10:
+            case BarcodeType.Interleaved2Of5: //Encode_Interleaved2of5();
                 _iBarcode = new Interleaved2of5(RawData, EncodedType);
                 break;
-            case Type.Industrial2Of5Mod10:
-            case Type.Industrial2Of5:
-            case Type.Standard2Of5Mod10:
-            case Type.Standard2Of5: //Encode_Standard2of5();
+            case BarcodeType.Industrial2Of5Mod10:
+            case BarcodeType.Industrial2Of5:
+            case BarcodeType.Standard2Of5Mod10:
+            case BarcodeType.Standard2Of5: //Encode_Standard2of5();
                 _iBarcode = new Standard2of5(RawData, EncodedType);
                 break;
-            case Type.Logmars:
-            case Type.Code39: //Encode_Code39();
+            case BarcodeType.Logmars:
+            case BarcodeType.Code39: //Encode_Code39();
                 _iBarcode = new Code39(RawData);
                 break;
-            case Type.Code39Extended:
+            case BarcodeType.Code39Extended:
                 _iBarcode = new Code39(RawData, true);
                 break;
-            case Type.Code39Mod43:
+            case BarcodeType.Code39Mod43:
                 _iBarcode = new Code39(RawData, false, true);
                 break;
-            case Type.Codabar: //Encode_Codabar();
+            case BarcodeType.Codabar: //Encode_Codabar();
                 _iBarcode = new Codabar(RawData);
                 break;
-            case Type.PostNet: //Encode_PostNet();
+            case BarcodeType.PostNet: //Encode_PostNet();
                 _iBarcode = new Postnet(RawData);
                 break;
-            case Type.Isbn:
-            case Type.Bookland: //Encode_ISBN_Bookland();
+            case BarcodeType.Isbn:
+            case BarcodeType.Bookland: //Encode_ISBN_Bookland();
                 _iBarcode = new ISBN(RawData);
                 break;
-            case Type.Jan13: //Encode_JAN13();
+            case BarcodeType.Jan13: //Encode_JAN13();
                 _iBarcode = new JAN13(RawData);
                 break;
-            case Type.UpcSupplemental2Digit: //Encode_UPCSupplemental_2();
+            case BarcodeType.UpcSupplemental2Digit: //Encode_UPCSupplemental_2();
                 _iBarcode = new UPCSupplement2(RawData);
                 break;
-            case Type.MsiMod10:
-            case Type.Msi2Mod10:
-            case Type.MsiMod11:
-            case Type.MsiMod11Mod10:
-            case Type.ModifiedPlessey: // Encode_MSI();
+            case BarcodeType.MsiMod10:
+            case BarcodeType.Msi2Mod10:
+            case BarcodeType.MsiMod11:
+            case BarcodeType.MsiMod11Mod10:
+            case BarcodeType.ModifiedPlessey: // Encode_MSI();
                 _iBarcode = new MSI(RawData, EncodedType);
                 break;
-            case Type.UpcSupplemental5Digit: // Encode_UPCSupplemental_5();
+            case BarcodeType.UpcSupplemental5Digit: // Encode_UPCSupplemental_5();
                 _iBarcode = new UPCSupplement5(RawData);
                 break;
-            case Type.UpcE: // Encode_UPCE();
+            case BarcodeType.UpcE: // Encode_UPCE();
                 _iBarcode = new UPCE(RawData);
                 break;
-            case Type.Ean8: // Encode_EAN8();
+            case BarcodeType.Ean8: // Encode_EAN8();
                 _iBarcode = new EAN8(RawData);
                 break;
-            case Type.Usd8:
-            case Type.Code11: // Encode_Code11();
+            case BarcodeType.Usd8:
+            case BarcodeType.Code11: // Encode_Code11();
                 _iBarcode = new Code11(RawData);
                 break;
-            case Type.Code128: // Encode_Code128();
+            case BarcodeType.Code128: // Encode_Code128();
                 _iBarcode = new Code128(RawData);
                 break;
-            case Type.Code128A:
+            case BarcodeType.Code128A:
                 _iBarcode = new Code128(RawData, Code128.TYPES.A);
                 break;
-            case Type.Code128B:
+            case BarcodeType.Code128B:
                 _iBarcode = new Code128(RawData, Code128.TYPES.B);
                 break;
-            case Type.Code128C:
+            case BarcodeType.Code128C:
                 _iBarcode = new Code128(RawData, Code128.TYPES.C);
                 break;
-            case Type.Itf14:
+            case BarcodeType.Itf14:
                 _iBarcode = new ITF14(RawData);
                 break;
-            case Type.Code93:
+            case BarcodeType.Code93:
                 _iBarcode = new Code93(RawData);
                 break;
-            case Type.Telepen:
+            case BarcodeType.Telepen:
                 _iBarcode = new Telepen(RawData);
                 break;
-            case Type.Fim:
+            case BarcodeType.Fim:
                 _iBarcode = new FIM(RawData);
                 break;
-            case Type.Pharmacode:
+            case BarcodeType.Pharmacode:
                 _iBarcode = new Pharmacode(RawData);
                 break;
 
@@ -446,7 +560,7 @@ public class Barcode : IDisposable
 
         switch (EncodedType)
         {
-            case Type.Itf14:
+            case BarcodeType.Itf14:
                 {
                     // Automatically calculate the Width if applicable. Quite confusing with this
                     // barcode type, and it seems this method overestimates the minimum width. But
@@ -520,7 +634,7 @@ public class Barcode : IDisposable
 
                     break;
                 }//case
-            case Type.UpcA:
+            case BarcodeType.UpcA:
                 {
                     // Automatically calculate Width if applicable.
                     Width = BarWidth * EncodedValue.Length ?? Width;
@@ -575,7 +689,7 @@ public class Barcode : IDisposable
 
                     break;
                 }//case
-            case Type.Ean13:
+            case BarcodeType.Ean13:
                 {
                     // Automatically calculate Width if applicable.
                     Width = BarWidth * EncodedValue.Length ?? Width;
@@ -650,7 +764,7 @@ public class Barcode : IDisposable
                     var iBarWidth = Width / EncodedValue.Length;
                     var iBarWidthModifier = 1;
 
-                    if (EncodedType == Type.PostNet)
+                    if (EncodedType == BarcodeType.PostNet)
                         iBarWidthModifier = 2;
 
                     //set alignment
@@ -681,7 +795,7 @@ public class Barcode : IDisposable
                                 forePaint.StrokeWidth = barWidth;
                                 while (pos < EncodedValue.Length)
                                 {
-                                    if (EncodedType == Type.PostNet)
+                                    if (EncodedType == BarcodeType.PostNet)
                                     {
                                         //draw half bars in postnet
                                         var y = 0f;
@@ -919,10 +1033,10 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="data">Raw data to encode.</param>
     /// <returns>Image representing the barcode.</returns>
-    public static SKImage DoEncode(Type iType, string data)
+    public static SKImage DoEncode(BarcodeType iType, string data)
     {
         using (var b = new Barcode())
         {
@@ -933,11 +1047,11 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="data">Raw data to encode.</param>
     /// <param name="xml">XML representation of the data and the image of the barcode.</param>
     /// <returns>Image representing the barcode.</returns>
-    public static SKImage DoEncode(Type iType, string data, out string xml)
+    public static SKImage DoEncode(BarcodeType iType, string data, out string xml)
     {
         using (var b = new Barcode())
         {
@@ -950,11 +1064,11 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="data">Raw data to encode.</param>
     /// <param name="includeLabel">Include the label at the bottom of the image with data encoded.</param>
     /// <returns>Image representing the barcode.</returns>
-    public static SKImage DoEncode(Type iType, string data, bool includeLabel)
+    public static SKImage DoEncode(BarcodeType iType, string data, bool includeLabel)
     {
         using (var b = new Barcode())
         {
@@ -966,13 +1080,13 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="data">Raw data to encode.</param>
     /// <param name="includeLabel">Include the label at the bottom of the image with data encoded.</param>
     /// <param name="width">Width of the resulting barcode.(pixels)</param>
     /// <param name="height">Height of the resulting barcode.(pixels)</param>
     /// <returns>Image representing the barcode.</returns>
-    public static SKImage DoEncode(Type iType, string data, bool includeLabel, int width, int height)
+    public static SKImage DoEncode(BarcodeType iType, string data, bool includeLabel, int width, int height)
     {
         using (var b = new Barcode())
         {
@@ -984,13 +1098,13 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="data">Raw data to encode.</param>
     /// <param name="includeLabel">Include the label at the bottom of the image with data encoded.</param>
     /// <param name="drawColor">Foreground color</param>
     /// <param name="backColor">Background color</param>
     /// <returns>Image representing the barcode.</returns>
-    public static SKImage DoEncode(Type iType, string data, bool includeLabel, Color drawColor, Color backColor)
+    public static SKImage DoEncode(BarcodeType iType, string data, bool includeLabel, Color drawColor, Color backColor)
     {
         using (var b = new Barcode())
         {
@@ -1002,7 +1116,7 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="data">Raw data to encode.</param>
     /// <param name="includeLabel">Include the label at the bottom of the image with data encoded.</param>
     /// <param name="drawColor">Foreground color</param>
@@ -1010,7 +1124,7 @@ public class Barcode : IDisposable
     /// <param name="width">Width of the resulting barcode.(pixels)</param>
     /// <param name="height">Height of the resulting barcode.(pixels)</param>
     /// <returns>Image representing the barcode.</returns>
-    public static SKImage DoEncode(Type iType, string data, bool includeLabel, Color drawColor, Color backColor, int width, int height)
+    public static SKImage DoEncode(BarcodeType iType, string data, bool includeLabel, Color drawColor, Color backColor, int width, int height)
     {
         using (var b = new Barcode())
         {
@@ -1022,7 +1136,7 @@ public class Barcode : IDisposable
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
-    /// <param name="iType">Type of encoding to use.</param>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="data">Raw data to encode.</param>
     /// <param name="includeLabel">Include the label at the bottom of the image with data encoded.</param>
     /// <param name="drawColor">Foreground color</param>
@@ -1031,7 +1145,7 @@ public class Barcode : IDisposable
     /// <param name="height">Height of the resulting barcode.(pixels)</param>
     /// <param name="xml">XML representation of the data and the image of the barcode.</param>
     /// <returns>Image representing the barcode.</returns>
-    public static SKImage DoEncode(Type iType, string data, bool includeLabel, Color drawColor, Color backColor, int width, int height, out string xml)
+    public static SKImage DoEncode(BarcodeType iType, string data, bool includeLabel, Color drawColor, Color backColor, int width, int height, out string xml)
     {
         using (var b = new Barcode())
         {

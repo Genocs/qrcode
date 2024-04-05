@@ -53,13 +53,8 @@ The library allows to build a different type of Barcode.
 The library do not contains reference to System.Drawing.Common library, so it can be used into Docker Image Linux native
 
 
-[![.NET](https://github.com/Genocs/qrcode/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/Genocs/qrcode/actions/workflows/dotnet.yml) [![Build Status](https://app.travis-ci.com/Genocs/qrcode.svg?branch=main)](https://app.travis-ci.com/github/Genocs/qrcode) <a href="https://www.nuget.org/packages/Genocs.QRCodeLibrary/" rel="Genocs.QRCodeLibrary">![NuGet](https://buildstats.info/nuget/genocs.qrcodelibrary)</a> <a href="https://hub.docker.com/repository/docker/genocs/qrcode/" rel="Genocs.QRCodeLibrary">![Docker Automated build](https://img.shields.io/docker/automated/genocs/qrcode)</a> [![Gitter](https://img.shields.io/badge/chat-on%20gitter-blue.svg)](https://gitter.im/genocs/)
+![Docker Automated build](https://img.shields.io/docker/automated/genocs/qrcode)</a> 
 
-
-
-## References
-
-Please see the original version at [codeproject](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/).
 
 ## Commands
 
@@ -67,25 +62,26 @@ Please see the original version at [codeproject](https://www.codeproject.com/Art
 
 To build and test the project type following command:
 
-```ps
+``` bash
 dotnet build
 dotnet test
 ```
 
 Steps to build the Docker image and run the container
 
-```ps
+``` bash
 # Build the Docker image
-docker build -f webapi.dockerfile -t genocs.qrcode.api .
+docker build -f webapi.dockerfile -t genocs/codes-webapi:1.0.0 -t genocs/codes-webapi:latest .
 
 # Add a tag
-docker tag genocs.qrcode.api genocs/qrcode.api
+docker tag genocs/codes-webapi:1.0.0 genocs/codes-webapi:latest
 
 # Push to the container registry
-docker push genocs/qrcode.api
+docker push genocs/codes-webapi:1.0.0
+docker push genocs/codes-webapi:latest
 
 # Run the container 
-docker run -p 90:80 -d --name qrcodeapi-container genocs/qrcode.api
+docker run -p 5900:80 -d --name qrcodeapi-container genocs/codes-webapi:1.0.0
 ```
 
 If you want to use the container into a docker network:
@@ -162,3 +158,6 @@ Become a financial contributor and help me sustain the project. [Support the Pro
 
 
 ## Acknowledgements
+
+Please see the original version at [codeproject](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/).
+

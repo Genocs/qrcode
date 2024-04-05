@@ -7,9 +7,9 @@ namespace Genocs.BarcodeLibrary.Symbologies;
 class Interleaved2of5 : BarcodeCommon, IBarcode
 {
     private readonly string[] _i25Code = { "NNWWN", "WNNNW", "NWNNW", "WWNNN", "NNWNW", "WNWNN", "NWWNN", "NNNWW", "WNNWN", "NWNWN" };
-    private readonly Type _encodedType;
+    private readonly BarcodeType _encodedType;
 
-    public Interleaved2of5(string input, Type encodedType)
+    public Interleaved2of5(string input, BarcodeType encodedType)
     {
         _encodedType = encodedType;
         _rawData = input;
@@ -21,14 +21,14 @@ class Interleaved2of5 : BarcodeCommon, IBarcode
     private string Encode_Interleaved2of5()
     {
         //check length of input (only even if no checkdigit, else with check digit odd)
-        if (RawData.Length % 2 != (_encodedType == Type.Interleaved2Of5Mod10 ? 1 : 0))
+        if (RawData.Length % 2 != (_encodedType == BarcodeType.Interleaved2Of5Mod10 ? 1 : 0))
             Error("EI25-1: Data length invalid.");
 
         if (!CheckNumericOnly(RawData))
             Error("EI25-2: Numeric Data Only");
 
         var result = "1010";
-        var data = RawData + (_encodedType == Type.Interleaved2Of5Mod10 ? CalculateMod10CheckDigit().ToString() : "");
+        var data = RawData + (_encodedType == BarcodeType.Interleaved2Of5Mod10 ? CalculateMod10CheckDigit().ToString() : "");
 
         for (int i = 0; i < data.Length; i += 2)
         {
