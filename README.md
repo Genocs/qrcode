@@ -81,7 +81,7 @@ docker push genocs/codes-webapi:1.0.0
 docker push genocs/codes-webapi:latest
 
 # Run the container 
-docker run -p 5900:80 -d --name qrcodeapi-container genocs/codes-webapi:1.0.0
+docker run -p 5900:8080 -d --name qrcodeapi-container genocs/codes-webapi:1.0.0
 ```
 
 If you want to use the container into a docker network:
@@ -92,7 +92,7 @@ docker run -p 90:80 -d --name qrcodeapi-container genocs/qrcode.api --network ge
 
 ###  Push the images to the Docker image repository (Docker Hub)
 
-The tagname is optional
+'tagname' is optional
 
 ``` ps
 docker push genocs/qrcode.api:tagname
@@ -103,10 +103,6 @@ docker push genocs/qrcode.api:tagname
 ``` ps
 docker pull genocs/qrcode.api:tagname
 ```
-
-
-
-
 
 ### Deploy in a cloud instance
 

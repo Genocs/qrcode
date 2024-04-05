@@ -27,7 +27,7 @@ RUN dotnet restore "Genocs.QRCodeLibrary.WebApi.csproj"
 RUN dotnet build "Genocs.QRCodeLibrary.WebApi.csproj" -c Debug -o /app/build
 
 FROM build-env AS publish
-RUN dotnet publish "Genocs.QRCodeLibrary.WebApi.csproj" -c Debug -o /app/publish
+RUN dotnet publish "Genocs.QRCodeLibrary.WebApi.csproj" -c Debug -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

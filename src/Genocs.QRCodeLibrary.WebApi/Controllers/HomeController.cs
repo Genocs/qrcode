@@ -75,7 +75,7 @@ public class HomeController : ControllerBase
     [Route("BuildQrCode")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult GetBuildQrCode([FromQuery] string payload, int size = 20)
+    public IActionResult GetBuildQrCode([FromQuery] string payload, int size = 16)
     {
         try
         {
