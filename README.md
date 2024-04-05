@@ -1,7 +1,8 @@
 <!-- PROJECT SHIELDS -->
 [![License][license-shield]][license-url]
 [![Build][build-shield]][build-url]
-[![Downloads][downloads-shield]][downloads-url]
+[![DownloadsBarcode][downloads-br-shield]][downloads-br-url]
+[![DownloadsQRCode][downloads-qr-shield]][downloads-qr-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -16,8 +17,10 @@
 [license-url]: https://github.com/Genocs/qrcode/blob/main/LICENSE
 [build-shield]: https://github.com/Genocs/qrcode/actions/workflows/build_and_test.yml/badge.svg?branch=main
 [build-url]: https://github.com/Genocs/qrcode/actions/workflows/build_and_test.yml
-[downloads-shield]: https://img.shields.io/nuget/dt/Genocs.QRCodeLibary.svg?color=2da44e&label=downloads&logo=nuget
-[downloads-url]: https://www.nuget.org/packages/Genocs.QRCodeLibary
+[downloads-br-shield]: https://img.shields.io/nuget/dt/Genocs.BarcodeLibrary.svg?color=2da44e&label=downloads_barcode&logo=nuget
+[downloads-br-url]: https://www.nuget.org/packages/Genocs.BarcodeLibrary
+[downloads-qr-shield]: https://img.shields.io/nuget/dt/Genocs.QRCodeLibrary.svg?color=2da44e&label=downloads_qrcode&logo=nuget
+[downloads-qr-url]: https://www.nuget.org/packages/Genocs.QRCodeLibrary
 [contributors-shield]: https://img.shields.io/github/contributors/Genocs/qrcode.svg?style=flat-square
 [contributors-url]: https://github.com/Genocs/qrcode/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/Genocs/qrcode?style=flat-square
