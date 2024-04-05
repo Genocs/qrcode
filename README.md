@@ -71,37 +71,37 @@ Steps to build the Docker image and run the container
 
 ``` bash
 # Build the Docker image
-docker build -f webapi.dockerfile -t genocs/codes-webapi:1.0.0 -t genocs/codes-webapi:latest .
+docker build -f webapi.dockerfile -t genocs/codes-webapi:1.0.1 -t genocs/codes-webapi:latest .
 
 # Add a tag
-docker tag genocs/codes-webapi:1.0.0 genocs/codes-webapi:latest
+docker tag genocs/codes-webapi:1.0.1 genocs/codes-webapi:latest
 
 # Push to the container registry
-docker push genocs/codes-webapi:1.0.0
+docker push genocs/codes-webapi:1.0.1
 docker push genocs/codes-webapi:latest
 
 # Run the container 
-docker run -p 5900:8080 -d --name qrcodeapi-container genocs/codes-webapi:1.0.0
+docker run -p 5900:8080 -d --name qrcodeapi-container genocs/codes-webapi:1.0.1
 ```
 
 If you want to use the container into a docker network:
 
-``` ps
-docker run -p 90:80 -d --name qrcodeapi-container genocs/qrcode.api --network genocs-network
+``` bash
+docker run -p 5900:8080 -d --name qrcodeapi-container genocs/codes-webapi:1.0.1 --network genocs-network
 ```
 
 ###  Push the images to the Docker image repository (Docker Hub)
 
-'tagname' is optional
+*tagname* is optional
 
-``` ps
-docker push genocs/qrcode.api:tagname
+``` bash
+docker push genocs/codes-webapi:tagname
 ```
 
 ### Pull the image from Docker image repository (Docker Hub)
 
-``` ps
-docker pull genocs/qrcode.api:tagname
+``` bash
+docker pull genocs/codes-webapi:tagname
 ```
 
 ### Deploy in a cloud instance
