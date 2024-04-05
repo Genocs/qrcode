@@ -604,12 +604,12 @@ public static class PayloadGenerator
 
             if (!string.IsNullOrEmpty(label))
             {
-                this.label = Uri.EscapeUriString(label);
+                this.label = Uri.EscapeDataString(label);
             }
 
             if (!string.IsNullOrEmpty(message))
             {
-                this.message = Uri.EscapeUriString(message);
+                this.message = Uri.EscapeDataString(message);
             }
 
             this.amount = amount;
@@ -1477,11 +1477,7 @@ public static class PayloadGenerator
                     if (periodicLastExecutionDate != null)
                         this.periodicLastExecutionDate = (DateTime)periodicLastExecutionDate;
                 }
-
             }
-
-
-
         }
 
         public override string ToString()
@@ -1952,9 +1948,9 @@ public static class PayloadGenerator
                 throw new Exception("Secret must be a filled out base32 encoded string");
             }
 
-            string strippedSecret = Secret.Replace(" ", "");
-            string escapedIssuer = null;
-            string escapedLabel = null;
+            string strippedSecret = Secret.Replace(" ", string.Empty);
+            string? escapedIssuer = null;
+            string? escapedLabel = null;
 
             if (!string.IsNullOrWhiteSpace(Issuer))
             {
@@ -1963,7 +1959,7 @@ public static class PayloadGenerator
                     throw new Exception("Issuer must not have a ':'");
                 }
 
-                escapedIssuer = Uri.EscapeUriString(Issuer);
+                escapedIssuer = Uri.EscapeDataString(Issuer);
             }
 
             if (!string.IsNullOrWhiteSpace(Label))
@@ -1973,7 +1969,7 @@ public static class PayloadGenerator
                     throw new Exception("Label must not have a ':'");
                 }
 
-                escapedLabel = Uri.EscapeUriString(Label);
+                escapedLabel = Uri.EscapeDataString(Label);
             }
 
             if (escapedLabel != null)
