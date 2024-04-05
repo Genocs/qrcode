@@ -2289,8 +2289,6 @@ public class PayloadGeneratorTests
         exception.Message.ShouldBe("Alternative procedure information block 2 must be shorter than 101 chars.");
     }
 
-
-
     [Fact]
     public void one_time_password_generator_time_based_generates_with_standard_options()
     {
@@ -2301,9 +2299,8 @@ public class PayloadGeneratorTests
             Label = "test@google.com",
         };
 
-        pg.ToString().ShouldBe("otpauth://totp/Google:test@google.com?secret=pwq65q55&issuer=Google");
+        pg.ToString().ShouldBe("otpauth://totp/Google:test%40google.com?secret=pwq65q55&issuer=Google");
     }
-
 
     [Fact]
     public void one_time_password_generator_hmac_based_generates_with_standard_options()
@@ -2317,10 +2314,10 @@ public class PayloadGeneratorTests
             Counter = 500,
         };
 
-        pg.ToString().ShouldBe("otpauth://hotp/Google:test@google.com?secret=pwq65q55&issuer=Google&counter=500");
+        pg.ToString().ShouldBe("otpauth://hotp/Google:test%40google.com?secret=pwq65q55&issuer=Google&counter=500");
     }
-    //TODO: Include more tests for the one time password payload generator
 
+    // TODO: Include more tests for the one time password payload generator
 
     [Fact]
     public void shadowsocks_generator_can_generate_payload()
