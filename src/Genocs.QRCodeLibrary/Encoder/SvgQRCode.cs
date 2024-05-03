@@ -3,15 +3,8 @@ using System.Text;
 
 namespace Genocs.QRCodeGenerator.Encoder;
 
-public class SvgQRCode : AbstractQRCode, IDisposable
+public class SvgQRCode : AbstractQRCode
 {
-    /// <summary>
-    /// Constructor without params to be used in COM Objects connections.
-    /// </summary>
-    public SvgQRCode()
-    {
-    }
-
     public SvgQRCode(QRCodeData data)
         : base(data)
     {
@@ -66,13 +59,14 @@ public class SvgQRCode : AbstractQRCode, IDisposable
                 }
             }
         }
+
         svgFile.Append(@"</svg>");
         return svgFile.ToString();
     }
 
     private string CleanSvgVal(double input)
     {
-        //Clean double values for international use/formats
+        // Clean double values for international use/formats
         return input.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 

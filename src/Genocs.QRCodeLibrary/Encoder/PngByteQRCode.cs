@@ -2,15 +2,8 @@
 
 namespace Genocs.QRCodeGenerator.Encoder;
 
-public sealed class PngByteQRCode : AbstractQRCode, IDisposable
+public sealed class PngByteQRCode : AbstractQRCode
 {
-    /// <summary>
-    /// Constructor without params to be used in COM Objects connections
-    /// </summary>
-    public PngByteQRCode()
-    {
-    }
-
     public PngByteQRCode(QRCodeData data)
         : base(data)
     {
@@ -23,7 +16,7 @@ public sealed class PngByteQRCode : AbstractQRCode, IDisposable
     {
         using (var png = new PngBuilder())
         {
-            var size = QrCodeData.ModuleMatrix.Count * pixelsPerModule;
+            int size = QrCodeData.ModuleMatrix.Count * pixelsPerModule;
             png.WriteHeader(size, size, 1, PngBuilder.ColorType.Greyscale);
             png.WriteScanlines(DrawScanlines(pixelsPerModule));
             png.WriteEnd();
@@ -38,7 +31,7 @@ public sealed class PngByteQRCode : AbstractQRCode, IDisposable
     {
         using (var png = new PngBuilder())
         {
-            var size = QrCodeData.ModuleMatrix.Count * pixelsPerModule;
+            int size = QrCodeData.ModuleMatrix.Count * pixelsPerModule;
             png.WriteHeader(size, size, 1, PngBuilder.ColorType.Indexed);
             png.WritePalette(darkColorRgba, lightColorRgba);
             png.WriteScanlines(DrawScanlines(pixelsPerModule));

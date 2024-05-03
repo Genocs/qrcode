@@ -1,15 +1,8 @@
 using SkiaSharp;
 
 namespace Genocs.QRCodeGenerator.Encoder;
-
-public class QRCode : AbstractQRCode, IDisposable
+public class QRCode : AbstractQRCode
 {
-    /// <summary>
-    /// Constructor without params to be used in COM Objects connections.
-    /// </summary>
-    public QRCode()
-    {
-    }
 
     public QRCode(QRCodeData data)
         : base(data)
@@ -39,8 +32,6 @@ public class QRCode : AbstractQRCode, IDisposable
             Style = SKPaintStyle.Fill
         };
 
-        int padding = 1;
-
         // Create an image and fill it blue
         SKBitmap image = new(size, size);
         using SKCanvas canvas = new(image);
@@ -54,10 +45,10 @@ public class QRCode : AbstractQRCode, IDisposable
 
                 if (module)
                 {
-                    float fL = x - offset + padding;
-                    float fT = y - offset + padding;
-                    float fR = pixelsPerModule + (x - offset) - padding;
-                    float fB = pixelsPerModule + (y - offset) - padding;
+                    float fL = x - offset;
+                    float fT = y - offset;
+                    float fR = pixelsPerModule + (x - offset);
+                    float fB = pixelsPerModule + (y - offset);
 
                     var rect = new SKRect(fL, fT, fR, fB);
                     canvas.DrawRect(rect, darkBrush);
@@ -142,20 +133,20 @@ public class QRCode : AbstractQRCode, IDisposable
         return SKImage.FromBitmap(image);
     }
 
-    //internal GraphicsPath CreateRoundedRectanglePath(RectangleF rect, int cornerRadius)
-    //{
-    //    var roundedRect = new GraphicsPath();
-    //    roundedRect.AddArc(rect.X, rect.Y, cornerRadius * 2, cornerRadius * 2, 180, 90);
-    //    roundedRect.AddLine(rect.X + cornerRadius, rect.Y, rect.Right - cornerRadius * 2, rect.Y);
-    //    roundedRect.AddArc(rect.X + rect.Width - cornerRadius * 2, rect.Y, cornerRadius * 2, cornerRadius * 2, 270, 90);
-    //    roundedRect.AddLine(rect.Right, rect.Y + cornerRadius * 2, rect.Right, rect.Y + rect.Height - cornerRadius * 2);
-    //    roundedRect.AddArc(rect.X + rect.Width - cornerRadius * 2, rect.Y + rect.Height - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 0, 90);
-    //    roundedRect.AddLine(rect.Right - cornerRadius * 2, rect.Bottom, rect.X + cornerRadius * 2, rect.Bottom);
-    //    roundedRect.AddArc(rect.X, rect.Bottom - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 90, 90);
-    //    roundedRect.AddLine(rect.X, rect.Bottom - cornerRadius * 2, rect.X, rect.Y + cornerRadius * 2);
-    //    roundedRect.CloseFigure();
-    //    return roundedRect;
-    //}
+    internal SKPath CreateRoundedRectanglePath(SKRect rect, int cornerRadius)
+    {
+        var roundedRect = new SKPath();
+        //roundedRect.AddArc(rect.Left, rect.Top, cornerRadius * 2, cornerRadius * 2, 180, 90);
+        //roundedRect.AddLine(rect.Left + cornerRadius, rect.Top, rect.Right - cornerRadius * 2, rect.Y);
+        //roundedRect.AddArc(rect.Left + rect.Width - cornerRadius * 2, rect.Y, cornerRadius * 2, cornerRadius * 2, 270, 90);
+        //roundedRect.AddLine(rect.Right, rect.Top + cornerRadius * 2, rect.Right, rect.Y + rect.Height - cornerRadius * 2);
+        //roundedRect.AddArc(rect.Left + rect.Width - cornerRadius * 2, rect.Y + rect.Height - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 0, 90);
+        //roundedRect.AddLine(rect.Right - cornerRadius * 2, rect.Bottom, rect.X + cornerRadius * 2, rect.Bottom);
+        //roundedRect.AddArc(rect.Left, rect.Bottom - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 90, 90);
+        //roundedRect.AddLine(rect.Left, rect.Bottom - cornerRadius * 2, rect.X, rect.Y + cornerRadius * 2);
+        roundedRect.Close();
+        return roundedRect;
+    }
 
     public static SKColor FromHtml(string color)
     {

@@ -34,17 +34,17 @@ public enum ErrorCorrection
 public enum EncodingMode
 {
     /// <summary>
-    /// Terminator
+    /// Terminator.
     /// </summary>
     Terminator,
 
     /// <summary>
-    /// Numeric
+    /// Numeric.
     /// </summary>
     Numeric,
 
     /// <summary>
-    /// Alpha numeric
+    /// Alpha numeric.
     /// </summary>
     AlphaNumeric,
 
@@ -54,62 +54,62 @@ public enum EncodingMode
     Append,
 
     /// <summary>
-    /// byte encoding
+    /// byte encoding.
     /// </summary>
     Byte,
 
     /// <summary>
-    /// FNC1 first
+    /// FNC1 first.
     /// </summary>
     FNC1First,
 
     /// <summary>
-    /// Unknown encoding constant
+    /// Unknown encoding constant.
     /// </summary>
     Unknown6,
 
     /// <summary>
-    /// Extended Channel Interpretaion (ECI) mode
+    /// Extended Channel Interpretation (ECI) mode.
     /// </summary>
     ECI,
 
     /// <summary>
-    /// Kanji encoding (not implemented by this software)
+    /// Kanji encoding (not implemented by this software).
     /// </summary>
     Kanji,
 
     /// <summary>
-    /// FNC1 second
+    /// FNC1 second.
     /// </summary>
     FNC1Second,
 
     /// <summary>
-    /// Unknown encoding constant
+    /// Unknown encoding constant.
     /// </summary>
     Unknown10,
 
     /// <summary>
-    /// Unknown encoding constant
+    /// Unknown encoding constant.
     /// </summary>
     Unknown11,
 
     /// <summary>
-    /// Unknown encoding constant
+    /// Unknown encoding constant.
     /// </summary>
     Unknown12,
 
     /// <summary>
-    /// Unknown encoding constant
+    /// Unknown encoding constant.
     /// </summary>
     Unknown13,
 
     /// <summary>
-    /// Unknown encoding constant
+    /// Unknown encoding constant.
     /// </summary>
     Unknown14,
 
     /// <summary>
-    /// Unknown encoding constant
+    /// Unknown encoding constant.
     /// </summary>
     Unknown15,
 }
@@ -119,32 +119,32 @@ public class QRDecoder
     public const string VersionNumber = "Rev 2.1.0 - 2019-07-22";
 
     /// <summary>
-    /// Gets QR Code matrix version
+    /// Gets QR Code matrix version.
     /// </summary>
     public int QRCodeVersion { get; internal set; }
 
     /// <summary>
-    /// Gets QR Code matrix dimension in bits
+    /// Gets QR Code matrix dimension in bits.
     /// </summary>
     public int QRCodeDimension { get; internal set; }
 
     /// <summary>
-    /// Gets QR Code error correction code (L, M, Q, H)
+    /// Gets QR Code error correction code (L, M, Q, H).
     /// </summary>
     public ErrorCorrection ErrorCorrection { get; internal set; }
 
     /// <summary>
-    /// Error correction percent (L, M, Q, H)
+    /// Error correction percent (L, M, Q, H).
     /// </summary>
     public int[] ErrCorrPercent = new int[] { 7, 15, 25, 30 };
 
     /// <summary>
-    /// Get mask code (0 to 7)
+    /// Get mask code (0 to 7).
     /// </summary>
     public int MaskCode { get; internal set; }
 
     /// <summary>
-    /// ECI Assignment Value
+    /// ECI Assignment Value.
     /// </summary>
     public int ECIAssignValue { get; internal set; }
 
@@ -172,7 +172,7 @@ public class QRDecoder
 
     internal bool Trans4Mode;
 
-    // transformation cooefficients from QR modules to image pixels
+    // transformation coefficients from QR modules to image pixels
     internal double Trans3a;
     internal double Trans3b;
     internal double Trans3c;
@@ -211,17 +211,14 @@ public class QRDecoder
         return new string(chars);
     }
 
-
     public QrCodeResult ImageDecoder(SKImage image)
     {
         byte[][] tempResult = ImageDecoderRaw(image);
         return QRCodeResult(tempResult);
     }
 
-
-
     /// <summary>
-    /// Format result for display
+    /// Format result for display.
     /// </summary>
     /// <param name="bufferData"></param>
     /// <returns></returns>
@@ -281,11 +278,8 @@ public class QRDecoder
     /// </summary>
     /// <param name="image">Input image.</param>
     /// <returns>Output byte arrays.</returns>
-    public byte[][] ImageDecoderRaw(SKImage image)
+    public byte[][]? ImageDecoderRaw(SKImage image)
     {
-#if DEBUG
-        int Start;
-#endif
         try
         {
             // empty data string output
@@ -295,58 +289,23 @@ public class QRDecoder
             ImageWidth = image.Width;
             ImageHeight = image.Height;
 
-#if DEBUG
-            Start = Environment.TickCount;
-            QRCodeTrace.Write("Convert image to black and white");
-#endif
 
             // convert input image to black and white boolean image
             if (!ConvertImageToBlackAndWhite(image)) return null;
 
-#if DEBUG
-            QRCodeTrace.Format("Time: {0}", Environment.TickCount - Start);
-            QRCodeTrace.Write("Finders search");
-#endif
-
             // horizontal search for finders
             if (!HorizontalFindersSearch()) return null;
-
-#if DEBUG
-            QRCodeTrace.Format("Horizontal Finders count: {0}", FinderList.Count);
-#endif
 
             // vertical search for finders
             VerticalFindersSearch();
 
-#if DEBUG
-            int MatchedCount = 0;
-            foreach (var HF in FinderList) if (HF._distance != double.MaxValue) MatchedCount++;
-            QRCodeTrace.Format("Matched Finders count: {0}", MatchedCount);
-            QRCodeTrace.Write("Remove all unused finders");
-#endif
-
             // remove unused finders
             if (!RemoveUnusedFinders()) return null;
-
-#if DEBUG
-            QRCodeTrace.Format("Time: {0}", Environment.TickCount - Start);
-            foreach (var HF in FinderList) QRCodeTrace.Write(HF.ToString());
-            QRCodeTrace.Write("Search for QR corners");
-#endif
         }
-
-#if DEBUG
-        catch (Exception Ex)
+        catch
         {
-            QRCodeTrace.Write("QR Code decoding failed (no finders). " + Ex.Message);
             return null;
         }
-#else
-		catch
-			{
-			return null;
-			}
-#endif
 
         // look for all possible 3 finder patterns
         int Index1End = FinderList.Count - 2;
@@ -364,19 +323,9 @@ public class QRDecoder
                         // not a valid corner
                         if (Corner == null) continue;
 
-#if DEBUG
-                        QRCodeTrace.Format("Decode Corner: Top Left:    {0}", Corner.TopLeftFinder.ToString());
-                        QRCodeTrace.Format("Decode Corner: Top Right:   {0}", Corner.TopRightFinder.ToString());
-                        QRCodeTrace.Format("Decode Corner: Bottom Left: {0}", Corner.BottomLeftFinder.ToString());
-#endif
-
                         // get corner info (version, error code and mask)
                         // continue if failed
                         if (!GetQRCodeCornerInfo(Corner)) continue;
-
-#if DEBUG
-                        QRCodeTrace.Write("Decode QR code using three finders");
-#endif
 
                         // decode corner using three finders
                         // continue if successful
@@ -393,10 +342,6 @@ public class QRDecoder
                         // decode using 4 points
                         foreach (var Align in AlignList)
                         {
-#if DEBUG
-                            QRCodeTrace.Format("Calculated alignment mark: Row {0}, Col {1}", Align._row, Align._col);
-#endif
-
                             // calculate transformation based on 3 finders and bottom right alignment mark
                             SetTransMatrix(Corner, Align._row, Align._col);
 
@@ -404,31 +349,16 @@ public class QRDecoder
                             if (DecodeQRCodeCorner(Corner)) break;
                         }
                     }
-
-#if DEBUG
-                    catch (Exception Ex)
+                    catch
                     {
-                        QRCodeTrace.Write("Decode corner failed. " + Ex.Message);
                         continue;
                     }
-#else
-			catch
-				{
-				continue;
-				}
-#endif
-                }
 
-#if DEBUG
-        QRCodeTrace.Format("Time: {0}", Environment.TickCount - Start);
-#endif
+                }
 
         // not found exit
         if (DataArrayList.Count == 0)
         {
-#if DEBUG
-            QRCodeTrace.Write("No QR Code found");
-#endif
             return null;
         }
 
@@ -694,9 +624,6 @@ public class QRDecoder
         // no finders found
         if (FinderList.Count < 3)
         {
-#if DEBUG
-            QRCodeTrace.Write("Horizontal finders search. Less than 3 finders found");
-#endif
             return false;
         }
 
@@ -772,10 +699,6 @@ public class QRDecoder
         }
 
         // list is now empty or has less than three finders
-#if DEBUG
-        if (AlignList.Count == 0) QRCodeTrace.Write("Vertical align search.\r\nNo finders found");
-#endif
-
         // exit
         return AlignList.Count != 0;
     }
@@ -951,9 +874,6 @@ public class QRDecoder
         // list is now empty or has less than three finders
         if (FinderList.Count < 3)
         {
-#if DEBUG
-            QRCodeTrace.Write("Remove unmatched finders. Less than 3 finders found");
-#endif
             return false;
         }
 
@@ -978,9 +898,6 @@ public class QRDecoder
         // list is now empty or has less than three finders
         if (FinderList.Count < 3)
         {
-#if DEBUG
-            QRCodeTrace.Write("Keep best matched finders. Less than 3 finders found");
-#endif
             return false;
         }
 
@@ -1021,12 +938,6 @@ public class QRDecoder
                 Index1--;
             }
         }
-
-        // list is now empty or has less than three finders
-#if DEBUG
-        if (AlignList.Count == 0)
-            QRCodeTrace.Write("Remove unused alignment marks.\r\nNo alignment marks found");
-#endif
 
         // exit
         return AlignList.Count != 0;
@@ -1121,10 +1032,6 @@ public class QRDecoder
             // qr code dimension
             QRCodeDimension = 17 + 4 * QRCodeVersion;
 
-#if DEBUG
-            QRCodeTrace.Format("Initial version number: {0}, dimension: {1}", QRCodeVersion, QRCodeDimension);
-#endif
-
             // set transformation matrix
             SetTransMatrix(Corner);
 
@@ -1147,10 +1054,6 @@ public class QRDecoder
                     // qr code dimension
                     QRCodeDimension = 17 + 4 * QRCodeVersion;
 
-#if DEBUG
-                    QRCodeTrace.Format("Updated version number: {0}, dimension: {1}", QRCodeVersion, QRCodeDimension);
-#endif
-
                     // set transformation matrix
                     SetTransMatrix(Corner);
                 }
@@ -1171,22 +1074,12 @@ public class QRDecoder
             // successful exit
             return true;
         }
-
-#if DEBUG
-        catch (Exception Ex)
+        catch
         {
-            QRCodeTrace.Format("Get QR Code corner info exception.\r\n{0}", Ex.Message);
-
             // failed exit
             return false;
         }
-#else
-		catch
-			{
-			// failed exit
-			return false;
-			}
-#endif
+
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -1224,34 +1117,17 @@ public class QRDecoder
             byte[] DataArray = DecodeData();
             DataArrayList.Add(DataArray);
 
-            // trace
-#if DEBUG
-            string DataString = ByteArrayToStr(DataArray);
-            QRCodeTrace.Format("Version: {0}, Dim: {1}, ErrCorr: {2}, Generator: {3}, Mask: {4}, Group1: {5}:{6}, Group2: {7}:{8}",
-                QRCodeVersion.ToString(), QRCodeDimension.ToString(), ErrorCorrection.ToString(), ErrCorrCodewords.ToString(), MaskCode.ToString(),
-                BlocksGroup1.ToString(), DataCodewordsGroup1.ToString(), BlocksGroup2.ToString(), DataCodewordsGroup2.ToString());
-            QRCodeTrace.Format("Data: {0}", DataString);
-#endif
+
 
             // successful exit
             return true;
         }
-
-#if DEBUG
-        catch (Exception Ex)
+        catch
         {
-            QRCodeTrace.Format("Decode QR code exception.\r\n{0}", Ex.Message);
-
             // failed exit
             return false;
         }
-#else
-		catch
-			{
-			// failed exit
-			return false;
-			}
-#endif
+
     }
 
     internal void SetTransMatrix(Corner corner)
@@ -1379,10 +1255,6 @@ public class QRDecoder
         int ImageCol = (int)Math.Round(Trans3a * AlignCol + Trans3c * AlignRow + Trans3e, 0, MidpointRounding.AwayFromZero);
         int ImageRow = (int)Math.Round(Trans3b * AlignCol + Trans3d * AlignRow + Trans3f, 0, MidpointRounding.AwayFromZero);
 
-#if DEBUG
-        QRCodeTrace.Format("Estimated alignment mark: Row {0}, Col {1}", ImageRow, ImageCol);
-#endif
-
         // search area
         int Side = (int)Math.Round(ALIGNMENT_SEARCH_AREA * (corner.TopLineLength + corner.LeftLineLength), 0, MidpointRounding.AwayFromZero);
 
@@ -1390,10 +1262,6 @@ public class QRDecoder
         int AreaTop = ImageRow - Side / 2;
         int AreaWidth = Side;
         int AreaHeight = Side;
-
-#if DEBUGEX
-		DisplayBottomRightCorder(AreaLeft, AreaTop, AreaWidth, AreaHeight);
-#endif
 
         // horizontal search for finders
         if (!HorizontalAlignmentSearch(AreaLeft, AreaTop, AreaWidth, AreaHeight)) return false;
@@ -1562,9 +1430,6 @@ public class QRDecoder
         // test for exact match
         if (Code >= 7 && Code <= 40 && StaticTables.VersionCodeArray[Code - 7] == VersionCode)
         {
-#if DEBUG
-            QRCodeTrace.Format("Version code exact match: {0:X4}, Version: {1}", VersionCode, Code);
-#endif
             return Code;
         }
 
@@ -1588,14 +1453,6 @@ public class QRDecoder
             }
         }
 
-#if DEBUG
-        if (Error <= 3)
-            QRCodeTrace.Format("Version code match with errors: {0:X4}, Version: {1}, Errors: {2}",
-                VersionCode, BestInfo + 7, Error);
-        else
-            QRCodeTrace.Format("Version code no match: {0:X4}", VersionCode);
-#endif
-
         return Error <= 3 ? BestInfo + 7 : 0;
     }
 
@@ -1610,6 +1467,7 @@ public class QRDecoder
         {
             if (GetModule(StaticTables.FormatInfoOne[Index, 0], StaticTables.FormatInfoOne[Index, 1])) Info |= 1 << Index;
         }
+
         return TestFormatInfo(Info);
     }
 
@@ -1628,6 +1486,7 @@ public class QRDecoder
             if (Col < 0) Col += QRCodeDimension;
             if (GetModule(Row, Col)) Info |= 1 << Index;
         }
+
         return TestFormatInfo(Info);
     }
 
@@ -1646,10 +1505,6 @@ public class QRDecoder
         // test for exact match
         if (StaticTables.FormatInfoArray[Info] == FormatInfo)
         {
-#if DEBUG
-            QRCodeTrace.Format("Format info exact match: {0:X4}, EC: {1}, mask: {2}",
-                FormatInfo, FormatInfoToErrCode(Info >> 3).ToString(), Info & 7);
-#endif
             return Info;
         }
 
@@ -1666,14 +1521,6 @@ public class QRDecoder
             }
         }
 
-#if DEBUG
-        if (Error <= 3)
-            QRCodeTrace.Format("Format info match with errors: {0:X4}, EC: {1}, mask: {2}, errors: {3}",
-                FormatInfo, FormatInfoToErrCode(Info >> 3).ToString(), Info & 7, Error);
-        else
-            QRCodeTrace.Format("Format info no match: {0:X4}", FormatInfo);
-
-#endif
         return Error <= 3 ? BestInfo : -1;
     }
 
@@ -1719,20 +1566,7 @@ public class QRDecoder
                 }
             }
 
-#if DEBUG
-        if (ErrorCount == 0)
-        {
-            QRCodeTrace.Write("Fixed modules no error");
-        }
-        else if (ErrorCount <= FixedCount * ErrCorrPercent[(int)ErrorCorrection] / 100)
-        {
-            QRCodeTrace.Format("Fixed modules some errors: {0} / {1}", ErrorCount, FixedCount);
-        }
-        else
-        {
-            QRCodeTrace.Format("Fixed modules too many errors: {0} / {1}", ErrorCount, FixedCount);
-        }
-#endif
+
         if (ErrorCount > FixedCount * ErrCorrPercent[(int)ErrorCorrection] / 100)
             throw new ApplicationException("Fixed modules error");
         return;
@@ -1953,14 +1787,10 @@ public class QRDecoder
             // update codewords array to next buffer
             DataCodewordsPtr += DataCodewords;
 
-            // update pointer				
+            // update pointer
             CodewordsArrayErrCorrPtr += ErrCorrCodewords;
         }
 
-#if DEBUG
-        if (TotalErrorCount == 0) QRCodeTrace.Write("No data errors");
-        else QRCodeTrace.Write("Error correction applied to data. Total errors: " + TotalErrorCount.ToString());
-#endif
         return;
     }
 

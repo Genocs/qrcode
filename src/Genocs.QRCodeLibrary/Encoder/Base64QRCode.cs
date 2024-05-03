@@ -2,17 +2,9 @@
 
 namespace Genocs.QRCodeGenerator.Encoder;
 
-public class Base64QRCode : AbstractQRCode, IDisposable
+public class Base64QRCode : AbstractQRCode
 {
     private QRCode _qrCode;
-
-    /// <summary>
-    /// Constructor without params to be used in COM Objects connections.
-    /// </summary>
-    public Base64QRCode()
-    {
-        _qrCode = new QRCode();
-    }
 
     public Base64QRCode(QRCodeData data)
         : base(data)

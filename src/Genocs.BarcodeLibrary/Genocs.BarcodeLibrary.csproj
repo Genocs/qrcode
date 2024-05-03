@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net7.0;net6.0;netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>net8.0;netstandard2.1</TargetFrameworks>
         <PackageId>Genocs.BarcodeLibrary</PackageId>
         <RootNamespace>Genocs.BarcodeLibrary</RootNamespace>
         <AssemblyName>Genocs.BarcodeLibrary</AssemblyName>
@@ -40,9 +40,9 @@
             <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
-    
+
     <ItemGroup>
-        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.7" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.8" />
         <PackageReference Include="System.Text.Json" Version="8.0.3" />
     </ItemGroup>
 

@@ -17,32 +17,32 @@ internal class Corner
     internal double LeftLineDeltaY;
     internal double LeftLineLength;
 
-    /////////////////////////////////////////////////////////////////////
-    // QR corner constructor
-    /////////////////////////////////////////////////////////////////////
-
-    private Corner
-            (
-            Finder TopLeftFinder,
-            Finder TopRightFinder,
-            Finder BottomLeftFinder
-            )
+    /// <summary>
+    /// QR corner constructor.
+    /// </summary>
+    /// <param name="topLeftFinder"></param>
+    /// <param name="topRightFinder"></param>
+    /// <param name="bottomLeftFinder"></param>
+    private Corner(
+            Finder topLeftFinder,
+            Finder topRightFinder,
+            Finder bottomLeftFinder)
     {
         // save three finders
-        this.TopLeftFinder = TopLeftFinder;
-        this.TopRightFinder = TopRightFinder;
-        this.BottomLeftFinder = BottomLeftFinder;
+        this.TopLeftFinder = topLeftFinder;
+        this.TopRightFinder = topRightFinder;
+        this.BottomLeftFinder = bottomLeftFinder;
 
         // top line slope
-        TopLineDeltaX = TopRightFinder._col - TopLeftFinder._col;
-        TopLineDeltaY = TopRightFinder._row - TopLeftFinder._row;
+        TopLineDeltaX = topRightFinder._col - topLeftFinder._col;
+        TopLineDeltaY = topRightFinder._row - topLeftFinder._row;
 
         // top line length
         TopLineLength = Math.Sqrt(TopLineDeltaX * TopLineDeltaX + TopLineDeltaY * TopLineDeltaY);
 
         // left line slope
-        LeftLineDeltaX = BottomLeftFinder._col - TopLeftFinder._col;
-        LeftLineDeltaY = BottomLeftFinder._row - TopLeftFinder._row;
+        LeftLineDeltaX = bottomLeftFinder._col - topLeftFinder._col;
+        LeftLineDeltaY = bottomLeftFinder._row - topLeftFinder._row;
 
         // left line length
         LeftLineLength = Math.Sqrt(LeftLineDeltaX * LeftLineDeltaX + LeftLineDeltaY * LeftLineDeltaY);
@@ -53,17 +53,15 @@ internal class Corner
     // Test QR corner for validity
     /////////////////////////////////////////////////////////////////////
 
-    internal static Corner CreateCorner
-            (
+    internal static Corner? CreateCorner(
             Finder topLeftFinder,
             Finder topRightFinder,
-            Finder bottomLeftFinder
-            )
+            Finder bottomLeftFinder)
     {
         // try all three possible permutation of three finders
         for (int index = 0; index < 3; index++)
         {
-            // TestCorner runs three times to test all posibilities
+            // TestCorner runs three times to test all possibilities
             // rotate top left, top right and bottom left
             if (index != 0)
             {
@@ -82,10 +80,10 @@ internal class Corner
             double leftLineDeltaY = bottomLeftFinder._row - topLeftFinder._row;
 
             // top line length
-            double topLineLength = Math.Sqrt(topLineDeltaX * topLineDeltaX + topLineDeltaY * topLineDeltaY);
+            double topLineLength = Math.Sqrt((topLineDeltaX * topLineDeltaX) + topLineDeltaY * topLineDeltaY);
 
             // left line length
-            double leftLineLength = Math.Sqrt(leftLineDeltaX * leftLineDeltaX + leftLineDeltaY * leftLineDeltaY);
+            double leftLineLength = Math.Sqrt(leftLineDeltaX * leftLineDeltaX + (leftLineDeltaY * leftLineDeltaY));
 
             // the short side must be at least 80% of the long side
             if (Math.Min(topLineLength, leftLineLength) < QRDecoder.CORNER_SIDE_LENGTH_DEV * Math.Max(topLineLength, leftLineLength)) continue;
@@ -96,8 +94,8 @@ internal class Corner
 
             // rotate lines such that top line is parallel to x axis
             // left line after rotation
-            double newLeftX = topLineCos * leftLineDeltaX + topLineSin * leftLineDeltaY;
-            double newLeftY = -topLineSin * leftLineDeltaX + topLineCos * leftLineDeltaY;
+            double newLeftX = (topLineCos * leftLineDeltaX) + (topLineSin * leftLineDeltaY);
+            double newLeftY = (-topLineSin * leftLineDeltaX) + (topLineCos * leftLineDeltaY);
 
             // new left line X should be zero (or between +/- 4 deg)
             if (Math.Abs(newLeftX / leftLineLength) > QRDecoder.CORNER_RIGHT_ANGLE_DEV) continue;

@@ -162,7 +162,6 @@ public class QRCodeData : IDisposable
     {
         ModuleMatrix.Clear();
         Version = 0;
-
     }
 
     public enum Compression

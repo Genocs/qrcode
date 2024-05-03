@@ -2,15 +2,8 @@
 
 namespace Genocs.QRCodeGenerator.Encoder;
 
-public class AsciiQRCode : AbstractQRCode, IDisposable
+public class AsciiQRCode : AbstractQRCode
 {
-    /// <summary>
-    /// Constructor without params to be used in COM Objects connections.
-    /// </summary>
-    public AsciiQRCode()
-    {
-    }
-
     public AsciiQRCode(QRCodeData data)
         : base(data)
     {

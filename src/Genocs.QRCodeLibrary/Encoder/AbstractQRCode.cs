@@ -1,12 +1,8 @@
 ﻿namespace Genocs.QRCodeGenerator.Encoder;
 
-public abstract class AbstractQRCode
+public abstract class AbstractQRCode : IDisposable
 {
-    protected QRCodeData? QrCodeData { get; set; }
-
-    protected AbstractQRCode()
-    {
-    }
+    protected QRCodeData QrCodeData { get; set; }
 
     protected AbstractQRCode(QRCodeData data)
     {
@@ -24,7 +20,6 @@ public abstract class AbstractQRCode
 
     public void Dispose()
     {
-        QrCodeData?.Dispose();
-        QrCodeData = null;
+        QrCodeData.Dispose();
     }
 }

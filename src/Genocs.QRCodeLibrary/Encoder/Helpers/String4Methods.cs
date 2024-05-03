@@ -10,6 +10,7 @@ internal static class String40Methods
         {
             result[i] = chars[j];
         }
+
         return new string(result);
     }
 }

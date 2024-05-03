@@ -10,12 +10,12 @@
         <DockerTargetOS>Linux</DockerTargetOS>
         <UserSecretsId>Genocs</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <DockerfileContext>..\..</DockerfileContext>        
+        <DockerfileContext>..\..</DockerfileContext>
     </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
 
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

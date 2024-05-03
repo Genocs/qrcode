@@ -2,15 +2,8 @@
 
 namespace Genocs.QRCodeGenerator.Encoder;
 
-public class PostscriptQRCode : AbstractQRCode, IDisposable
+public class PostscriptQRCode : AbstractQRCode
 {
-    /// <summary>
-    /// Constructor without params to be used in COM Objects connections.
-    /// </summary>
-    public PostscriptQRCode()
-    {
-    }
-
     public PostscriptQRCode(QRCodeData data)
         : base(data)
     {
