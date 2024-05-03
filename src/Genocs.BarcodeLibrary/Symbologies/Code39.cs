@@ -52,13 +52,13 @@ class Code39 : BarcodeCommon, IBarcode
         InitCode39();
         init_ExtendedCode39();
 
-        var strNoAstr = RawData.Replace("*", "");
-        var strFormattedData = "*" + strNoAstr + (_enableChecksum ? GetChecksumChar(strNoAstr).ToString() : String.Empty) + "*";
+        string strNoAstr = RawData.Replace("*", string.Empty);
+        string strFormattedData = "*" + strNoAstr + (_enableChecksum ? GetChecksumChar(strNoAstr).ToString() : string.Empty) + "*";
 
         if (_allowExtended)
             InsertExtendedCharsIfNeeded(ref strFormattedData);
 
-        var result = "";
+        string result = string.Empty;
 
         //foreach (char c in this.FormattedData)
         foreach (var c in strFormattedData)
@@ -67,7 +67,7 @@ class Code39 : BarcodeCommon, IBarcode
             {
                 result += C39_Code[c].ToString();
                 result += "0";//whitespace
-            }//try
+            }
             catch
             {
                 if (_allowExtended)
@@ -79,7 +79,7 @@ class Code39 : BarcodeCommon, IBarcode
 
         result = result.Substring(0, result.Length - 1);
 
-        //clear the hashtable so it no longer takes up memory
+        // clear the hash table so it no longer takes up memory
         C39_Code.Clear();
 
         return result;
@@ -227,9 +227,10 @@ class Code39 : BarcodeCommon, IBarcode
         ExtC39_Translation.Add("z", "+Z");
         ExtC39_Translation.Add(Convert.ToChar(127).ToString(), "%T"); //also %X, %Y, %Z 
     }
+
     private void InsertExtendedCharsIfNeeded(ref string formattedData)
     {
-        var output = "";
+        string output = "";
         foreach (var c in formattedData)
         {
             try
@@ -247,22 +248,23 @@ class Code39 : BarcodeCommon, IBarcode
 
         formattedData = output;
     }
+
     private char GetChecksumChar(string strNoAstr)
     {
-        //checksum
-        var Code39_Charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%";
+        // checksum
+        string Code39_Charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%";
         var sum = 0;
         InsertExtendedCharsIfNeeded(ref strNoAstr);
 
-        //Calculate the checksum
+        // Calculate the checksum
         foreach (var t in strNoAstr)
         {
             sum = sum + Code39_Charset.IndexOf(t.ToString(), StringComparison.Ordinal);
         }
 
-        //return the checksum char
+        // return the checksum char
         return Code39_Charset[sum % 43];
-    } 
+    }
 
     public string EncodedValue => Encode_Code39();
 

@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
 
-/* 
+/*
  * ***************************************************
  *                 Barcode Library                   *
  *                                                   *
@@ -204,14 +204,16 @@ public class Barcode : IDisposable
     }
 
     #region Properties
+
     /// <summary>
     /// Gets or sets the raw data to encode.
     /// </summary>
-    public string RawData { get; set; } = ""; //RawData
+    public string RawData { get; set; } = string.Empty;
+
     /// <summary>
     /// Gets the encoded value.
     /// </summary>
-    public string EncodedValue { get; private set; } = "";
+    public string EncodedValue { get; private set; } = string.Empty;
 
     /// <summary>
     /// Gets the Country that assigned the Manufacturer Code.
@@ -219,9 +221,10 @@ public class Barcode : IDisposable
     public string CountryAssigningManufacturerCode { get; private set; } = "N/A";
 
     /// <summary>
-    /// Gets or sets the Encoded BarcodeType (ex. UPC-A, EAN-13 ... etc)
+    /// Gets or sets the Encoded BarcodeType (ex. UPC-A, EAN-13 ... etc).
     /// </summary>
-    public BarcodeType EncodedType { set; get; } = BarcodeType.Unspecified; //EncodedType
+    public BarcodeType EncodedType { set; get; } = BarcodeType.Unspecified;
+
     /// <summary>
     /// Gets the Image of the generated barcode.
     /// </summary>
@@ -230,15 +233,18 @@ public class Barcode : IDisposable
     /// <summary>
     /// Gets or sets the color of the bars. (Default is black)
     /// </summary>
-    public SKColorF ForeColor { get; set; } = SKColors.Black; //ForeColor
+    public SKColorF ForeColor { get; set; } = SKColors.Black;
+
     /// <summary>
     /// Gets or sets the background color. (Default is white)
     /// </summary>
-    public SKColorF BackColor { get; set; } = SKColors.White; //BackColor
+    public SKColorF BackColor { get; set; } = SKColors.White;
+
     /// <summary>
     /// Gets or sets the label font. (Default is Microsoft Sans Serif, 10pt, Bold)
     /// </summary>
-    public SKFont LabelFont { get; set; } = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), 28); //LabelFont
+    public SKFont LabelFont { get; set; } = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), 28);
+
     /// <summary>
     /// Gets or sets the width of the image to be drawn. (Default is 300 pixels)
     /// </summary>
@@ -253,6 +259,7 @@ public class Barcode : IDisposable
     ///   If non-null, sets the width of a bar. <see cref="Width"/> is ignored and calculated automatically.
     /// </summary>
     public int? BarWidth { get; set; }
+
     /// <summary>
     ///   If non-null, <see cref="Height"/> is ignored and set to <see cref="Width"/> divided by this value rounded down.
     /// </summary>
@@ -265,26 +272,24 @@ public class Barcode : IDisposable
     ///   calculated. So it is safe to use in conjunction with <see cref="BarWidth"/>.
     /// </para></remarks>
     public double? AspectRatio { get; set; }
+
     /// <summary>
-    /// Gets or sets whether a label should be drawn below the image. (Default is false)
+    /// Gets or sets whether a label should be drawn below the image. (Default is false).
     /// </summary>
     public bool IncludeLabel { get; set; }
 
     /// <summary>
-    /// Alternate label to be displayed.  (IncludeLabel must be set to true as well)
+    /// Alternate label to be displayed.  (IncludeLabel must be set to true as well).
     /// </summary>
-    public String AlternateLabel { get; set; }
+    public string AlternateLabel { get; set; }
 
     /// <summary>
     /// Gets or sets the amount of time in milliseconds that it took to encode and draw the barcode.
     /// </summary>
-    public double EncodingTime
-    {
-        get;
-        set;
-    }
+    public double EncodingTime { get; set; }
+
     /// <summary>
-    /// Gets or sets the image format to use when encoding and returning images. (Jpeg is default)
+    /// Gets or sets the image format to use when encoding and returning images. (Jpeg is default).
     /// </summary>
     public SKEncodedImageFormat ImageFormat { get; set; } = SKEncodedImageFormat.Jpeg;
 
@@ -294,17 +299,18 @@ public class Barcode : IDisposable
     public List<string> Errors => _iBarcode.Errors;
 
     /// <summary>
-    /// Gets or sets the alignment of the barcode inside the image. (Not for Postnet or ITF-14)
+    /// Gets or sets the alignment of the barcode inside the image. (Not for Postnet or ITF-14).
     /// </summary>
     public AlignmentPositions Alignment
     {
         get;
         set;
-    }//Alignment
+    }
+
     /// <summary>
-    /// Gets a byte array representation of the encoded image. (Used for Crystal Reports)
+    /// Gets a byte array representation of the encoded image. (Used for Crystal Reports).
     /// </summary>
-    public byte[] EncodedImageBytes
+    public byte[]? EncodedImageBytes
     {
         get
         {
@@ -315,9 +321,10 @@ public class Barcode : IDisposable
             {
                 EncodedImage.Encode(ImageFormat, 100).SaveTo(ms);
                 return ms.ToArray();
-            }//using
+            }
         }
     }
+
     /// <summary>
     /// Gets the assembly version information.
     /// </summary>
@@ -330,37 +337,38 @@ public class Barcode : IDisposable
     #endregion
 
     #region General Encode
-    /// <summary>
-    /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
-    /// </summary>
-    /// <param name="iType">BarcodeType of encoding to use.</param>
-    /// <param name="stringToEncode">Raw data to encode.</param>
-    /// <param name="width">Width of the resulting barcode.(pixels)</param>
-    /// <param name="height">Height of the resulting barcode.(pixels)</param>
-    /// <returns>Image representing the barcode.</returns>
-    public SKImage Encode(BarcodeType iType, string stringToEncode, int width, int height)
-    {
-        Width = width;
-        Height = height;
-        return Encode(iType, stringToEncode);
-    }//Encode(TYPE, string, int, int)
 
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
     /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="stringToEncode">Raw data to encode.</param>
-    /// <param name="foreColor">Foreground color</param>
-    /// <param name="backColor">Background color</param>
-    /// <param name="width">Width of the resulting barcode.(pixels)</param>
-    /// <param name="height">Height of the resulting barcode.(pixels)</param>
+    /// <param name="width">Width of the resulting barcode.(pixels).</param>
+    /// <param name="height">Height of the resulting barcode.(pixels).</param>
+    /// <returns>Image representing the barcode.</returns>
+    public SKImage Encode(BarcodeType iType, string stringToEncode, int width, int height)
+    {
+        Width = width;
+        Height = height;
+        return Encode(iType, stringToEncode);
+    }
+
+    /// <summary>
+    /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
+    /// </summary>
+    /// <param name="iType">BarcodeType of encoding to use.</param>
+    /// <param name="stringToEncode">Raw data to encode.</param>
+    /// <param name="foreColor">Foreground color.</param>
+    /// <param name="backColor">Background color.</param>
+    /// <param name="width">Width of the resulting barcode.(pixels).</param>
+    /// <param name="height">Height of the resulting barcode.(pixels).</param>
     /// <returns>Image representing the barcode.</returns>
     public SKImage Encode(BarcodeType iType, string stringToEncode, SKColorF foreColor, SKColorF backColor, int width, int height)
     {
         Width = width;
         Height = height;
         return Encode(iType, stringToEncode, foreColor, backColor);
-    }//Encode(TYPE, string, Color, Color, int, int)
+    }
 
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
@@ -375,7 +383,8 @@ public class Barcode : IDisposable
         BackColor = backColor;
         ForeColor = foreColor;
         return Encode(iType, stringToEncode);
-    }//(Image)Encode(BarcodeType, string, Color, Color)
+    }
+
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
@@ -386,7 +395,8 @@ public class Barcode : IDisposable
     {
         RawData = stringToEncode;
         return Encode(iType);
-    }//(Image)Encode(TYPE, string)
+    }
+
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
@@ -395,12 +405,14 @@ public class Barcode : IDisposable
     {
         EncodedType = iType;
         return Encode();
-    }//Encode()
+    }
+
     public SKImage Encode(string stringToEncode)
     {
         RawData = stringToEncode;
         return Encode();
-    }//(Image)Encode(TYPE, string)
+    }
+
     /// <summary>
     /// Encodes the raw data into a barcode image.
     /// </summary>
@@ -418,7 +430,7 @@ public class Barcode : IDisposable
         EncodingTime = (DateTime.Now - dtStartTime).TotalMilliseconds;
 
         return EncodedImage;
-    }//Encode
+    }
 
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.
@@ -430,43 +442,43 @@ public class Barcode : IDisposable
     /// <param name="rawData" >Optional raw_data parameter to for quick barcode generation</param>
     public string GenerateBarcode(string rawData = "")
     {
-        if (rawData != "")
+        if (rawData != string.Empty)
         {
             RawData = rawData;
         }
 
-        //make sure there is something to encode
-        if (RawData.Trim() == "")
+        // Make sure there is something to encode
+        if (RawData.Trim() == string.Empty)
             throw new Exception("EENCODE-1: Input data not allowed to be blank.");
 
         if (EncodedType == BarcodeType.Unspecified)
             throw new Exception("EENCODE-2: Symbology type not allowed to be unspecified.");
 
-        EncodedValue = "";
+        EncodedValue = string.Empty;
         CountryAssigningManufacturerCode = "N/A";
 
         switch (EncodedType)
         {
             case BarcodeType.Ucc12:
-            case BarcodeType.UpcA: //Encode_UPCA();
+            case BarcodeType.UpcA:
                 _iBarcode = new UPCA(RawData);
                 break;
             case BarcodeType.Ucc13:
-            case BarcodeType.Ean13: //Encode_EAN13();
+            case BarcodeType.Ean13:
                 _iBarcode = new EAN13(RawData, DisableEan13CountryException);
                 break;
             case BarcodeType.Interleaved2Of5Mod10:
-            case BarcodeType.Interleaved2Of5: //Encode_Interleaved2of5();
+            case BarcodeType.Interleaved2Of5:
                 _iBarcode = new Interleaved2of5(RawData, EncodedType);
                 break;
             case BarcodeType.Industrial2Of5Mod10:
             case BarcodeType.Industrial2Of5:
             case BarcodeType.Standard2Of5Mod10:
-            case BarcodeType.Standard2Of5: //Encode_Standard2of5();
+            case BarcodeType.Standard2Of5:
                 _iBarcode = new Standard2of5(RawData, EncodedType);
                 break;
             case BarcodeType.Logmars:
-            case BarcodeType.Code39: //Encode_Code39();
+            case BarcodeType.Code39:
                 _iBarcode = new Code39(RawData);
                 break;
             case BarcodeType.Code39Extended:
@@ -475,43 +487,43 @@ public class Barcode : IDisposable
             case BarcodeType.Code39Mod43:
                 _iBarcode = new Code39(RawData, false, true);
                 break;
-            case BarcodeType.Codabar: //Encode_Codabar();
+            case BarcodeType.Codabar:
                 _iBarcode = new Codabar(RawData);
                 break;
-            case BarcodeType.PostNet: //Encode_PostNet();
+            case BarcodeType.PostNet:
                 _iBarcode = new Postnet(RawData);
                 break;
             case BarcodeType.Isbn:
-            case BarcodeType.Bookland: //Encode_ISBN_Bookland();
+            case BarcodeType.Bookland:
                 _iBarcode = new ISBN(RawData);
                 break;
-            case BarcodeType.Jan13: //Encode_JAN13();
+            case BarcodeType.Jan13:
                 _iBarcode = new JAN13(RawData);
                 break;
-            case BarcodeType.UpcSupplemental2Digit: //Encode_UPCSupplemental_2();
+            case BarcodeType.UpcSupplemental2Digit:
                 _iBarcode = new UPCSupplement2(RawData);
                 break;
             case BarcodeType.MsiMod10:
             case BarcodeType.Msi2Mod10:
             case BarcodeType.MsiMod11:
             case BarcodeType.MsiMod11Mod10:
-            case BarcodeType.ModifiedPlessey: // Encode_MSI();
+            case BarcodeType.ModifiedPlessey:
                 _iBarcode = new MSI(RawData, EncodedType);
                 break;
-            case BarcodeType.UpcSupplemental5Digit: // Encode_UPCSupplemental_5();
+            case BarcodeType.UpcSupplemental5Digit:
                 _iBarcode = new UPCSupplement5(RawData);
                 break;
-            case BarcodeType.UpcE: // Encode_UPCE();
+            case BarcodeType.UpcE:
                 _iBarcode = new UPCE(RawData);
                 break;
-            case BarcodeType.Ean8: // Encode_EAN8();
+            case BarcodeType.Ean8:
                 _iBarcode = new EAN8(RawData);
                 break;
             case BarcodeType.Usd8:
-            case BarcodeType.Code11: // Encode_Code11();
+            case BarcodeType.Code11:
                 _iBarcode = new Code11(RawData);
                 break;
-            case BarcodeType.Code128: // Encode_Code128();
+            case BarcodeType.Code128:
                 _iBarcode = new Code128(RawData);
                 break;
             case BarcodeType.Code128A:
@@ -547,13 +559,14 @@ public class Barcode : IDisposable
     #endregion
 
     #region Image Functions
+
     /// <summary>
     /// Gets a bitmap representation of the encoded data.
     /// </summary>
     /// <returns>Bitmap of encoded value.</returns>
     private SKBitmap Generate_Image()
     {
-        if (EncodedValue == "") throw new Exception("EGENERATE_IMAGE-1: Must be encoded first.");
+        if (EncodedValue == string.Empty) throw new Exception("EGENERATE_IMAGE-1: Must be encoded first.");
         SKBitmap bitmap;
 
         var dtStartTime = DateTime.Now;
@@ -564,7 +577,7 @@ public class Barcode : IDisposable
                 {
                     // Automatically calculate the Width if applicable. Quite confusing with this
                     // barcode type, and it seems this method overestimates the minimum width. But
-                    // at least it�s deterministic and doesn�t produce too small of a value.
+                    // at least it�s deterministic and does't produce too small of a value.
                     if (BarWidth.HasValue)
                     {
                         // Width = (BarWidth * EncodedValue.Length) + bearerwidth + iquietzone
@@ -576,9 +589,10 @@ public class Barcode : IDisposable
                         // Rounding error? + 1
                         Width = (int)(241 / 176.9 * EncodedValue.Length * BarWidth.Value + 1);
                     }
+
                     Height = (int?)(Width / AspectRatio) ?? Height;
 
-                    var ilHeight = Height;
+                    int ilHeight = Height;
                     if (IncludeLabel)
                     {
                         ilHeight -= Utils.GetFontHeight(RawData, LabelFont);
@@ -594,46 +608,48 @@ public class Barcode : IDisposable
                     if (iBarWidth <= 0 || iquietzone <= 0)
                         throw new Exception("EGENERATE_IMAGE-3: Image size specified not large enough to draw image. (Bar size determined to be less than 1 pixel or quiet zone determined to be less than 1 pixel)");
 
-                    //draw image
+                    // draw image
                     var pos = 0;
 
                     var canvas = new SKCanvas(bitmap);
 
-                    //fill background
+                    // fill background
                     canvas.Clear(BackColor);
 
-                    //lines are fBarWidth wide so draw the appropriate color line vertically
+                    // lines are fBarWidth wide so draw the appropriate color line vertically
                     using (var paint = new SKPaint())
                     {
                         paint.ColorF = ForeColor;
                         paint.StrokeWidth = iBarWidth;
-                        //paint.Alignment = PenAlignment.Right;
+
+                        // paint.Alignment = PenAlignment.Right;
 
                         while (pos < EncodedValue.Length)
                         {
-                            //draw the appropriate color line vertically
+                            // draw the appropriate color line vertically
                             if (EncodedValue[pos] == '1')
                                 canvas.DrawLine(new SKPoint((pos * iBarWidth) + shiftAdjustment + bearerwidth + iquietzone, 0), new SKPoint((pos * iBarWidth) + shiftAdjustment + bearerwidth + iquietzone, Height), paint);
 
                             pos++;
-                        }//while
+                        }
 
-                        //bearer bars
+                        // bearer bars
                         paint.StrokeWidth = (float)ilHeight / 8;
                         paint.ColorF = ForeColor;
 
-                        //paint.Alignment = PenAlignment.Center;
-                        canvas.DrawLine(new SKPoint(0, 0), new SKPoint(bitmap.Width, 0), paint);//top
-                        canvas.DrawLine(new SKPoint(0, ilHeight), new SKPoint(bitmap.Width, ilHeight), paint);//bottom
-                        canvas.DrawLine(new SKPoint(0, 0), new SKPoint(0, ilHeight), paint);//left
-                        canvas.DrawLine(new SKPoint(bitmap.Width, 0), new SKPoint(bitmap.Width, ilHeight), paint);//right
-                    }//using
+                        // paint.Alignment = PenAlignment.Center;
+                        canvas.DrawLine(new SKPoint(0, 0), new SKPoint(bitmap.Width, 0), paint);
+                        canvas.DrawLine(new SKPoint(0, ilHeight), new SKPoint(bitmap.Width, ilHeight), paint);
+                        canvas.DrawLine(new SKPoint(0, 0), new SKPoint(0, ilHeight), paint);
+                        canvas.DrawLine(new SKPoint(bitmap.Width, 0), new SKPoint(bitmap.Width, ilHeight), paint);
+                    }
 
                     if (IncludeLabel)
                         Labels.Label_ITF14(this, bitmap);
 
                     break;
-                }//case
+                }
+
             case BarcodeType.UpcA:
                 {
                     // Automatically calculate Width if applicable.
@@ -647,25 +663,25 @@ public class Barcode : IDisposable
 
                     var iBarWidth = Width / EncodedValue.Length;
 
-                    //set alignment
+                    // set alignment
                     var shiftAdjustment = BarcodeCommon.GetAlignmentShiftAdjustment(this);
 
                     bitmap = new SKBitmap(Width, Height);
                     if (iBarWidth <= 0)
                         throw new Exception("EGENERATE_IMAGE-2: Image size specified not large enough to draw image. (Bar size determined to be less than 1 pixel)");
 
-                    //draw image
+                    // draw image
                     var pos = 0;
                     var halfBarWidth = (int)(iBarWidth * 0.5);
 
                     using (var canvas = new SKCanvas(bitmap))
                     {
-                        //clears the image and colors the entire background
+                        // clears the image and colors the entire background
                         canvas.Clear(BackColor);
 
                         var barwidth = iBarWidth;
-                        //lines are fBarWidth wide so draw the appropriate color line vertically
 
+                        // lines are fBarWidth wide so draw the appropriate color line vertically
                         using (var paintFore = new SKPaint())
                         {
                             paintFore.ColorF = ForeColor;
@@ -678,8 +694,8 @@ public class Barcode : IDisposable
                                 }
 
                                 pos++;
-                            }//while
-                        }//using
+                            }
+                        }
                     }
 
                     if (IncludeLabel)
@@ -688,7 +704,8 @@ public class Barcode : IDisposable
                     }
 
                     break;
-                }//case
+                }
+
             case BarcodeType.Ean13:
                 {
                     // Automatically calculate Width if applicable.
@@ -700,7 +717,7 @@ public class Barcode : IDisposable
                     var ilHeight = Height;
                     var topLabelAdjustment = 0;
 
-                    //set alignment
+                    // set alignment
                     var shiftAdjustment = BarcodeCommon.GetAlignmentShiftAdjustment(this);
 
                     if (IncludeLabel)
@@ -718,13 +735,13 @@ public class Barcode : IDisposable
                     if (iBarWidth <= 0)
                         throw new Exception("EGENERATE_IMAGE-2: Image size specified not large enough to draw image. (Bar size determined to be less than 1 pixel)");
 
-                    //draw image
+                    // draw image
                     var pos = 0;
                     var halfBarWidth = (int)(iBarWidth * 0.5);
 
                     using (var canvas = new SKCanvas(bitmap))
                     {
-                        //clears the image and colors the entire background
+                        // clears the image and colors the entire background
                         canvas.Clear((SKColor)BackColor);
 
                         using (var paint = new SKPaint())
@@ -749,7 +766,8 @@ public class Barcode : IDisposable
                     }
 
                     break;
-                }//case
+                }
+
             default:
                 {
                     // Automatically calculate Width if applicable.
@@ -767,13 +785,13 @@ public class Barcode : IDisposable
                     if (EncodedType == BarcodeType.PostNet)
                         iBarWidthModifier = 2;
 
-                    //set alignment
+                    // set alignment
                     var shiftAdjustment = BarcodeCommon.GetAlignmentShiftAdjustment(this);
 
                     if (iBarWidth <= 0)
                         throw new Exception("EGENERATE_IMAGE-2: Image size specified not large enough to draw image. (Bar size determined to be less than 1 pixel)");
 
-                    //draw image
+                    // draw image
                     var pos = 0;
                     var halfBarWidth = (int)Math.Round(iBarWidth * 0.5);
 
@@ -797,7 +815,7 @@ public class Barcode : IDisposable
                                 {
                                     if (EncodedType == BarcodeType.PostNet)
                                     {
-                                        //draw half bars in postnet
+                                        // draw half bars in postnet
                                         var y = 0f;
                                         if (EncodedValue[pos] == '0')
                                             y = ilHeight - ilHeight * 0.4f;
@@ -837,7 +855,7 @@ public class Barcode : IDisposable
     /// </summary>
     /// <param name="savetype">File type to put the data in before returning the bytes.</param>
     /// <returns>Bytes representing the encoded image.</returns>
-    public byte[] GetImageData(SaveTypes savetype)
+    public byte[]? GetImageData(SaveTypes savetype)
     {
         byte[]? imageData = null;
 
@@ -953,8 +971,10 @@ public class Barcode : IDisposable
 
     public string ToXml(bool includeImage = true)
     {
-        if (EncodedValue == "")
+        if (EncodedValue == string.Empty)
+        {
             throw new Exception("EGETXML-1: Could not retrieve XML due to the barcode not being encoded first.  Please call Encode first.");
+        }
         else
         {
             try
@@ -1030,6 +1050,7 @@ public class Barcode : IDisposable
     #endregion
 
     #region Static Encode Methods
+
     /// <summary>
     /// Encodes the raw data into binary form representing bars and spaces.  Also generates an Image of the barcode.
     /// </summary>
@@ -1041,7 +1062,7 @@ public class Barcode : IDisposable
         using (var b = new Barcode())
         {
             return b.Encode(iType, data);
-        }//using
+        }
     }
 
     /// <summary>
@@ -1058,7 +1079,7 @@ public class Barcode : IDisposable
             var i = b.Encode(iType, data);
             xml = b.ToXml();
             return i;
-        }//using
+        }
     }
 
     /// <summary>
@@ -1074,7 +1095,7 @@ public class Barcode : IDisposable
         {
             b.IncludeLabel = includeLabel;
             return b.Encode(iType, data);
-        }//using
+        }
     }
 
     /// <summary>
@@ -1092,7 +1113,7 @@ public class Barcode : IDisposable
         {
             b.IncludeLabel = includeLabel;
             return b.Encode(iType, data, width, height);
-        }//using
+        }
     }
 
     /// <summary>
@@ -1110,7 +1131,7 @@ public class Barcode : IDisposable
         {
             b.IncludeLabel = includeLabel;
             return b.Encode(iType, data, new SKColor(drawColor.R, drawColor.G, drawColor.B, drawColor.A), new SKColor(backColor.R, backColor.G, backColor.B, backColor.A));
-        }//using
+        }
     }
 
     /// <summary>
@@ -1130,7 +1151,7 @@ public class Barcode : IDisposable
         {
             b.IncludeLabel = includeLabel;
             return b.Encode(iType, data, new SKColor(drawColor.R, drawColor.G, drawColor.B, drawColor.A), new SKColor(backColor.R, backColor.G, backColor.B, backColor.A), width, height);
-        }//using
+        }
     }
 
     /// <summary>
@@ -1139,10 +1160,10 @@ public class Barcode : IDisposable
     /// <param name="iType">BarcodeType of encoding to use.</param>
     /// <param name="data">Raw data to encode.</param>
     /// <param name="includeLabel">Include the label at the bottom of the image with data encoded.</param>
-    /// <param name="drawColor">Foreground color</param>
-    /// <param name="backColor">Background color</param>
-    /// <param name="width">Width of the resulting barcode.(pixels)</param>
-    /// <param name="height">Height of the resulting barcode.(pixels)</param>
+    /// <param name="drawColor">Foreground color.</param>
+    /// <param name="backColor">Background color.</param>
+    /// <param name="width">Width of the resulting barcode.(pixels).</param>
+    /// <param name="height">Height of the resulting barcode.(pixels).</param>
     /// <param name="xml">XML representation of the data and the image of the barcode.</param>
     /// <returns>Image representing the barcode.</returns>
     public static SKImage DoEncode(BarcodeType iType, string data, bool includeLabel, Color drawColor, Color backColor, int width, int height, out string xml)

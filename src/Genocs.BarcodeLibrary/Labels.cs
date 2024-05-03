@@ -36,7 +36,7 @@ internal class Labels
                         pen.StrokeWidth = (float)img.Height / 16;
 
                         canvas.DrawLine(new SKPoint(0, backY - pen.StrokeWidth / 2f),
-                            new SKPoint(img.Width, backY - pen.StrokeWidth / 2f), pen); // bottom
+                            new SKPoint(img.Width, backY - pen.StrokeWidth / 2f), pen);
                     }
 
                     // color a box at the bottom of the barcode to hold the string of data
@@ -86,11 +86,13 @@ internal class Labels
         {
             using var g = new SKCanvas(img);
 
-            /*g.SmoothingMode = SmoothingMode.HighQuality;
+            /*
+            g.SmoothingMode = SmoothingMode.HighQuality;
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 g.CompositingQuality = CompositingQuality.HighQuality;
-                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;*/
+                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+            */
 
             int alignmentAdjustment = BarcodeCommon.GetAlignmentShiftAdjustment(barcode);
             string text = barcode.AlternateLabel ?? barcode.RawData;
@@ -145,16 +147,20 @@ internal class Labels
     /// <returns>Image representation of the barcode with labels applied.</returns>
     public static SKImage Label_EAN13(Barcode barcode, SKBitmap img)
     {
-        if (barcode == null) throw new ArgumentNullException(nameof(barcode));
+        if (barcode == null)
+        {
+            throw new ArgumentNullException(nameof(barcode));
+        }
+
         try
         {
-            var iBarWidth = barcode.Width / barcode.EncodedValue.Length;
+            int iBarWidth = barcode.Width / barcode.EncodedValue.Length;
 
-            var shiftAdjustment = BarcodeCommon.GetAlignmentShiftAdjustment(barcode);
+            int shiftAdjustment = BarcodeCommon.GetAlignmentShiftAdjustment(barcode);
 
             barcode.LabelFont.Edging = SKFontEdging.SubpixelAntialias;
 
-            var text = barcode.RawData;
+            string text = barcode.RawData;
             var first = text.Substring(0, 1);
             var second = text.Substring(1, 6);
             var third = text.Substring(7, 6);
@@ -165,16 +171,16 @@ internal class Labels
             SKRect textBounds = new();
             foreBrush.MeasureText(text, ref textBounds);
 
-            //Default alignment for UPCA
+            // Default alignment for UPCA
 
             float w1 = iBarWidth * 3; // Width of first block
             float w2 = iBarWidth * 42; // Width of second block
             float w3 = iBarWidth * 42; // Width of third block
 
             float s1 = shiftAdjustment;
-            var s2 = s1 + w1; // Start position of block 2
-            var s3 = s2 + w2 + iBarWidth * 5; // Start position of block 3
-            var s4 = s3 + w3;
+            float s2 = s1 + w1; // Start position of block 2
+            float s3 = s2 + w2 + (iBarWidth * 5); // Start position of block 3
+            float s4 = s3 + w3;
 
             SKRect textBounds1 = new();
             SKRect textBounds2 = new();
@@ -213,12 +219,12 @@ internal class Labels
             g.Dispose();
             foreBrush.Dispose();
             return SKImage.FromBitmap(img);
-        }//try
+        }
         catch (Exception ex)
         {
             throw new Exception("ELABEL_EAN13-1: " + ex.Message);
-        }//catch
-    }//Label_EAN13
+        }
+    }
 
     /// <summary>
     /// Draws Label for UPC-A barcodes.
@@ -231,9 +237,9 @@ internal class Labels
         if (barcode == null) throw new ArgumentNullException(nameof(barcode));
         try
         {
-            var iBarWidth = barcode.Width / barcode.EncodedValue.Length;
+            int iBarWidth = barcode.Width / barcode.EncodedValue.Length;
 
-            var shiftAdjustment = BarcodeCommon.GetAlignmentShiftAdjustment(barcode);
+            int shiftAdjustment = BarcodeCommon.GetAlignmentShiftAdjustment(barcode);
 
             barcode.LabelFont.Edging = SKFontEdging.SubpixelAntialias;
 
@@ -249,16 +255,16 @@ internal class Labels
             SKRect textBounds = new();
             foreBrush.MeasureText(text, ref textBounds);
 
-            //Default alignment for UPCA
+            // Default alignment for UPCA
 
-            float w1 = iBarWidth * 3; //Width of first block
-            float w2 = iBarWidth * 42; //Width of second block
-            float w3 = iBarWidth * 42; //Width of third block
-            float w4 = iBarWidth * 3; //Width of fourth block
+            float w1 = iBarWidth * 3; // Width of first block
+            float w2 = iBarWidth * 42; // Width of second block
+            float w3 = iBarWidth * 42; // Width of third block
+            float w4 = iBarWidth * 3; // Width of fourth block
 
             float s1 = shiftAdjustment;
-            var s2 = s1 + w1; //Start position of block 2
-            var s3 = s2 + w2 + iBarWidth * 5; //Start position of block 3
+            var s2 = s1 + w1; // Start position of block 2
+            var s3 = s2 + w2 + iBarWidth * 5; // Start position of block 3
             var s4 = s3 + w3;
 
             SKRect textBounds1 = new();
@@ -271,7 +277,7 @@ internal class Labels
             foreBrush.MeasureText(third, ref textBounds3);
             foreBrush.MeasureText(fourth, ref textBounds4);
 
-            //Draw the background rectangles for each block
+            // Draw the background rectangles for each block
             using (var backBrush = new SKPaint())
             {
                 backBrush.ColorF = barcode.BackColor;
@@ -301,22 +307,22 @@ internal class Labels
             g.Dispose();
             foreBrush.Dispose();
             return SKImage.FromBitmap(img);
-        }//try
+        }
         catch (Exception ex)
         {
             throw new Exception("ELABEL_UPCA-1: " + ex.Message);
-        }//catch
-    }//Label_UPCA
+        }
+    }
 
     private static int GetFontSize(Barcode barcode, int wid, int hgt, string lbl)
     {
-        //Returns the optimal font size for the specified dimensions
-        var fontSize = 10;
+        // Returns the optimal font size for the specified dimensions
+        int fontSize = 10;
 
         if (lbl.Length > 0)
         {
             var bounds = SKRect.Empty;
-            for (var i = 1; i <= 100; i++)
+            for (int i = 1; i <= 100; i++)
             {
                 using (var testFont = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Normal), i))
                 {
@@ -331,8 +337,7 @@ internal class Labels
                     }
                 }
             }
-
-        };
+        }
 
         return fontSize;
     }

@@ -112,7 +112,7 @@ public class HomeController : ControllerBase
         {
             BarcodeLibrary.Barcode barcodeGenerator = new BarcodeLibrary.Barcode();
             barcodeGenerator.IncludeLabel = true;
-            barcodeGenerator.LabelFont = new SKFont(SKTypeface.FromFamilyName("Arial"), 100f);
+            barcodeGenerator.LabelFont = new SKFont(SKTypeface.FromFamilyName("Arial"), height / 10f);
             var img = barcodeGenerator.Encode(barcodeType, payload, width, height);
 
             return File(img.Encode().AsStream(), "image/png");

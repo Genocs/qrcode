@@ -4,7 +4,7 @@ namespace Genocs.BarcodeLibrary.Symbologies;
 ///  ISBN encoding
 ///  Written by: Brad Barnhill.
 /// </summary>
-class ISBN : BarcodeCommon, IBarcode
+internal class ISBN : BarcodeCommon, IBarcode
 {
     public ISBN(string input)
     {
@@ -19,7 +19,7 @@ class ISBN : BarcodeCommon, IBarcode
         if (!CheckNumericOnly(RawData))
             Error("EBOOKLANDISBN-1: Numeric Data Only");
 
-        var type = "UNKNOWN";
+        string type = "UNKNOWN";
         switch (RawData.Length)
         {
             case 10:
@@ -32,15 +32,15 @@ class ISBN : BarcodeCommon, IBarcode
                 }
 
             case 12 when RawData.StartsWith("978"):
-                type = "BOOKLAND-NOCHECKDIGIT"; //else if
+                type = "BOOKLAND-NOCHECKDIGIT";
                 break;
             case 13 when RawData.StartsWith("978"):
                 type = "BOOKLAND-CHECKDIGIT";
-                _rawData = RawData.Remove(12, 1); //else if
+                _rawData = RawData.Remove(12, 1);
                 break;
         }
 
-        //check to see if its an unknown type
+        // check to see if its an unknown type
         if (type == "UNKNOWN") Error("EBOOKLANDISBN-2: Invalid input.  Must start with 978 and be length must be 9, 10, 12, 13 characters.");
 
         var ean13 = new EAN13(RawData);

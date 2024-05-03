@@ -2,9 +2,9 @@
 
 /// <summary>
 ///  FIM encoding
-///  Written by: Brad Barnhill
+///  Written by: Brad Barnhill.
 /// </summary>
-class FIM : BarcodeCommon, IBarcode
+internal class FIM : BarcodeCommon, IBarcode
 {
     private readonly string[] FIM_Codes = { "110010011", "101101101", "110101011", "111010111", "101000101" };
     public enum FIMTypes { FIM_A = 0, FIM_B, FIM_C, FIM_D, FIM_E };
@@ -38,7 +38,7 @@ class FIM : BarcodeCommon, IBarcode
             default:
                 Error("EFIM-1: Could not determine encoding type. (Only pass in A, B, C, D, or E)");
                 break;
-        }//switch
+        }
     }
 
     public string Encode_FIM()
@@ -47,7 +47,7 @@ class FIM : BarcodeCommon, IBarcode
         foreach (char c in RawData)
         {
             encoded += c + "0";
-        }//foreach
+        }
 
         encoded = encoded.Substring(0, encoded.Length - 1);
 
@@ -56,6 +56,4 @@ class FIM : BarcodeCommon, IBarcode
 
     public string EncodedValue
         => Encode_FIM();
-
-
 }

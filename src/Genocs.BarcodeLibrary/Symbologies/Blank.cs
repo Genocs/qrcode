@@ -2,9 +2,9 @@
 
 /// <summary>
 ///  Blank encoding template
-///  Written by: Brad Barnhill
+///  Written by: Brad Barnhill.
 /// </summary>
-class Blank : BarcodeCommon, IBarcode
+internal class Blank : BarcodeCommon, IBarcode
 {
     public string EncodedValue
     {

@@ -2,9 +2,9 @@ namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
 ///  Interleaved 2 of 5 encoding
-///  Written by: Brad Barnhill
+///  Written by: Brad Barnhill.
 /// </summary>
-class Interleaved2of5 : BarcodeCommon, IBarcode
+internal class Interleaved2of5 : BarcodeCommon, IBarcode
 {
     private readonly string[] _i25Code = { "NNWWN", "WNNNW", "NWNNW", "WWNNN", "NNWNW", "WNWNN", "NWWNN", "NNNWW", "WNNWN", "NWNWN" };
     private readonly BarcodeType _encodedType;
@@ -20,24 +20,24 @@ class Interleaved2of5 : BarcodeCommon, IBarcode
     /// </summary>
     private string Encode_Interleaved2of5()
     {
-        //check length of input (only even if no checkdigit, else with check digit odd)
+        // check length of input (only even if no checkdigit, else with check digit odd)
         if (RawData.Length % 2 != (_encodedType == BarcodeType.Interleaved2Of5Mod10 ? 1 : 0))
             Error("EI25-1: Data length invalid.");
 
         if (!CheckNumericOnly(RawData))
             Error("EI25-2: Numeric Data Only");
 
-        var result = "1010";
-        var data = RawData + (_encodedType == BarcodeType.Interleaved2Of5Mod10 ? CalculateMod10CheckDigit().ToString() : "");
+        string result = "1010";
+        string data = RawData + (_encodedType == BarcodeType.Interleaved2Of5Mod10 ? CalculateMod10CheckDigit().ToString() : "");
 
         for (int i = 0; i < data.Length; i += 2)
         {
-            var bars = true;
-            var patternbars = _i25Code[(int)char.GetNumericValue(data, i)];
-            var patternspaces = _i25Code[(int)char.GetNumericValue(data, i + 1)];
-            var patternmixed = "";
+            bool bars = true;
+            string patternbars = _i25Code[(int)char.GetNumericValue(data, i)];
+            string patternspaces = _i25Code[(int)char.GetNumericValue(data, i + 1)];
+            string patternmixed = string.Empty;
 
-            //interleave
+            // interleave
             while (patternbars.Length > 0)
             {
                 patternmixed += patternbars[0].ToString() + patternspaces[0].ToString();
@@ -61,11 +61,12 @@ class Interleaved2of5 : BarcodeCommon, IBarcode
                     else
                         result += "00";
                 }
+
                 bars = !bars;
             }
         }
 
-        //add ending bars
+        // add ending bars
         result += "1101";
         return result;
     }
@@ -76,8 +77,8 @@ class Interleaved2of5 : BarcodeCommon, IBarcode
         var even = true;
         for (var i = RawData.Length - 1; i >= 0; --i)
         {
-            //convert numeric in char format to integer and
-            //multiply by 3 or 1 based on if an even index from the end
+            // convert numeric in char format to integer and
+            // multiply by 3 or 1 based on if an even index from the end
             sum += (RawData[i] - '0') * (even ? 3 : 1);
             even = !even;
         }
