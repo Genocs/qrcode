@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Genocs.QRCodeGenerator.Encoder;
+namespace Genocs.QRCodeLibrary.Encoder;
 
 public class PostscriptQRCode : AbstractQRCode
 {

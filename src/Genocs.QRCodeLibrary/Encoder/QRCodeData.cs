@@ -1,8 +1,8 @@
-using Genocs.QRCodeGenerator.Encoder.Helpers;
+using Genocs.QRCodeLibrary.Encoder.Helpers;
 using System.Collections;
 using System.IO.Compression;
 
-namespace Genocs.QRCodeGenerator.Encoder;
+namespace Genocs.QRCodeLibrary.Encoder;
 
 public class QRCodeData : IDisposable
 {

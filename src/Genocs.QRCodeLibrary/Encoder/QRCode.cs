@@ -1,6 +1,7 @@
 using SkiaSharp;
 
-namespace Genocs.QRCodeGenerator.Encoder;
+namespace Genocs.QRCodeLibrary.Encoder;
+
 public class QRCode : AbstractQRCode
 {
 

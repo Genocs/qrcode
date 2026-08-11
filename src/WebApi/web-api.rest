@@ -1,0 +1,24 @@
+###############################################################################
+# Use this file inside Visual Studio code with 'REST Client' plugin 
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+###############################################################################
+
+@url = https://localhost:5001
+@payload = Ciao come stai?
+### Welcome message
+GET {{url}}
+
+### Check the health of the service
+GET {{url}}/health
+
+### Build a qrcode
+GET {{url}}/BuildQrCode?payload={{payload}}
+
+### Read a qrcode printed into an image
+POST {{url}}/findQrCode
+Content-Type: application/json
+{
+
+  "fullname": "John Doe",
+  "address": "New York City, Street XYZ"
+}

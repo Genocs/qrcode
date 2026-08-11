@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Genocs.QRCodeGenerator.Encoder;
+namespace Genocs.QRCodeLibrary.Encoder;
 
 public class AsciiQRCode : AbstractQRCode
 {
@@ -59,6 +59,7 @@ public class AsciiQRCode : AbstractQRCode
         int adjustmentValueForNumberOfCharacters = darkColorString.Length / 2 != 1 ? darkColorString.Length / 2 : 0;
         int verticalNumberOfRepeats = repeatPerModule + adjustmentValueForNumberOfCharacters;
         int sideLength = QrCodeData!.ModuleMatrix.Count * verticalNumberOfRepeats;
+
         for (int y = 0; y < sideLength; y++)
         {
             bool emptyLine = true;

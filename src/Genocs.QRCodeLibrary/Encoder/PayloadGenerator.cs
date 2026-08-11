@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Genocs.QRCodeGenerator.Encoder;
+namespace Genocs.QRCodeLibrary.Encoder;
 
 public static class PayloadGenerator
 {
@@ -37,10 +37,7 @@ public static class PayloadGenerator
         }
 
         public override string ToString()
-        {
-            return
-                $"WIFI:T:{authenticationMode};S:{ssid};P:{password};{(isHiddenSsid ? "H:true" : string.Empty)};";
-        }
+            => $"WIFI:T:{authenticationMode};S:{ssid};P:{password};{(isHiddenSsid ? "H:true" : string.Empty)};";
 
         public enum Authentication
         {
@@ -98,20 +95,13 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            switch (encoding)
+            return encoding switch
             {
-                case MailEncoding.MAILTO:
-                    return
-                        $"mailto:{mailReceiver}?subject={Uri.EscapeDataString(subject)}&body={Uri.EscapeDataString(message)}";
-                case MailEncoding.MATMSG:
-                    return
-                        $"MATMSG:TO:{mailReceiver};SUB:{EscapeInput(subject)};BODY:{EscapeInput(message)};;";
-                case MailEncoding.SMTP:
-                    return
-                        $"SMTP:{mailReceiver}:{EscapeInput(subject, true)}:{EscapeInput(message, true)}";
-                default:
-                    return mailReceiver;
-            }
+                MailEncoding.MAILTO => $"mailto:{mailReceiver}?subject={Uri.EscapeDataString(subject)}&body={Uri.EscapeDataString(message)}",
+                MailEncoding.MATMSG => $"MATMSG:TO:{mailReceiver};SUB:{EscapeInput(subject)};BODY:{EscapeInput(message)};;",
+                MailEncoding.SMTP => $"SMTP:{mailReceiver}:{EscapeInput(subject, true)}:{EscapeInput(message, true)}",
+                _ => mailReceiver,
+            };
         }
 
         public enum MailEncoding
@@ -154,17 +144,13 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            switch (encoding)
+            return encoding switch
             {
-                case SMSEncoding.SMS:
-                    return $"sms:{number}?body={Uri.EscapeDataString(subject)}";
-                case SMSEncoding.SMS_iOS:
-                    return $"sms:{number};body={Uri.EscapeDataString(subject)}";
-                case SMSEncoding.SMSTO:
-                    return $"SMSTO:{number}:{subject}";
-                default:
-                    return "sms:";
-            }
+                SMSEncoding.SMS => $"sms:{number}?body={Uri.EscapeDataString(subject)}",
+                SMSEncoding.SMS_iOS => $"sms:{number};body={Uri.EscapeDataString(subject)}",
+                SMSEncoding.SMSTO => $"SMSTO:{number}:{subject}",
+                _ => "sms:",
+            };
         }
 
         public enum SMSEncoding
@@ -181,10 +167,10 @@ public static class PayloadGenerator
         private readonly MMSEncoding encoding;
 
         /// <summary>
-        /// Creates a MMS payload without text
+        /// Creates a MMS payload without text.
         /// </summary>
-        /// <param name="number">Receiver phone number</param>
-        /// <param name="encoding">Encoding type</param>
+        /// <param name="number">Receiver phone number.</param>
+        /// <param name="encoding">Encoding type.</param>
         public MMS(string number, MMSEncoding encoding = MMSEncoding.MMS)
         {
             this.number = number;
@@ -193,11 +179,11 @@ public static class PayloadGenerator
         }
 
         /// <summary>
-        /// Creates a MMS payload with text (subject)
+        /// Creates a MMS payload with text (subject).
         /// </summary>
-        /// <param name="number">Receiver phone number</param>
-        /// <param name="subject">Text of the MMS</param>
-        /// <param name="encoding">Encoding type</param>
+        /// <param name="number">Receiver phone number.</param>
+        /// <param name="subject">Text of the MMS.</param>
+        /// <param name="encoding">Encoding type.</param>
         public MMS(string number, string subject, MMSEncoding encoding = MMSEncoding.MMS)
         {
             this.number = number;
@@ -207,15 +193,12 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            switch (encoding)
+            return encoding switch
             {
-                case MMSEncoding.MMSTO:
-                    return $"mmsto:{number}?subject={Uri.EscapeDataString(subject)}";
-                case MMSEncoding.MMS:
-                    return $"mms:{number}?body={Uri.EscapeDataString(subject)}";
-                default:
-                    return "mms:";
-            }
+                MMSEncoding.MMSTO => $"mmsto:{number}?subject={Uri.EscapeDataString(subject)}",
+                MMSEncoding.MMS => $"mms:{number}?body={Uri.EscapeDataString(subject)}",
+                _ => "mms:",
+            };
         }
 
         public enum MMSEncoding
@@ -245,15 +228,12 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            switch (encoding)
+            return encoding switch
             {
-                case GeolocationEncoding.GEO:
-                    return $"geo:{latitude},{longitude}";
-                case GeolocationEncoding.GoogleMaps:
-                    return $"http://maps.google.com/maps?q={latitude},{longitude}";
-                default:
-                    return "geo:";
-            }
+                GeolocationEncoding.GEO => $"geo:{latitude},{longitude}",
+                GeolocationEncoding.GoogleMaps => $"http://maps.google.com/maps?q={latitude},{longitude}",
+                _ => "geo:",
+            };
         }
 
         public enum GeolocationEncoding
@@ -265,7 +245,7 @@ public static class PayloadGenerator
 
     public class PhoneNumber : Payload
     {
-        private readonly string number;
+        private readonly string _number;
 
         /// <summary>
         /// Generates a phone call payload.
@@ -273,32 +253,30 @@ public static class PayloadGenerator
         /// <param name="number">Phone Number of the receiver.</param>
         public PhoneNumber(string number)
         {
-            this.number = number;
+            _number = number;
         }
 
         public override string ToString()
         {
-            return $"tel:{number}";
+            return $"tel:{_number}";
         }
     }
 
     public class SkypeCall : Payload
     {
-        private readonly string skypeUsername;
+        private readonly string _username;
 
         /// <summary>
-        /// Generates a Skype call payload
+        /// Generates a Skype call payload.
         /// </summary>
-        /// <param name="skypeUsername">Skype username which will be called</param>
+        /// <param name="skypeUsername">Skype username which will be called.</param>
         public SkypeCall(string skypeUsername)
         {
-            this.skypeUsername = skypeUsername;
+            _username = skypeUsername;
         }
 
         public override string ToString()
-        {
-            return $"skype:{skypeUsername}?call";
-        }
+            => $"skype:{_username}?call";
     }
 
     public class Url : Payload
@@ -461,6 +439,7 @@ public static class PayloadGenerator
                 if (birthday != null)
                     payload += $"BDAY:{((DateTime)birthday).ToString("yyyyMMdd")}\r\n";
                 string addressString = string.Empty;
+
                 if (addressOrder == AddressOrder.Default)
                 {
                     addressString = $"ADR:,,{(!string.IsNullOrEmpty(street) ? street + " " : "")}{(!string.IsNullOrEmpty(houseNumber) ? houseNumber : "")},{(!string.IsNullOrEmpty(zipCode) ? zipCode : "")},{(!string.IsNullOrEmpty(city) ? city : "")},{(!string.IsNullOrEmpty(stateRegion) ? stateRegion : "")},{(!string.IsNullOrEmpty(country) ? country : "")}\r\n";
@@ -469,6 +448,7 @@ public static class PayloadGenerator
                 {
                     addressString = $"ADR:,,{(!string.IsNullOrEmpty(houseNumber) ? houseNumber + " " : "")}{(!string.IsNullOrEmpty(street) ? street : "")},{(!string.IsNullOrEmpty(city) ? city : "")},{(!string.IsNullOrEmpty(stateRegion) ? stateRegion : "")},{(!string.IsNullOrEmpty(zipCode) ? zipCode : "")},{(!string.IsNullOrEmpty(country) ? country : "")}\r\n";
                 }
+
                 payload += addressString;
                 if (!string.IsNullOrEmpty(website))
                     payload += $"URL:{website}\r\n";
@@ -535,6 +515,7 @@ public static class PayloadGenerator
                 else
                     payload += "TYPE=home,pref:";
                 string addressString = string.Empty;
+
                 if (addressOrder == AddressOrder.Default)
                 {
                     addressString = $";;{(!string.IsNullOrEmpty(street) ? street + " " : "")}{(!string.IsNullOrEmpty(houseNumber) ? houseNumber : "")};{(!string.IsNullOrEmpty(zipCode) ? zipCode : "")};{(!string.IsNullOrEmpty(city) ? city : "")};{(!string.IsNullOrEmpty(stateRegion) ? stateRegion : "")};{(!string.IsNullOrEmpty(country) ? country : "")}\r\n";
@@ -543,6 +524,7 @@ public static class PayloadGenerator
                 {
                     addressString = $";;{(!string.IsNullOrEmpty(houseNumber) ? houseNumber + " " : "")}{(!string.IsNullOrEmpty(street) ? street : "")};{(!string.IsNullOrEmpty(city) ? city : "")};{(!string.IsNullOrEmpty(stateRegion) ? stateRegion : "")};{(!string.IsNullOrEmpty(zipCode) ? zipCode : "")};{(!string.IsNullOrEmpty(country) ? country : "")}\r\n";
                 }
+
                 payload += addressString;
 
                 if (birthday != null)
@@ -572,7 +554,6 @@ public static class PayloadGenerator
             VCard3,
             VCard4
         }
-
 
         /// <summary>
         /// define the address format
@@ -928,10 +909,9 @@ public static class PayloadGenerator
                 return new Contact(name, null, null, country, addressLine1, addressLine2, AddressType.CombinedAddress);
             }
 
-
             private Contact(string name, string zipCode, string city, string country, string streetOrAddressline1, string houseNumberOrAddressline2, AddressType addressType)
             {
-                //Pattern extracted from https://qr-validation.iso-payments.ch as explained in https://github.com/codebude/QRCoder/issues/97
+                // Pattern extracted from https://qr-validation.iso-payments.ch as explained in https://github.com/codebude/QRCoder/issues/97
                 var charsetPattern = @"^([a-zA-Z0-9\.,;:'\ \+\-/\(\)?\*\[\]\{\}\\`´~ ]|[!""#%&<>÷=@_$£]|[àáâäçèéêëìíîïñòóôöùúûüýßÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜÑ])*$";
 
                 adrType = addressType;
@@ -1101,11 +1081,8 @@ public static class PayloadGenerator
             return SwissQrCodePayload;
         }
 
-
-
-
         /// <summary>
-        /// ISO 4217 currency codes
+        /// ISO 4217 currency codes.
         /// </summary>
         public enum Currency
         {
@@ -1142,7 +1119,6 @@ public static class PayloadGenerator
         private readonly GirocodeVersion version;
         private readonly GirocodeEncoding encoding;
         private readonly TypeOfRemittance typeOfRemittance;
-
 
         /// <summary>
         /// Generates the payload for a Girocode (QR-Code with credit transfer information).
@@ -1257,7 +1233,7 @@ public static class PayloadGenerator
 
     public class BezahlCode : Payload
     {
-        //BezahlCode specification: http://www.bezahlcode.de/wp-content/uploads/BezahlCode_TechDok.pdf
+        // BezahlCode specification: http://www.bezahlcode.de/wp-content/uploads/BezahlCode_TechDok.pdf
 
         private readonly string name, iban, bic, account, bnc, sepaReference, reason, creditorId, mandateId, periodicTimeunit;
         private readonly decimal amount;
@@ -1266,9 +1242,8 @@ public static class PayloadGenerator
         private readonly PayloadGenerator.BezahlCode.AuthorityType authority;
         private readonly DateTime executionDate, dateOfSignature, periodicFirstExecutionDate, periodicLastExecutionDate;
 
-
         /// <summary>
-        /// Constructor for contact data
+        /// Constructor for contact data.
         /// </summary>
         /// <param name="authority">Type of the bank transfer</param>
         /// <param name="name">Name of the receiver (Empfänger)</param>
@@ -1280,7 +1255,6 @@ public static class PayloadGenerator
         public BezahlCode(PayloadGenerator.BezahlCode.AuthorityType authority, string name, string account = "", string bnc = "", string iban = "", string bic = "", string reason = "") : this(authority, name, account, bnc, iban, bic, 0, string.Empty, 0, null, null, string.Empty, string.Empty, null, reason, 0, string.Empty, Currency.EUR, null, 1)
         {
         }
-
 
         /// <summary>
         /// Constructor for non-SEPA payments
@@ -1326,21 +1300,18 @@ public static class PayloadGenerator
         {
         }
 
-
-
-
         /// <summary>
-        /// Generic constructor. Please use specific (non-SEPA or SEPA) constructor
+        /// Generic constructor. Please use specific (non-SEPA or SEPA) constructor.
         /// </summary>
-        /// <param name="authority">Type of the bank transfer</param>
-        /// <param name="name">Name of the receiver (Empfänger)</param>
-        /// <param name="account">Bank account (Kontonummer)</param>
-        /// <param name="bnc">Bank institute (Bankleitzahl)</param>
+        /// <param name="authority">Type of the bank transfer.</param>
+        /// <param name="name">Name of the receiver (Empfänger).</param>
+        /// <param name="account">Bank account (Kontonummer).</param>
+        /// <param name="bnc">Bank institute (Bankleitzahl).</param>
         /// <param name="iban">IBAN</param>
         /// <param name="bic">BIC</param>
         /// <param name="amount">Amount (Betrag)</param>
-        /// <param name="periodicTimeunit">Unit of intervall for payment ('M' = monthly, 'W' = weekly)</param>
-        /// <param name="periodicTimeunitRotation">Intervall for payment. This value is combined with 'periodicTimeunit'</param>
+        /// <param name="periodicTimeunit">Unit of intervall for payment ('M' = monthly, 'W' = weekly).</param>
+        /// <param name="periodicTimeunitRotation">Intervall for payment. This value is combined with 'periodicTimeunit'.</param>
         /// <param name="periodicFirstExecutionDate">Date of first periodic execution</param>
         /// <param name="periodicLastExecutionDate">Date of last periodic execution</param>
         /// <param name="creditorId">Creditor id (Gläubiger ID)</param>
@@ -1354,7 +1325,7 @@ public static class PayloadGenerator
         /// <param name="internalMode">Only used for internal state handdling</param>
         public BezahlCode(PayloadGenerator.BezahlCode.AuthorityType authority, string name, string account, string bnc, string iban, string bic, decimal amount, string periodicTimeunit = "", int periodicTimeunitRotation = 0, DateTime? periodicFirstExecutionDate = null, DateTime? periodicLastExecutionDate = null, string creditorId = "", string mandateId = "", DateTime? dateOfSignature = null, string reason = "", int postingKey = 0, string sepaReference = "", Currency currency = Currency.EUR, DateTime? executionDate = null, int internalMode = 0)
         {
-            //Loaded via "contact-constructor"
+            // Loaded via "contact-constructor"
             if (internalMode == 1)
             {
                 if (authority != PayloadGenerator.BezahlCode.AuthorityType.contact && authority != PayloadGenerator.BezahlCode.AuthorityType.contact_v2)
@@ -1515,6 +1486,7 @@ public static class PayloadGenerator
                             bezahlCodePayload += $"dateofsignature={dateOfSignature.ToString("ddMMyyyy")}&";
                     }
                 }
+
                 bezahlCodePayload += $"amount={amount:0.00}&".Replace(".", ",");
 
                 if (!string.IsNullOrEmpty(reason))
@@ -1534,7 +1506,7 @@ public static class PayloadGenerator
             }
             else
             {
-                //Handle what is same for all contacts
+                // Handle what is same for all contacts
                 if (authority == PayloadGenerator.BezahlCode.AuthorityType.contact)
                 {
                     bezahlCodePayload += $"account={account}&";
@@ -1562,7 +1534,7 @@ public static class PayloadGenerator
         }
 
         /// <summary>
-        /// ISO 4217 currency codes
+        /// ISO 4217 currency codes.
         /// </summary>
         public enum Currency
         {
@@ -1746,45 +1718,51 @@ public static class PayloadGenerator
             ZWL = 932
         }
 
-
         /// <summary>
-        /// Operation modes of the BezahlCode
+        /// Operation modes of the BezahlCode.
         /// </summary>
         public enum AuthorityType
         {
             /// <summary>
-            /// Single payment (Überweisung)
+            /// Single payment (Überweisung).
             /// </summary>
             [Obsolete]
             singlepayment,
+
             /// <summary>
-            /// Single SEPA payment (SEPA-Überweisung)
+            /// Single SEPA payment (SEPA-Überweisung).
             /// </summary>
             singlepaymentsepa,
+
             /// <summary>
-            /// Single debit (Lastschrift)
+            /// Single debit (Lastschrift).
             /// </summary>
             [Obsolete]
             singledirectdebit,
+
             /// <summary>
-            /// Single SEPA debit (SEPA-Lastschrift)
+            /// Single SEPA debit (SEPA-Lastschrift).
             /// </summary>
             singledirectdebitsepa,
+
             /// <summary>
-            /// Periodic payment (Dauerauftrag)
+            /// Periodic payment (Dauerauftrag).
             /// </summary>
             [Obsolete]
             periodicsinglepayment,
+
             /// <summary>
-            /// Periodic SEPA payment (SEPA-Dauerauftrag)
+            /// Periodic SEPA payment (SEPA-Dauerauftrag).
             /// </summary>
             periodicsinglepaymentsepa,
+
             /// <summary>
-            /// Contact data
+            /// Contact data.
             /// </summary>
             contact,
+
             /// <summary>
-            /// Contact data V2
+            /// Contact data V2.
             /// </summary>
             contact_v2
         }
@@ -1858,7 +1836,7 @@ public static class PayloadGenerator
 
     public class OneTimePassword : Payload
     {
-        //https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+        // https://github.com/google/google-authenticator/wiki/Key-Uri-Format
         public OneTimePasswordAuthType Type { get; set; } = OneTimePasswordAuthType.TOTP;
         public string Secret { get; set; }
 
@@ -1900,15 +1878,12 @@ public static class PayloadGenerator
 
         public override string ToString()
         {
-            switch (Type)
+            return Type switch
             {
-                case OneTimePasswordAuthType.TOTP:
-                    return TimeToString();
-                case OneTimePasswordAuthType.HOTP:
-                    return HMACToString();
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                OneTimePasswordAuthType.TOTP => TimeToString(),
+                OneTimePasswordAuthType.HOTP => HMACToString(),
+                _ => throw new ArgumentOutOfRangeException(),
+            };
         }
 
         // Note: Issuer:Label must only contain 1 : if either of the Issuer or the Label has a : then it is invalid.
@@ -2062,12 +2037,13 @@ public static class PayloadGenerator
         /// <param name="password">Password of the SS proxy</param>
         /// <param name="method">Encryption type</param>
         /// <param name="tag">Optional tag line</param>
-        public ShadowSocksConfig(string hostname, int port, string password, Method method, string tag = null) :
-            this(hostname, port, password, method, null, tag)
-        { }
+        public ShadowSocksConfig(string hostname, int port, string password, Method method, string? tag = null)
+            : this(hostname, port, password, method, null, tag)
+        {
+        }
 
-        public ShadowSocksConfig(string hostname, int port, string password, Method method, string plugin, string pluginOption, string tag = null) :
-            this(hostname, port, password, method, new Dictionary<string, string>
+        public ShadowSocksConfig(string hostname, int port, string password, Method method, string plugin, string pluginOption, string? tag = null)
+            : this(hostname, port, password, method, new Dictionary<string, string>
             {
                 ["plugin"] = plugin + (
                 string.IsNullOrEmpty(pluginOption)
@@ -2075,7 +2051,9 @@ public static class PayloadGenerator
                 : $";{pluginOption}"
             )
             }, tag)
-        { }
+        {
+        }
+
         private Dictionary<string, string> UrlEncodeTable = new Dictionary<string, string>
         {
             [" "] = "+",
@@ -2117,6 +2095,7 @@ public static class PayloadGenerator
             {
                 j = j.Replace(kv.Key, kv.Value);
             }
+
             return j;
         }
 
@@ -2164,8 +2143,10 @@ public static class PayloadGenerator
             Aes128Gcm,
             Aes192Gcm,
             Aes256Gcm,
+
             // AEAD, not standard
             XChacha20IetfPoly1305,
+
             // Stream cipher
             Aes128Cfb,
             Aes192Cfb,
@@ -2177,8 +2158,10 @@ public static class PayloadGenerator
             Camellia192Cfb,
             Camellia256Cfb,
             Chacha20Ietf,
+
             // alias of Aes256Cfb
             Aes256Cb,
+
             // Stream cipher, not standard
             Aes128Ofb,
             Aes192Ofb,
@@ -2189,11 +2172,13 @@ public static class PayloadGenerator
             Aes128Cfb8,
             Aes192Cfb8,
             Aes256Cfb8,
+
             // Stream cipher, deprecated
             Chacha20,
             BfCfb,
             Rc4Md5,
             Salsa20,
+
             // Not standard and not in acitve use
             DesCfb,
             IdeaCfb,
@@ -2258,7 +2243,6 @@ public static class PayloadGenerator
             moneroUri += !string.IsNullOrEmpty(txDescription) ? $"tx_description={Uri.EscapeDataString(txDescription)}" : string.Empty;
             return moneroUri.TrimEnd('&');
         }
-
 
         public class MoneroTransactionException : Exception
         {
@@ -2335,7 +2319,7 @@ public static class PayloadGenerator
 
         private int CalculateChecksum()
         {
-            int _cs = 5 + _payerName.Length; //5 = UPNQR constant Length
+            int _cs = 5 + _payerName.Length; // 5 = UPNQR constant Length
             _cs += _payerAddress.Length;
             _cs += _payerPlace.Length;
             _cs += _amount.Length;
@@ -2376,13 +2360,13 @@ public static class PayloadGenerator
 
     private static bool IsValidIban(string iban)
     {
-        //Clean IBAN
+        // Clean IBAN
         var ibanCleared = iban.ToUpper().Replace(" ", "").Replace("-", "");
 
-        //Check for general structure
+        // Check for general structure
         var structurallyValid = Regex.IsMatch(ibanCleared, @"^[a-zA-Z]{2}[0-9]{2}([a-zA-Z0-9]?){16,30}$");
 
-        //Check IBAN checksum
+        // Check IBAN checksum
         var sum = $"{ibanCleared.Substring(4)}{ibanCleared.Substring(0, 4)}".ToCharArray().Aggregate("", (current, c) => current + (char.IsLetter(c) ? (c - 55).ToString() : c.ToString()));
         decimal sumDec;
         if (!decimal.TryParse(sum, out sumDec))
@@ -2395,6 +2379,7 @@ public static class PayloadGenerator
     private static bool IsValidQRIban(string iban)
     {
         var foundQrIid = false;
+
         try
         {
             var ibanCleared = iban.ToUpper().Replace(" ", "").Replace("-", "");
@@ -2409,7 +2394,6 @@ public static class PayloadGenerator
     {
         return Regex.IsMatch(bic.Replace(" ", ""), @"^([a-zA-Z]{4}[a-zA-Z]{2}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?)$");
     }
-
 
     private static string ConvertStringToEncoding(string message, string encoding)
     {
@@ -2428,14 +2412,14 @@ public static class PayloadGenerator
         {
             forbiddenChars = new char[1] { ':' };
         }
+
         foreach (var c in forbiddenChars)
         {
             inp = inp.Replace(c.ToString(), "\\" + c);
         }
+
         return inp;
     }
-
-
 
     public static bool ChecksumMod10(string digits)
     {
@@ -2449,6 +2433,7 @@ public static class PayloadGenerator
             var num = Convert.ToInt32(digits[i]) - 48;
             remainder = mods[(num + remainder) % 10];
         }
+
         var checksum = (10 - remainder) % 10;
         return checksum == Convert.ToInt32(digits[digits.Length - 1]) - 48;
     }

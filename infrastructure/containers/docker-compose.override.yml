@@ -1,0 +1,5 @@
+services:
+  barcode-builder:
+    build:
+      context: ../../
+      dockerfile: ./src/WebApi/Dockerfile

@@ -1,38 +1,40 @@
-﻿namespace Genocs.QRCodeGenerator.Decoder;
+﻿namespace Genocs.QRCodeLibrary.Decoder;
 
 internal class ReedSolomon
 {
     internal static int INCORRECTABLE_ERROR = -1;
 
-    internal static int CorrectData
-            (
-            byte[] ReceivedData,        // received data buffer with data and error correction code
-            int DataLength,         // length of data in the buffer (note sometimes the array is longer than data)
-            int ErrCorrCodewords    // numer of error correction codewords
-            )
+    /// <summary>
+    /// Corrects the received data using Reed-Solomon error correction.
+    /// </summary>
+    /// <param name="receivedData">The received data buffer with data and error correction code.</param>
+    /// <param name="dataLength">The length of data in the buffer (note sometimes the array is longer than data).</param>
+    /// <param name="errorCorrectionCodewords">The number of error correction codewords.</param>
+    /// <returns>The number of errors corrected, or -1 if the data cannot be corrected.</returns>
+    internal static int CorrectData(byte[] receivedData, int dataLength, int errorCorrectionCodewords)
     {
         // calculate syndrome vector
-        int[] Syndrome = CalculateSyndrome(ReceivedData, DataLength, ErrCorrCodewords);
+        int[] syndrome = CalculateSyndrome(receivedData, dataLength, errorCorrectionCodewords);
 
         // received data has no error
         // note: this should not happen because we call this method only if error was detected
-        if (Syndrome == null) return 0;
+        if (syndrome == null) return 0;
 
         // Modified Berlekamp-Massey
         // calculate sigma and omega
-        int[] Sigma = new int[ErrCorrCodewords / 2 + 2];
-        int[] Omega = new int[ErrCorrCodewords / 2 + 1];
-        int ErrorCount = CalculateSigmaMBM(Sigma, Omega, Syndrome, ErrCorrCodewords);
+        int[] Sigma = new int[errorCorrectionCodewords / 2 + 2];
+        int[] Omega = new int[errorCorrectionCodewords / 2 + 1];
+        int ErrorCount = CalculateSigmaMBM(Sigma, Omega, syndrome, errorCorrectionCodewords);
 
         // data cannot be corrected
         if (ErrorCount <= 0) return INCORRECTABLE_ERROR;
 
         // look for error position using Chien search
         int[] ErrorPosition = new int[ErrorCount];
-        if (!ChienSearch(ErrorPosition, DataLength, ErrorCount, Sigma)) return INCORRECTABLE_ERROR;
+        if (!ChienSearch(ErrorPosition, dataLength, ErrorCount, Sigma)) return INCORRECTABLE_ERROR;
 
         // correct data array based on position array
-        ApplyCorrection(ReceivedData, DataLength, ErrorCount, ErrorPosition, Sigma, Omega);
+        ApplyCorrection(receivedData, dataLength, ErrorCount, ErrorPosition, Sigma, Omega);
 
         // return error count before it was corrected
         return ErrorCount;
@@ -45,12 +47,14 @@ internal class ReedSolomon
     // ....
     // Sm = R0 + R1 * A**m + R2 * A**2m + .... + Rn * A**mn
 
-    internal static int[] CalculateSyndrome
-            (
-            byte[] ReceivedData,        // recived data buffer with data and error correction code
-            int DataLength,         // length of data in the buffer (note sometimes the array is longer than data) 
-            int ErrCorrCodewords    // numer of error correction codewords
-            )
+    /// <summary>
+    /// Calculates the syndrome vector for the received data.
+    /// </summary>
+    /// <param name="ReceivedData">The received data buffer with data and error correction code.</param>
+    /// <param name="DataLength">The length of data in the buffer (note sometimes the array is longer than data).</param>
+    /// <param name="ErrCorrCodewords">The number of error correction codewords.</param>
+    /// <returns>The syndrome vector, or null if no errors are detected.</returns>
+    internal static int[] CalculateSyndrome(byte[] ReceivedData, int DataLength, int ErrCorrCodewords)
     {
         // allocate syndrome vector
         int[] Syndrome = new int[ErrCorrCodewords];

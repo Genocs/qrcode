@@ -6,9 +6,7 @@ internal static class Utils
 {
     internal static int GetFontHeight(string text, SKFont font)
     {
-        var textBounds = new SKRect();
-        using var textPaint = new SKPaint(font);
-        textPaint.MeasureText(text, ref textBounds);
+        font.MeasureText(text, out SKRect textBounds);
         return (int)textBounds.Height;
     }
 }

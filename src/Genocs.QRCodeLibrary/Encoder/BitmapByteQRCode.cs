@@ -1,4 +1,4 @@
-﻿namespace Genocs.QRCodeGenerator.Encoder;
+﻿namespace Genocs.QRCodeLibrary.Encoder;
 
 // ReSharper disable once InconsistentNaming
 public class BitmapByteQRCode : AbstractQRCode

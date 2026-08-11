@@ -1,0 +1,30 @@
+services:
+
+  barcode-builder:
+    image: genocs/barcode-builder:local
+    hostname: barcode-builder
+    container_name: barcode-builder
+    ports:
+      - 5070:8080
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      mongoDb__connectionString: mongodb://mongodb:27017
+      mongoDb__database: barcode_builder
+      mongoDb__seed: "true"
+      pdfStorage__templatesPath: /app/data/templates
+      pdfStorage__fontsPath: /app/data/fonts
+      pdfStorage__assetsPath: /app/data/assets
+      logger__console__enabled: "true"
+    networks:
+      - genocs      
+    volumes:
+      # Persist / swap templates, fonts, and assets without rebuilding the image
+      - ./docker/data/templates:/app/data/templates:ro
+      - ./docker/data/fonts:/app/data/fonts:ro
+      - ./docker/data/assets:/app/data/assets:ro
+
+networks:
+  genocs:
+    name: genocs-network
+    external: true
+    driver: bridge

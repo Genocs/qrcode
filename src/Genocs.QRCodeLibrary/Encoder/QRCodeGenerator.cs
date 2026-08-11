@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Text;
 
-namespace Genocs.QRCodeGenerator.Encoder;
+namespace Genocs.QRCodeLibrary.Encoder;
 
 public class QRCodeGenerator : IDisposable
 {
@@ -103,7 +103,6 @@ After:
     {
         return GenerateQrCode(binaryData, eccLevel);
     }
-
 
     /// <summary>
     /// Calculates the QR code data which than can be used in one of the rendering classes to generate a graphical representation.
@@ -1447,15 +1446,15 @@ After:
     public enum ECCLevel
     {
         /// <summary>
-        /// 7% may be lost before recovery is not possible
+        /// 7% may be lost before recovery is not possible.
         /// </summary>
         L,
         /// <summary>
-        /// 15% may be lost before recovery is not possible
+        /// 15% may be lost before recovery is not possible.
         /// </summary>
         M,
         /// <summary>
-        /// 25% may be lost before recovery is not possible
+        /// 25% may be lost before recovery is not possible.
         /// </summary>
         Q,
         /// <summary>

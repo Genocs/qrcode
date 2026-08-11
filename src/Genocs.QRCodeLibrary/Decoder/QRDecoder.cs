@@ -1,6 +1,6 @@
 ﻿using SkiaSharp;
 
-namespace Genocs.QRCodeGenerator.Decoder;
+namespace Genocs.QRCodeLibrary.Decoder;
 
 /// <summary>
 /// QR Code error correction code enumeration.
@@ -222,9 +222,10 @@ public class QRDecoder
     /// </summary>
     /// <param name="bufferData"></param>
     /// <returns></returns>
-    private static QrCodeResult QRCodeResult(byte[][] bufferData)
+    private static QrCodeResult? QRCodeResult(byte[][] bufferData)
     {
-        QrCodeResult result = null;
+        QrCodeResult? result = null;
+
         // no QR code
         if (bufferData == null) return result;
 
@@ -1143,33 +1144,33 @@ public class QRDecoder
         Matrix1[0, 0] = 3;
         Matrix1[0, 1] = 3;
         Matrix1[0, 2] = 1;
-        Matrix1[0, 3] = corner.TopLeftFinder._col;
+        Matrix1[0, 3] = corner._topLeftFinder._col;
 
         Matrix1[1, 0] = BottomRightPos;
         Matrix1[1, 1] = 3;
         Matrix1[1, 2] = 1;
-        Matrix1[1, 3] = corner.TopRightFinder._col;
+        Matrix1[1, 3] = corner._topRightFinder._col;
 
         Matrix1[2, 0] = 3;
         Matrix1[2, 1] = BottomRightPos;
         Matrix1[2, 2] = 1;
-        Matrix1[2, 3] = corner.BottomLeftFinder._col;
+        Matrix1[2, 3] = corner._bottomLeftFinder._col;
 
         // build matrix 2 for Vertical Y direction
         Matrix2[0, 0] = 3;
         Matrix2[0, 1] = 3;
         Matrix2[0, 2] = 1;
-        Matrix2[0, 3] = corner.TopLeftFinder._row;
+        Matrix2[0, 3] = corner._topLeftFinder._row;
 
         Matrix2[1, 0] = BottomRightPos;
         Matrix2[1, 1] = 3;
         Matrix2[1, 2] = 1;
-        Matrix2[1, 3] = corner.TopRightFinder._row;
+        Matrix2[1, 3] = corner._topRightFinder._row;
 
         Matrix2[2, 0] = 3;
         Matrix2[2, 1] = BottomRightPos;
         Matrix2[2, 2] = 1;
-        Matrix2[2, 3] = corner.BottomLeftFinder._row;
+        Matrix2[2, 3] = corner._bottomLeftFinder._row;
 
         // solve matrix1
         SolveMatrixOne(Matrix1);
@@ -1292,23 +1293,23 @@ public class QRDecoder
         Matrix[0, 0] = 3.0;
         Matrix[0, 1] = 3.0;
         Matrix[0, 2] = 1.0;
-        Matrix[0, 6] = -3.0 * Corner.TopLeftFinder._col;
-        Matrix[0, 7] = -3.0 * Corner.TopLeftFinder._col;
-        Matrix[0, 8] = Corner.TopLeftFinder._col;
+        Matrix[0, 6] = -3.0 * Corner._topLeftFinder._col;
+        Matrix[0, 7] = -3.0 * Corner._topLeftFinder._col;
+        Matrix[0, 8] = Corner._topLeftFinder._col;
 
         Matrix[1, 0] = FarFinder;
         Matrix[1, 1] = 3.0;
         Matrix[1, 2] = 1.0;
-        Matrix[1, 6] = -FarFinder * Corner.TopRightFinder._col;
-        Matrix[1, 7] = -3.0 * Corner.TopRightFinder._col;
-        Matrix[1, 8] = Corner.TopRightFinder._col;
+        Matrix[1, 6] = -FarFinder * Corner._topRightFinder._col;
+        Matrix[1, 7] = -3.0 * Corner._topRightFinder._col;
+        Matrix[1, 8] = Corner._topRightFinder._col;
 
         Matrix[2, 0] = 3.0;
         Matrix[2, 1] = FarFinder;
         Matrix[2, 2] = 1.0;
-        Matrix[2, 6] = -3.0 * Corner.BottomLeftFinder._col;
-        Matrix[2, 7] = -FarFinder * Corner.BottomLeftFinder._col;
-        Matrix[2, 8] = Corner.BottomLeftFinder._col;
+        Matrix[2, 6] = -3.0 * Corner._bottomLeftFinder._col;
+        Matrix[2, 7] = -FarFinder * Corner._bottomLeftFinder._col;
+        Matrix[2, 8] = Corner._bottomLeftFinder._col;
 
         Matrix[3, 0] = FarAlign;
         Matrix[3, 1] = FarAlign;
@@ -1320,23 +1321,23 @@ public class QRDecoder
         Matrix[4, 3] = 3.0;
         Matrix[4, 4] = 3.0;
         Matrix[4, 5] = 1.0;
-        Matrix[4, 6] = -3.0 * Corner.TopLeftFinder._row;
-        Matrix[4, 7] = -3.0 * Corner.TopLeftFinder._row;
-        Matrix[4, 8] = Corner.TopLeftFinder._row;
+        Matrix[4, 6] = -3.0 * Corner._topLeftFinder._row;
+        Matrix[4, 7] = -3.0 * Corner._topLeftFinder._row;
+        Matrix[4, 8] = Corner._topLeftFinder._row;
 
         Matrix[5, 3] = FarFinder;
         Matrix[5, 4] = 3.0;
         Matrix[5, 5] = 1.0;
-        Matrix[5, 6] = -FarFinder * Corner.TopRightFinder._row;
-        Matrix[5, 7] = -3.0 * Corner.TopRightFinder._row;
-        Matrix[5, 8] = Corner.TopRightFinder._row;
+        Matrix[5, 6] = -FarFinder * Corner._topRightFinder._row;
+        Matrix[5, 7] = -3.0 * Corner._topRightFinder._row;
+        Matrix[5, 8] = Corner._topRightFinder._row;
 
         Matrix[6, 3] = 3.0;
         Matrix[6, 4] = FarFinder;
         Matrix[6, 5] = 1.0;
-        Matrix[6, 6] = -3.0 * Corner.BottomLeftFinder._row;
-        Matrix[6, 7] = -FarFinder * Corner.BottomLeftFinder._row;
-        Matrix[6, 8] = Corner.BottomLeftFinder._row;
+        Matrix[6, 6] = -3.0 * Corner._bottomLeftFinder._row;
+        Matrix[6, 7] = -FarFinder * Corner._bottomLeftFinder._row;
+        Matrix[6, 8] = Corner._bottomLeftFinder._row;
 
         Matrix[7, 3] = FarAlign;
         Matrix[7, 4] = FarAlign;

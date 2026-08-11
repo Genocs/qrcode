@@ -30,15 +30,11 @@ internal abstract class BarcodeCommon
 
     internal static int GetAlignmentShiftAdjustment(Barcode barcode)
     {
-        switch (barcode.Alignment)
+        return barcode.Alignment switch
         {
-            case AlignmentPositions.Left:
-                return 0;
-            case AlignmentPositions.Right:
-                return barcode.Width % barcode.EncodedValue.Length;
-            case AlignmentPositions.Center:
-            default:
-                return (barcode.Width % barcode.EncodedValue.Length) / 2;
-        }
+            AlignmentPositions.Left => 0,
+            AlignmentPositions.Right => barcode.Width % barcode.EncodedValue.Length,
+            _ => (barcode.Width % barcode.EncodedValue.Length) / 2,
+        };
     }
 }

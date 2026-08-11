@@ -1,14 +1,14 @@
-﻿namespace Genocs.QRCodeGenerator.Decoder;
+﻿namespace Genocs.QRCodeLibrary.Decoder;
 
 /////////////////////////////////////////////////////////////////////
 // QR corner three finders pattern class
 /////////////////////////////////////////////////////////////////////
 
-internal class Corner
+internal sealed class Corner
 {
-    internal Finder TopLeftFinder;
-    internal Finder TopRightFinder;
-    internal Finder BottomLeftFinder;
+    internal Finder _topLeftFinder;
+    internal Finder _topRightFinder;
+    internal Finder _bottomLeftFinder;
 
     internal double TopLineDeltaX;
     internal double TopLineDeltaY;
@@ -20,32 +20,29 @@ internal class Corner
     /// <summary>
     /// QR corner constructor.
     /// </summary>
-    /// <param name="topLeftFinder"></param>
-    /// <param name="topRightFinder"></param>
-    /// <param name="bottomLeftFinder"></param>
-    private Corner(
-            Finder topLeftFinder,
-            Finder topRightFinder,
-            Finder bottomLeftFinder)
+    /// <param name="topLeftFinder">The top-left finder.</param>
+    /// <param name="topRightFinder">The top-right finder.</param>
+    /// <param name="bottomLeftFinder">The bottom-left finder.</param>
+    private Corner(Finder topLeftFinder, Finder topRightFinder, Finder bottomLeftFinder)
     {
         // save three finders
-        this.TopLeftFinder = topLeftFinder;
-        this.TopRightFinder = topRightFinder;
-        this.BottomLeftFinder = bottomLeftFinder;
+        _topLeftFinder = topLeftFinder;
+        _topRightFinder = topRightFinder;
+        _bottomLeftFinder = bottomLeftFinder;
 
         // top line slope
         TopLineDeltaX = topRightFinder._col - topLeftFinder._col;
         TopLineDeltaY = topRightFinder._row - topLeftFinder._row;
 
         // top line length
-        TopLineLength = Math.Sqrt(TopLineDeltaX * TopLineDeltaX + TopLineDeltaY * TopLineDeltaY);
+        TopLineLength = Math.Sqrt((TopLineDeltaX * TopLineDeltaX) + (TopLineDeltaY * TopLineDeltaY));
 
         // left line slope
         LeftLineDeltaX = bottomLeftFinder._col - topLeftFinder._col;
         LeftLineDeltaY = bottomLeftFinder._row - topLeftFinder._row;
 
         // left line length
-        LeftLineLength = Math.Sqrt(LeftLineDeltaX * LeftLineDeltaX + LeftLineDeltaY * LeftLineDeltaY);
+        LeftLineLength = Math.Sqrt((LeftLineDeltaX * LeftLineDeltaX) + (LeftLineDeltaY * LeftLineDeltaY));
         return;
     }
 
@@ -53,10 +50,7 @@ internal class Corner
     // Test QR corner for validity
     /////////////////////////////////////////////////////////////////////
 
-    internal static Corner? CreateCorner(
-            Finder topLeftFinder,
-            Finder topRightFinder,
-            Finder bottomLeftFinder)
+    internal static Corner? CreateCorner(Finder topLeftFinder, Finder topRightFinder, Finder bottomLeftFinder)
     {
         // try all three possible permutation of three finders
         for (int index = 0; index < 3; index++)
@@ -128,14 +122,13 @@ internal class Corner
         if (Math.Abs(TopLineDeltaX) >= Math.Abs(TopLineDeltaY))
         {
             topModules += TopLineLength * TopLineLength /
-                (Math.Abs(TopLineDeltaX) * 0.5 * (TopLeftFinder._hModule + TopRightFinder._hModule));
+                (Math.Abs(TopLineDeltaX) * 0.5 * (_topLeftFinder._hModule + _topRightFinder._hModule));
         }
-
-        // top line is mostly vertical
         else
         {
+            // top line is mostly vertical
             topModules += TopLineLength * TopLineLength /
-                (Math.Abs(TopLineDeltaY) * 0.5 * (TopLeftFinder._vModule + TopRightFinder._vModule));
+                (Math.Abs(TopLineDeltaY) * 0.5 * (_topLeftFinder._vModule + _topRightFinder._vModule));
         }
 
         // version number based on left line
@@ -145,21 +138,23 @@ internal class Corner
         if (Math.Abs(LeftLineDeltaY) >= Math.Abs(LeftLineDeltaX))
         {
             leftModules += LeftLineLength * LeftLineLength /
-                (Math.Abs(LeftLineDeltaY) * 0.5 * (TopLeftFinder._vModule + BottomLeftFinder._vModule));
+                (Math.Abs(LeftLineDeltaY) * 0.5 * (_topLeftFinder._vModule + _bottomLeftFinder._vModule));
         }
-
-        // left line is mostly horizontal
         else
         {
+            // left line is mostly horizontal
             leftModules += LeftLineLength * LeftLineLength /
-                (Math.Abs(LeftLineDeltaX) * 0.5 * (TopLeftFinder._hModule + BottomLeftFinder._hModule));
+                (Math.Abs(LeftLineDeltaX) * 0.5 * (_topLeftFinder._hModule + _bottomLeftFinder._hModule));
         }
 
         // version (there is rounding in the calculation)
         int version = ((int)Math.Round(0.5 * (topModules + leftModules)) - 15) / 4;
 
         // not a valid corner
-        if (version < 1 || version > 40) throw new ApplicationException("Corner is not valid (version number must be 1 to 40)");
+        if (version < 1 || version > 40)
+        {
+            throw new ApplicationException("Corner is not valid (version number must be 1 to 40)");
+        }
 
         // exit with version number
         return version;
