@@ -9,18 +9,14 @@
         <Description>QRCode library for .NET</Description>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>5.0.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
-        <Company>Genocs</Company>
-        <Copyright>Genocs 2026</Copyright>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Genocs/qrcode.git</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>
         <PackageIcon>icon.png</PackageIcon>
         <RepositoryType>git</RepositoryType>
         <PackageTags>QRCode reader writer</PackageTags>
         <PackageReleaseNotes>Removed reference</PackageReleaseNotes>
+        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -35,7 +31,7 @@
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
-        <None Include="README.md">
+        <None Include="README_NUGET.md">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
@@ -44,5 +40,9 @@
     <ItemGroup>
         <PackageReference Include="SkiaSharp" Version="4.151.1" />
         <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.151.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Genocs.QRCodeLibrary.Tests" />
     </ItemGroup>
 </Project>

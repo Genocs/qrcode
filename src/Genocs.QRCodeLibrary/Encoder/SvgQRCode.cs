@@ -35,16 +35,16 @@ public class SvgQRCode : AbstractQRCode
 
     public string GetGraphic(Size viewBox, Color darkColor, Color lightColor, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute)
     {
-        return GetGraphic(viewBox, darkColor, lightColor, drawQuietZones, sizingMode);
+        return GetGraphic(viewBox, ColorToHex(darkColor), ColorToHex(lightColor), drawQuietZones, sizingMode);
     }
 
     public string GetGraphic(Size viewBox, string darkColorHex, string lightColorHex, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute)
     {
-        var offset = drawQuietZones ? 0 : 4;
-        var drawableModulesCount = QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : offset * 2);
-        var pixelsPerModule = Math.Min(viewBox.Width, viewBox.Height) / (double)drawableModulesCount;
-        var qrSize = drawableModulesCount * pixelsPerModule;
-        var svgSizeAttributes = sizingMode == SizingMode.WidthHeightAttribute ? $@"width=""{viewBox.Width}"" height=""{viewBox.Height}""" : $@"viewBox=""0 0 {viewBox.Width} {viewBox.Height}""";
+        int offset = drawQuietZones ? 0 : 4;
+        int drawableModulesCount = QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : offset * 2);
+        double pixelsPerModule = Math.Min(viewBox.Width, viewBox.Height) / (double)drawableModulesCount;
+        double qrSize = drawableModulesCount * pixelsPerModule;
+        string? svgSizeAttributes = sizingMode == SizingMode.WidthHeightAttribute ? $@"width=""{viewBox.Width}"" height=""{viewBox.Height}""" : $@"viewBox=""0 0 {viewBox.Width} {viewBox.Height}""";
         var svgFile = new StringBuilder($@"<svg version=""1.1"" baseProfile=""full"" shape-rendering=""crispEdges"" {svgSizeAttributes} xmlns=""http://www.w3.org/2000/svg"">");
         svgFile.AppendLine($@"<rect x=""0"" y=""0"" width=""{CleanSvgVal(qrSize)}"" height=""{CleanSvgVal(qrSize)}"" fill=""{lightColorHex}"" />");
         for (int xi = offset; xi < offset + drawableModulesCount; xi++)
@@ -53,8 +53,8 @@ public class SvgQRCode : AbstractQRCode
             {
                 if (QrCodeData.ModuleMatrix[yi][xi])
                 {
-                    var x = (xi - offset) * pixelsPerModule;
-                    var y = (yi - offset) * pixelsPerModule;
+                    double x = (xi - offset) * pixelsPerModule;
+                    double y = (yi - offset) * pixelsPerModule;
                     svgFile.AppendLine($@"<rect x=""{CleanSvgVal(x)}"" y=""{CleanSvgVal(y)}"" width=""{CleanSvgVal(pixelsPerModule)}"" height=""{CleanSvgVal(pixelsPerModule)}"" fill=""{darkColorHex}"" />");
                 }
             }
@@ -64,10 +64,20 @@ public class SvgQRCode : AbstractQRCode
         return svgFile.ToString();
     }
 
-    private string CleanSvgVal(double input)
+    private static string CleanSvgVal(double input)
     {
         // Clean double values for international use/formats
         return input.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static string ColorToHex(Color color)
+    {
+        if (color.A == 255)
+        {
+            return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+        }
+
+        return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 
     public enum SizingMode
@@ -81,9 +91,9 @@ public static class SvgQRCodeHelper
 {
     public static string GetQRCode(string plainText, int pixelsPerModule, string darkColorHex, string lightColorHex, QRCodeGenerator.ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, QRCodeGenerator.EciMode eciMode = QRCodeGenerator.EciMode.Default, int requestedVersion = -1, bool drawQuietZones = true, SvgQRCode.SizingMode sizingMode = SvgQRCode.SizingMode.WidthHeightAttribute)
     {
-        using (var qrGenerator = new QRCodeGenerator())
-        using (var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion))
-        using (var qrCode = new SvgQRCode(qrCodeData))
-            return qrCode.GetGraphic(pixelsPerModule, darkColorHex, lightColorHex, drawQuietZones, sizingMode);
+        using var qrGenerator = new QRCodeGenerator();
+        using var qrCodeData = qrGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion);
+        using var qrCode = new SvgQRCode(qrCodeData);
+        return qrCode.GetGraphic(pixelsPerModule, darkColorHex, lightColorHex, drawQuietZones, sizingMode);
     }
 }

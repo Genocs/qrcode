@@ -4,7 +4,7 @@ namespace Genocs.QRCodeLibrary.Encoder;
 
 public class Base64QRCode : AbstractQRCode
 {
-    private QRCode _qrCode;
+    private readonly QRCode _qrCode;
 
     public Base64QRCode(QRCodeData data)
         : base(data)
@@ -12,10 +12,10 @@ public class Base64QRCode : AbstractQRCode
         _qrCode = new QRCode(data);
     }
 
-    public override void SetQRCodeData(QRCodeData data)
-    {
-        _qrCode.SetQRCodeData(data);
-    }
+    //public override void SetQRCodeData(QRCodeData data)
+    //{
+    //    _qrCode.SetQRCodeData(data);
+    //}
 
     public string GetGraphic(int pixelsPerModule)
     {
@@ -54,21 +54,21 @@ public class Base64QRCode : AbstractQRCode
         string base64 = string.Empty;
 
         //IImageEncoder iFormat;
-        //switch (imgType)
-        //{
-        //    case ImageType.Png:
-        //        iFormat = new PngEncoder();
-        //        break;
-        //    case ImageType.Jpeg:
-        //        iFormat = new JpegEncoder();
-        //        break;
-        //    case ImageType.Gif:
-        //        iFormat = new GifEncoder();
-        //        break;
-        //    default:
-        //        iFormat = new PngEncoder();
-        //        break;
-        //}
+        switch (imgType)
+        {
+            case ImageType.Png:
+                //        iFormat = new PngEncoder();
+                break;
+            case ImageType.Jpeg:
+                //        iFormat = new JpegEncoder();
+                break;
+            case ImageType.Gif:
+                //        iFormat = new GifEncoder();
+                break;
+            default:
+                //        iFormat = new PngEncoder();
+                break;
+        }
 
         //using (MemoryStream memoryStream = new MemoryStream())
         //{

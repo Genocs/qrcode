@@ -237,30 +237,17 @@ internal class ReedSolomon
         return int1 == 0 || int2 == 0 ? 0 : StaticTables.ExpToInt[StaticTables.IntToExp[int1] + StaticTables.IntToExp[int2]];
     }
 
-    internal static int MultiplyIntByExp
-            (
-            int Int,
-            int Exp
-            )
+    internal static int MultiplyIntByExp(int Int, int Exp)
     {
         return Int == 0 ? 0 : StaticTables.ExpToInt[StaticTables.IntToExp[Int] + Exp];
     }
 
-    internal static int MultiplyDivide
-            (
-            int int1,
-            int int2,
-            int int3
-            )
+    internal static int MultiplyDivide(int int1, int int2, int int3)
     {
         return int1 == 0 || int2 == 0 ? 0 : StaticTables.ExpToInt[(StaticTables.IntToExp[int1] + StaticTables.IntToExp[int2] - StaticTables.IntToExp[int3] + 255) % 255];
     }
 
-    internal static int DivideIntByExp
-            (
-            int Int,
-            int Exp
-            )
+    internal static int DivideIntByExp(int Int, int Exp)
     {
         return Int == 0 ? 0 : StaticTables.ExpToInt[StaticTables.IntToExp[Int] - Exp + 255];
     }
@@ -278,7 +265,5 @@ internal class ReedSolomon
             for (int index2 = 0; index2 < index2End; index2++)
                 if (poly2[index2] != 0) result[index1 + index2] ^= StaticTables.ExpToInt[loga + StaticTables.IntToExp[poly2[index2]]];
         }
-
-        return;
     }
 }

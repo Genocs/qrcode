@@ -1,68 +1,54 @@
 namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  Standard 2 of 5 encoding
-///  Written by: Brad Barnhill
+///  Standard 2 of 5 encoding.
 /// </summary>
-internal class Standard2of5 : BarcodeCommon, IBarcode
+internal class Standard2of5 : BarcodeEncoding, IBarcode
 {
-    private readonly string[] S25_Code = {
-        "10101110111010",
-        "11101010101110",
-        "10111010101110",
-        "11101110101010",
-        "10101110101110",
-        "11101011101010",
-        "10111011101010",
-        "10101011101110",
-        "11101010111010",
-        "10111010111010"
-    };
+    private static readonly string[] Standard2of5Codes = { "10101110111010", "11101010101110", "10111010101110", "11101110101010", "10101110101110", "11101011101010", "10111011101010", "10101011101110", "11101010111010", "10111010111010" };
 
     private readonly BarcodeType _encodedType = BarcodeType.Unspecified;
 
     public Standard2of5(string input, BarcodeType encodedType)
     {
-        _rawData = input;
+        RawData = input;
         _encodedType = encodedType;
     }
 
     /// <summary>
     /// Encode the raw data using the Standard 2 of 5 algorithm.
     /// </summary>
-    private string Encode_Standard2of5()
+    protected override string Encode()
     {
         if (!CheckNumericOnly(RawData))
             Error("ES25-1: Numeric Data Only");
 
-        var result = "11011010";
+        string result = "11011010";
 
         for (int i = 0; i < RawData.Length; i++)
         {
-            result += S25_Code[(int)char.GetNumericValue(RawData, i)];
+            result += Standard2of5Codes[(int)char.GetNumericValue(RawData, i)];
         }
 
-        result += _encodedType == BarcodeType.Standard2Of5Mod10 ? S25_Code[CalculateMod10CheckDigit()] : "";
+        result += _encodedType == BarcodeType.Standard2Of5Mod10 ? Standard2of5Codes[CalculateMod10CheckDigit()] : string.Empty;
 
-        //add ending bars
+        // Add ending bars
         result += "1101011";
         return result;
     }
 
     private int CalculateMod10CheckDigit()
     {
-        var sum = 0;
-        var even = true;
-        for (var i = RawData.Length - 1; i >= 0; --i)
+        int sum = 0;
+        bool even = true;
+        for (int i = RawData.Length - 1; i >= 0; --i)
         {
-            //convert numeric in char format to integer and
-            //multiply by 3 or 1 based on if an even index from the end
+            // convert numeric in char format to integer and
+            // multiply by 3 or 1 based on if an even index from the end
             sum += (RawData[i] - '0') * (even ? 3 : 1);
             even = !even;
         }
 
-        return (10 - sum % 10) % 10;
+        return (10 - (sum % 10)) % 10;
     }
-
-    public string EncodedValue => Encode_Standard2of5();
 }

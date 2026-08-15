@@ -1,9 +1,9 @@
 namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  Code 128 encoding.
+/// Code 128 encoding.
 /// </summary>
-internal class Code128 : BarcodeCommon, IBarcode
+internal class Code128 : BarcodeEncoding, IBarcode
 {
     public static readonly char FNC1 = Convert.ToChar(200);
     public static readonly char FNC2 = Convert.ToChar(201);
@@ -26,7 +26,7 @@ internal class Code128 : BarcodeCommon, IBarcode
     /// <param name="input">Data to encode.</param>
     public Code128(string input)
     {
-        _rawData = input;
+        RawData = input;
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ internal class Code128 : BarcodeCommon, IBarcode
     public Code128(string input, TYPES type)
     {
         this._type = type;
-        _rawData = input;
+        RawData = input;
     }
 
     string C128_ByA(string a) => C128_Code[C128_CodeIndexByA[a]];
@@ -47,7 +47,7 @@ internal class Code128 : BarcodeCommon, IBarcode
     string C128_TryByB(string b) => C128_TryByLookup(C128_CodeIndexByB, b);
     string C128_TryByC(string c) => C128_TryByLookup(C128_CodeIndexByC, c);
 
-    private string Encode_Code128()
+    protected override string Encode()
     {
         // Initialize data structure to hold encoding information
         InitCode128();
@@ -246,11 +246,11 @@ internal class Code128 : BarcodeCommon, IBarcode
         {
             string s = _formattedData[(int)i];
 
-            //try to find value in the A column
+            // Try to find value in the A column
             var value = C128_CodeIndexByA.TryGetValue(s, out var index)
-            //try to find value in the B column
+            // Try to find value in the B column
                 || C128_CodeIndexByB.TryGetValue(s, out index)
-            //try to find value in the C column
+            // Try to find value in the C column
                 || C128_CodeIndexByC.TryGetValue(s, out index) ? (uint)index : throw new InvalidOperationException($"Unable to find character “{s}”");
 
             var addition = value * (i == 0 ? 1 : i);
@@ -266,7 +266,7 @@ internal class Code128 : BarcodeCommon, IBarcode
         var temp = "";
         var tempRawData = RawData;
 
-        //breaking the raw data up for code A and code B will mess up the encoding
+        // Breaking the raw data up for code A and code B will mess up the encoding
         switch (_type)
         {
             case TYPES.A:
@@ -493,7 +493,4 @@ internal class Code128 : BarcodeCommon, IBarcode
 
         return Encoded_Data;
     }
-
-    public string EncodedValue
-        => Encode_Code128();
 }

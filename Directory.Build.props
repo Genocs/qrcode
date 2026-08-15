@@ -9,6 +9,11 @@
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)dotnet.ruleset</CodeAnalysisRuleSet>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+        <Version>7.0.0-beta001</Version>
+        <Authors>Nocco Giovanni Emanuele</Authors>
+        <Company>Genocs</Company>
+        <Copyright>Genocs 2026</Copyright>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 

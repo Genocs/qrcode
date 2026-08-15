@@ -3,15 +3,8 @@
 [![Build][build-shield]][build-url]
 [![DownloadsBarcode][downloads-br-shield]][downloads-br-url]
 [![DownloadsQRCode][downloads-qr-shield]][downloads-qr-url]
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![Discord][discord-shield]][discord-url]
-[![Gitter][gitter-shield]][gitter-url]
-[![Twitter][twitter-shield]][twitter-url]
-[![Twitterx][twitterx-shield]][twitterx-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 [license-shield]: https://img.shields.io/github/license/Genocs/qrcode?color=2da44e&style=flat-square
 [license-url]: https://github.com/Genocs/qrcode/blob/main/LICENSE
@@ -21,142 +14,147 @@
 [downloads-br-url]: https://www.nuget.org/packages/Genocs.BarcodeLibrary
 [downloads-qr-shield]: https://img.shields.io/nuget/dt/Genocs.QRCodeLibrary.svg?color=2da44e&label=downloads_qrcode&logo=nuget
 [downloads-qr-url]: https://www.nuget.org/packages/Genocs.QRCodeLibrary
-[contributors-shield]: https://img.shields.io/github/contributors/Genocs/qrcode.svg?style=flat-square
-[contributors-url]: https://github.com/Genocs/qrcode/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/Genocs/qrcode?style=flat-square
-[forks-url]: https://github.com/Genocs/qrcode/network/members
-[stars-shield]: https://img.shields.io/github/stars/Genocs/qrcode.svg?style=flat-square
-[stars-url]: https://img.shields.io/github/stars/Genocs/qrcode?style=flat-square
 [issues-shield]: https://img.shields.io/github/issues/Genocs/qrcode?style=flat-square
 [issues-url]: https://github.com/Genocs/qrcode/issues
 [discord-shield]: https://img.shields.io/discord/1106846706512953385?color=%237289da&label=Discord&logo=discord&logoColor=%237289da&style=flat-square
 [discord-url]: https://discord.com/invite/fWwArnkV
-[gitter-shield]: https://img.shields.io/badge/chat-on%20gitter-blue.svg
-[gitter-url]: https://gitter.im/genocs/
-[twitter-shield]: https://img.shields.io/twitter/follow/genocs?color=1DA1F2&label=Twitter&logo=Twitter&style=flat-square
-[twitter-url]: https://twitter.com/genocs
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
-[linkedin-url]: https://www.linkedin.com/in/giovanni-emanuele-nocco-b31a5169/
-[twitterx-shield]: https://img.shields.io/twitter/url/https/twitter.com/genocs.svg?style=social
-[twitterx-url]: https://twitter.com/genocs
 
+# Genocs QR code and barcode libraries
 
-<p align="center">
-    <img src="./assets/genocs-library-logo.png" alt="icon">
-</p>
+.NET libraries to **encode QR codes** and **1D barcodes** as images, without a dependency on `System.Drawing.Common`, so the same code can run on Windows, Linux, and Linux containers.
 
+The work is a SkiaSharp-based port of existing open-source projects ([QRCoder](https://github.com/codebude/QRCoder), [BarcodeLib](https://github.com/barnhill/barcodelib), and a [CodeProject QR decoder](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/)). Target frameworks are **.NET 8, 9, and 10**.
 
-Barcode builder and QRCode scanner and builder
-=========
+> [!IMPORTANT]
+> **Preview / experimental — not ready for general production use.**
+> Published NuGet packages (`5.0.0`) are unsupported snapshots. Do not use this stack for customer-facing tickets, payments, or a public HTTP API until the [production-readiness](docs/production-readiness.md) blockers are closed. Prefer [QRCoder](https://github.com/codebude/QRCoder), [ZXing.Net](https://github.com/micjahn/ZXing.Net), or [BarcodeLib](https://github.com/barnhill/barcodelib) if you need production codes today.
 
-This library can be used to build and scan images containing QR code.
+## Aim
 
-The library allows to build a different type of Barcode.
+Provide a **single Genocs surface** for:
 
-The library do not contains reference to System.Drawing.Common library, so it can be used into Docker Image Linux native
+| Package | Intended capability |
+| --- | --- |
+| [`Genocs.QRCodeLibrary`](https://www.nuget.org/packages/Genocs.QRCodeLibrary) | Build QR payloads and rasterize them (PNG / SVG / PostScript). Optionally decode QR images. |
+| [`Genocs.BarcodeLibrary`](https://www.nuget.org/packages/Genocs.BarcodeLibrary) | Encode common 1D symbologies (Code 128, Code 39, EAN/UPC, ITF-14, Pharmacode, and others) to a SkiaSharp image. Encode-only — there is no barcode reader. |
 
+The repository also includes a **demo Web API** and a console scratchpad. Those hosts are samples, not a supported service.
 
-![Docker Automated build](https://img.shields.io/docker/automated/genocs/qrcode)</a> 
+## Current status
 
+Assessed 16 August 2026. Full write-up: [docs/](docs/README.md).
 
-## Commands
+| Area | Status |
+| --- | --- |
+| QR PNG encode | **Experimental.** Renderer exists; antialiasing and logo overlay are incorrect. No scanner round-trip tests. |
+| QR SVG / PostScript | **SVG encode works** for `GetGraphic(int)` / hex colors. PostScript is still unfinished. |
+| QR decode | **Experimental.** Fixture tests pass for crisp PNGs (v1–v7, L/M/Q/H, 15° rotation, reduced contrast). Camera JPEGs are still unproven. |
+| Structured payloads (Wi-Fi, Swiss QR, Girocode, vCard, …) | **Best-tested path** — string generation only, not a scannable image. |
+| 1D barcode encode | **Experimental.** Encode-string and PNG tests cover every `BarcodeType`. Not yet proven against a hardware scanner. |
+| Demo Web API | **Local demo only.** No auth, no upload limits, errors often returned as HTTP 200. |
+| NuGet 5.0.0 | **Do not treat as a supported product.** Package READMEs and changelog are stale. |
 
-###  Build the project
+Go / no-go by use case is in [docs/production-readiness.md](docs/production-readiness.md). The catch-up plan is [docs/roadmap.md](docs/roadmap.md).
 
-To build and test the project type following command:
+## Install (preview)
 
-``` bash
+```bash
+dotnet add package Genocs.QRCodeLibrary
+dotnet add package Genocs.BarcodeLibrary
+```
+
+Pin an exact version. Do not use floating `5.0.*` in production builds.
+
+## Usage (illustrative)
+
+These snippets match the current public API. They are **not** a guarantee that the output will scan until the P0 work in the roadmap is done.
+
+QR encode (PNG):
+
+```csharp
+using Genocs.QRCodeLibrary.Encoder;
+using SkiaSharp;
+
+using var generator = new QRCodeGenerator();
+using var data = generator.CreateQrCode("Hello, World!", QRCodeGenerator.ECCLevel.M);
+using var qrCode = new QRCode(data);
+using var image = qrCode.GetGraphic(20, SKColors.Black, SKColors.White, drawQuietZones: true);
+
+using var stream = File.OpenWrite("qrcode.png");
+image.Encode(SKEncodedImageFormat.Png, 100).SaveTo(stream);
+```
+
+Barcode encode (UPC-A):
+
+```csharp
+using Genocs.BarcodeLibrary;
+using SkiaSharp;
+
+using var barcode = new Barcode { IncludeLabel = true };
+using var image = barcode.Encode(BarcodeType.UpcA, "038000356216", SKColors.Black, SKColors.White, 290, 120);
+
+using var stream = File.OpenWrite("barcode.png");
+image.Encode(SKEncodedImageFormat.Png, 100).SaveTo(stream);
+```
+
+Avoid the QR `GetGraphic` overload that takes an icon/logo. `SvgQRCode` is usable for basic PNG-equivalent SVG output.
+
+## Build and test
+
+Requires the .NET 10 SDK (`global.json`). The libraries also compile for `net8.0` and `net9.0`.
+
+```bash
 dotnet build
 dotnet test
 ```
 
-Steps to build the Docker image and run the container
+CI currently installs **.NET 8 only**; that gap is tracked in the [findings](docs/findings.md) (F-06).
 
-``` bash
-# Build the Docker image
-docker build -f webapi.dockerfile -t genocs/codes-webapi:1.0.1 -t genocs/codes-webapi:latest .
+### Demo host (optional)
 
-# Add a tag
-docker tag genocs/codes-webapi:1.0.1 genocs/codes-webapi:latest
+The Web API under `src/WebApi` is a local demo (`GET /BuildQrCode`, `GET /BuildBarcode`, `POST /FindQrCode`). Do not expose it on the public internet.
 
-# Push to the container registry
-docker push genocs/codes-webapi:1.0.1
-docker push genocs/codes-webapi:latest
-
-# Run the container 
-docker run -p 5900:8080 -d --name qrcodeapi-container genocs/codes-webapi:1.0.1
+```bash
+./scripts/run-on-docker.sh
 ```
 
-If you want to use the container into a docker network:
+## Documentation
 
-``` bash
-docker run -p 5900:8080 -d --name qrcodeapi-container genocs/codes-webapi:1.0.1 --network genocs-network
-```
-
-###  Push the images to the Docker image repository (Docker Hub)
-
-*tagname* is optional
-
-``` bash
-docker push genocs/codes-webapi:tagname
-```
-
-### Pull the image from Docker image repository (Docker Hub)
-
-``` bash
-docker pull genocs/codes-webapi:tagname
-```
-
-### Deploy in a cloud instance
-
-You can deploy Demo Application with one click in Heroku, Microsoft Azure, or Google Cloud Platform: 
-
-[<img src="https://www.herokucdn.com/deploy/button.svg" height="30px">](https://heroku.com/deploy?template=https://github.com/heartexlabs/label-studio/tree/heroku-persistent-pg)
-[<img src="https://aka.ms/deploytoazurebutton" height="30px">](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fheartexlabs%2Flabel-studio%2Fmaster%2Fazuredeploy.json)
-[<img src="https://deploy.cloud.run/button.svg" height="30px">](https://deploy.cloud.run)
+| Document | Purpose |
+| --- | --- |
+| [Production readiness](docs/production-readiness.md) | Verdict, maturity scores, go / no-go |
+| [Findings](docs/findings.md) | Issue catalog (F-01 … F-23) |
+| [Roadmap](docs/roadmap.md) | P0–P3 plan to a supportable release |
+| [Architecture](docs/architecture.md) | Layout, origins, intended vs actual capabilities |
 
 ## License
 
-This project is licensed with the [MIT license](LICENSE).
+This repository is published under the [MIT license](LICENSE). NuGet packages pack that same file (`PackageLicenseFile`).
 
-## Changelogs
+Upstream code is not all MIT:
 
-View Complete [Changelogs](https://github.com/Genocs/qrcode/blob/main/CHANGELOGS.md).
+- 1D barcodes are a port of [BarcodeLib](https://github.com/barnhill/barcodelib) (**Apache 2.0**). The Apache license copy previously at `src/Genocs.BarcodeLibrary/LICENSE.txt` is no longer in the tree.
+- The QR decoder originates from a CodeProject article (typically **CPOL**). There is no CPOL file in the repo.
+
+A single MIT file does not satisfy those upstream terms. That remains a shipping blocker: [F-04](docs/findings.md).
+
+## Acknowledgements
+
+- QR encoder and payload helpers: [QRCoder](https://github.com/codebude/QRCoder) by Raffael Herrmann
+- 1D barcode symbologies: [BarcodeLib](https://github.com/barnhill/barcodelib) by Brad Barnhill
+- QR decoder: [Uzi Granot on CodeProject](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/)
 
 ## Community
 
 - Discord [@genocs](https://discord.com/invite/fWwArnkV)
-- Facebook Page [@genocs](https://facebook.com/Genocs)
-- Youtube Channel [@genocs](https://youtube.com/c/genocs)
-
+- Issues: [github.com/Genocs/qrcode/issues](https://github.com/Genocs/qrcode/issues)
 
 ## Support
 
-Has this Project helped you learn something New? or Helped you at work?
-Here are a few ways by which you can support.
+If this project helped you:
 
-- ⭐ Leave a star! 
-- 🥇 Recommend this project to your colleagues.
-- 🦸 Do consider endorsing me on LinkedIn for ASP.NET Core - [Connect via LinkedIn](https://www.linkedin.com/in/giovanni-emanuele-nocco-b31a5169/) 
-- ☕ If you want to support this project in the long run, [consider buying me a coffee](https://www.buymeacoffee.com/genocs)!
-  
+- Star the repository
+- Open issues with scanner samples (image + expected payload)
+- [Buy me a coffee](https://www.buymeacoffee.com/genocs)
 
 [![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/qrcode/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
-
-## Code Contributors
-
-This project exists thanks to all the people who contribute. [Submit your PR and join the team!](CONTRIBUTING.md)
-
-[![genocs contributors](https://contrib.rocks/image?repo=Genocs/qrcode "genocs contributors")](https://github.com/genocs/qrcode/graphs/contributors)
-
-## Financial Contributors
-
-Become a financial contributor and help me sustain the project. [Support the Project!](https://opencollective.com/genocs/contribute)
-
-<a href="https://opencollective.com/genocs"><img src="https://opencollective.com/genocs/individuals.svg?width=890"></a>
-
-
-## Acknowledgements
-
-Please see the original version at [codeproject](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/).
-

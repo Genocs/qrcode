@@ -1,11 +1,14 @@
-﻿using Genocs.QRCodeLibrary.Encoder;
-using Shouldly;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Reflection;
+using Genocs.QRCodeLibrary.Encoder;
+using Genocs.QRCodeLibrary.Encoder.Helpers;
+using Genocs.QRCodeLibrary.Encoder.Payloads;
+using Shouldly;
 using Xunit;
-using static Genocs.QRCodeLibrary.Encoder.PayloadGenerator.BezahlCode;
 using static Genocs.QRCodeLibrary.Encoder.PayloadGenerator.SwissQrCode.AdditionalInformation;
 using static Genocs.QRCodeLibrary.Encoder.PayloadGenerator.SwissQrCode.Reference;
+using static Genocs.QRCodeLibrary.Encoder.Payloads.BezahlCode;
+using static Genocs.QRCodeLibrary.Encoder.Payloads.Girocode;
 
 namespace Genocs.QRCodeLibrary.Tests;
 
@@ -30,7 +33,6 @@ public class PayloadGeneratorTests
     //    var label = "Some Label to Encode";
     //    var message = "Some Message to Encode";
 
-
     //    var generator = new PayloadGenerator.BitcoinAddress(address, amount, label, message);
 
     //    QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -44,12 +46,12 @@ public class PayloadGeneratorTests
     [Fact]
     public void bitcoin_address_generator_can_generate_address()
     {
-        var address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
-        var amount = .123;
-        var label = "Some Label to Encode";
-        var message = "Some Message to Encode";
+        string address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
+        double amount = .123;
+        string label = "Some Label to Encode";
+        string message = "Some Message to Encode";
 
-        var generator = new PayloadGenerator.BitcoinAddress(address, amount, label, message);
+        var generator = new BitcoinAddress(address, amount, label, message);
 
         generator
             .ToString()
@@ -59,12 +61,11 @@ public class PayloadGeneratorTests
     [Fact]
     public void bitcoin_address_generator_should_skip_missing_label()
     {
-        var address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
-        var amount = .123;
-        var message = "Some Message to Encode";
+        string address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
+        double amount = .123;
+        string message = "Some Message to Encode";
 
-
-        var generator = new PayloadGenerator.BitcoinAddress(address, amount, null, message);
+        var generator = new BitcoinAddress(address, amount, null, message);
 
         generator
             .ToString()
@@ -74,10 +75,10 @@ public class PayloadGeneratorTests
     [Fact]
     public void bitcoin_address_generator_should_skip_missing_message()
     {
-        var address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
+        string address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
         var amount = .123;
 
-        var generator = new PayloadGenerator.BitcoinAddress(address, amount);
+        var generator = new BitcoinAddress(address, amount);
 
         generator
             .ToString()
@@ -87,10 +88,10 @@ public class PayloadGeneratorTests
     [Fact]
     public void bitcoin_address_generator_should_round_to_satoshi()
     {
-        var address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
+        string address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
         var amount = .123456789;
 
-        var generator = new PayloadGenerator.BitcoinAddress(address, amount);
+        var generator = new BitcoinAddress(address, amount);
 
         generator
             .ToString()
@@ -103,11 +104,10 @@ public class PayloadGeneratorTests
         var currentCulture = Thread.CurrentThread.CurrentCulture;
         Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
 
-        var address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
+        string address = "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W";
         var amount = .123;
 
-
-        var generator = new PayloadGenerator.BitcoinAddress(address, amount);
+        var generator = new BitcoinAddress(address, amount);
 
         generator
             .ToString()
@@ -119,12 +119,12 @@ public class PayloadGeneratorTests
     [Fact]
     public void wifi_should_build_wep()
     {
-        var ssid = "MyWiFiSSID";
-        var password = "7heP4assw0rd";
-        var authmode = PayloadGenerator.WiFi.Authentication.WEP;
-        var hideSSID = false;
+        string ssid = "MyWiFiSSID";
+        string password = "7heP4assw0rd";
+        var authmode = WiFi.Authentication.WEP;
+        bool hideSSID = false;
 
-        var generator = new PayloadGenerator.WiFi(ssid, password, authmode, hideSSID);
+        var generator = new WiFi(ssid, password, authmode, hideSSID);
 
         generator.ToString().ShouldBe($"WIFI:T:WEP;S:MyWiFiSSID;P:7heP4assw0rd;;");
     }
@@ -132,12 +132,12 @@ public class PayloadGeneratorTests
     [Fact]
     public void wifi_should_build_wpa()
     {
-        var ssid = "MyWiFiSSID";
-        var password = "7heP4assw0rd";
-        var authmode = PayloadGenerator.WiFi.Authentication.WPA;
-        var hideSSID = false;
+        string ssid = "MyWiFiSSID";
+        string password = "7heP4assw0rd";
+        WiFi.Authentication authmode = WiFi.Authentication.WPA;
+        bool hideSSID = false;
 
-        var generator = new PayloadGenerator.WiFi(ssid, password, authmode, hideSSID);
+        var generator = new WiFi(ssid, password, authmode, hideSSID);
 
         generator.ToString().ShouldBe($"WIFI:T:WPA;S:MyWiFiSSID;P:7heP4assw0rd;;");
     }
@@ -147,9 +147,9 @@ public class PayloadGeneratorTests
     {
         var ssid = "MyWiFiSSID";
         var password = "7heP4assw0rd";
-        var authmode = PayloadGenerator.WiFi.Authentication.WPA;
+        var authmode = WiFi.Authentication.WPA;
 
-        var generator = new PayloadGenerator.WiFi(ssid, password, authmode);
+        var generator = new WiFi(ssid, password, authmode);
 
         generator.ToString().ShouldBe($"WIFI:T:WPA;S:MyWiFiSSID;P:7heP4assw0rd;;");
     }
@@ -159,10 +159,10 @@ public class PayloadGeneratorTests
     {
         var ssid = "M\\y;W,i:FiSSID";
         var password = "7heP4assw0rd\\;:,";
-        var authmode = PayloadGenerator.WiFi.Authentication.WPA;
+        var authmode = WiFi.Authentication.WPA;
         var hideSSID = true;
 
-        var generator = new PayloadGenerator.WiFi(ssid, password, authmode, hideSSID);
+        var generator = new WiFi(ssid, password, authmode, hideSSID);
 
         generator.ToString().ShouldBe($"WIFI:T:WPA;S:M\\\\y\\;W\\,i\\:FiSSID;P:7heP4assw0rd\\\\\\;\\:\\,;H:true;");
     }
@@ -172,10 +172,10 @@ public class PayloadGeneratorTests
     {
         var ssid = "MyWiFiSSID";
         var password = "7heP4assw0rd";
-        var authmode = PayloadGenerator.WiFi.Authentication.WPA;
+        var authmode = WiFi.Authentication.WPA;
         var hideSSID = true;
 
-        var generator = new PayloadGenerator.WiFi(ssid, password, authmode, hideSSID);
+        var generator = new WiFi(ssid, password, authmode, hideSSID);
 
         generator.ToString().ShouldBe($"WIFI:T:WPA;S:MyWiFiSSID;P:7heP4assw0rd;H:true;");
     }
@@ -185,10 +185,10 @@ public class PayloadGeneratorTests
     {
         var ssid = "A9B7F18CCE";
         var password = "00105F0E6";
-        var authmode = PayloadGenerator.WiFi.Authentication.WPA;
+        var authmode = WiFi.Authentication.WPA;
         var hideSSID = true;
 
-        var generator = new PayloadGenerator.WiFi(ssid, password, authmode, hideSSID);
+        var generator = new WiFi(ssid, password, authmode, hideSSID);
 
         generator.ToString().ShouldBe($"WIFI:T:WPA;S:\"A9B7F18CCE\";P:\"00105F0E6\";H:true;");
     }
@@ -198,10 +198,10 @@ public class PayloadGeneratorTests
     {
         var ssid = "a9b7f18cce";
         var password = "00105f0Ee6";
-        var authmode = PayloadGenerator.WiFi.Authentication.WPA;
+        var authmode = WiFi.Authentication.WPA;
         var hideSSID = true;
 
-        var generator = new PayloadGenerator.WiFi(ssid, password, authmode, hideSSID);
+        var generator = new WiFi(ssid, password, authmode, hideSSID);
 
         generator.ToString().ShouldBe($"WIFI:T:WPA;S:\"a9b7f18cce\";P:\"00105f0Ee6\";H:true;");
     }
@@ -211,10 +211,10 @@ public class PayloadGeneratorTests
     {
         var ssid = "0xA9B7F18CCE";
         var password = "0x00105F0E6";
-        var authmode = PayloadGenerator.WiFi.Authentication.WPA;
+        var authmode = WiFi.Authentication.WPA;
         var hideSSID = true;
 
-        var generator = new PayloadGenerator.WiFi(ssid, password, authmode, hideSSID);
+        var generator = new WiFi(ssid, password, authmode, hideSSID);
 
         generator.ToString().ShouldBe($"WIFI:T:WPA;S:\"0xA9B7F18CCE\";P:\"0x00105F0E6\";H:true;");
     }
@@ -224,10 +224,10 @@ public class PayloadGeneratorTests
     {
         var ssid = "0XA9B7F18CCE";
         var password = "0X00105F0E6";
-        var authmode = PayloadGenerator.WiFi.Authentication.WPA;
+        var authmode = WiFi.Authentication.WPA;
         var hideSSID = true;
 
-        var generator = new PayloadGenerator.WiFi(ssid, password, authmode, hideSSID);
+        var generator = new WiFi(ssid, password, authmode, hideSSID);
 
         generator.ToString().ShouldBe($"WIFI:T:WPA;S:\"0XA9B7F18CCE\";P:\"0X00105F0E6\";H:true;");
     }
@@ -238,9 +238,9 @@ public class PayloadGeneratorTests
         var receiver = "john@doe.com";
         var subject = "A test mail";
         var message = "Just see if it works!";
-        var encoding = PayloadGenerator.Mail.MailEncoding.MAILTO;
+        var encoding = Mail.MailEncoding.MAILTO;
 
-        var generator = new PayloadGenerator.Mail(receiver, subject, message, encoding);
+        var generator = new Mail(receiver, subject, message, encoding);
 
         generator.ToString().ShouldBe("mailto:john@doe.com?subject=A%20test%20mail&body=Just%20see%20if%20it%20works%21");
     }
@@ -251,9 +251,9 @@ public class PayloadGeneratorTests
         var receiver = "john@doe.com";
         var subject = "A test mail";
         var message = "Just see if it works!";
-        var encoding = PayloadGenerator.Mail.MailEncoding.MATMSG;
+        var encoding = Mail.MailEncoding.MATMSG;
 
-        var generator = new PayloadGenerator.Mail(receiver, subject, message, encoding);
+        var generator = new Mail(receiver, subject, message, encoding);
 
         generator.ToString().ShouldBe("MATMSG:TO:john@doe.com;SUB:A test mail;BODY:Just see if it works!;;");
     }
@@ -264,9 +264,9 @@ public class PayloadGeneratorTests
         var receiver = "john@doe.com";
         var subject = "A test mail";
         var message = "Just see if it works!";
-        var encoding = PayloadGenerator.Mail.MailEncoding.SMTP;
+        var encoding = Mail.MailEncoding.SMTP;
 
-        var generator = new PayloadGenerator.Mail(receiver, subject, message, encoding);
+        var generator = new Mail(receiver, subject, message, encoding);
 
         generator.ToString().ShouldBe("SMTP:john@doe.com:A test mail:Just see if it works!");
     }
@@ -277,9 +277,9 @@ public class PayloadGeneratorTests
         var receiver = "john@doe.com";
         var subject = "A test mail";
         var message = "Just see if \\:;, it works!";
-        var encoding = PayloadGenerator.Mail.MailEncoding.MATMSG;
+        var encoding = Mail.MailEncoding.MATMSG;
 
-        var generator = new PayloadGenerator.Mail(receiver, subject, message, encoding);
+        var generator = new Mail(receiver, subject, message, encoding);
 
         generator.ToString().ShouldBe("MATMSG:TO:john@doe.com;SUB:A test mail;BODY:Just see if \\\\\\:\\;\\, it works!;;");
     }
@@ -291,9 +291,9 @@ public class PayloadGeneratorTests
         var receiver = "john@doe.com";
         var subject = "A test mail";
         var message = "Just see: if it works!";
-        var encoding = PayloadGenerator.Mail.MailEncoding.SMTP;
+        var encoding = Mail.MailEncoding.SMTP;
 
-        var generator = new PayloadGenerator.Mail(receiver, subject, message, encoding);
+        var generator = new Mail(receiver, subject, message, encoding);
 
         generator.ToString().ShouldBe("SMTP:john@doe.com:A test mail:Just see\\: if it works!");
     }
@@ -304,7 +304,7 @@ public class PayloadGeneratorTests
     {
         var receiver = "john@doe.com";
 
-        var generator = new PayloadGenerator.Mail(receiver);
+        var generator = new Mail(receiver);
 
         generator.ToString().ShouldBe("mailto:john@doe.com?subject=&body=");
     }
@@ -322,7 +322,6 @@ public class PayloadGeneratorTests
         generator.ToString().ShouldBe("sms:01601234567?body=A%20small%20SMS");
     }
 
-
     [Fact]
     public void sms_should_build_type_SMS_iOS()
     {
@@ -334,7 +333,6 @@ public class PayloadGeneratorTests
 
         generator.ToString().ShouldBe("sms:01601234567;body=A%20small%20SMS");
     }
-
 
     [Fact]
     public void sms_should_build_type_SMSTO()
@@ -348,7 +346,6 @@ public class PayloadGeneratorTests
         generator.ToString().ShouldBe("SMSTO:01601234567:A small SMS");
     }
 
-
     [Fact]
     public void sms_should_add_unused_params()
     {
@@ -358,7 +355,6 @@ public class PayloadGeneratorTests
 
         generator.ToString().ShouldBe("sms:01601234567?body=");
     }
-
 
     [Fact]
     public void mms_should_build_type_MMS()
@@ -372,7 +368,6 @@ public class PayloadGeneratorTests
         generator.ToString().ShouldBe("mms:01601234567?body=A%20tiny%20MMS");
     }
 
-
     [Fact]
     public void mms_should_build_type_MMSTO()
     {
@@ -384,7 +379,6 @@ public class PayloadGeneratorTests
 
         generator.ToString().ShouldBe("mmsto:01601234567?subject=A%20tiny%20SMS");
     }
-
 
     [Fact]
     public void mms_should_add_unused_params()
@@ -447,17 +441,15 @@ public class PayloadGeneratorTests
         generator.ToString().ShouldBe("geo:51.227741,6.773456");
     }
 
-
     [Fact]
     public void phonenumber_should_build()
     {
         var number = "+495321123456";
 
-        var generator = new PayloadGenerator.PhoneNumber(number);
+        var generator = new PhoneNumber(number);
 
         generator.ToString().ShouldBe("tel:+495321123456");
     }
-
 
     [Fact]
     public void skype_should_build()
@@ -508,7 +500,7 @@ public class PayloadGeneratorTests
         var url = "http://code-bude.net";
         var title = "A nerd's blog";
 
-        var generator = new PayloadGenerator.Bookmark(url, title);
+        var generator = new Bookmark(url, title);
 
         generator.ToString().ShouldBe("MEBKM:TITLE:A nerd's blog;URL:http\\://code-bude.net;;");
     }
@@ -520,7 +512,7 @@ public class PayloadGeneratorTests
         var url = "http://code-bude.net/fake,url.html";
         var title = "A nerd's blog: \\All;the;things\\";
 
-        var generator = new PayloadGenerator.Bookmark(url, title);
+        var generator = new Bookmark(url, title);
 
         generator.ToString().ShouldBe("MEBKM:TITLE:A nerd's blog\\: \\\\All\\;the\\;things\\\\;URL:http\\://code-bude.net/fake\\,url.html;;");
     }
@@ -535,9 +527,9 @@ public class PayloadGeneratorTests
         var alldayEvent = false;
         var begin = new DateTime(2016, 01, 03, 12, 00, 00);
         var end = new DateTime(2016, 01, 03, 14, 30, 0);
-        var encoding = PayloadGenerator.CalendarEvent.EventEncoding.Universal;
+        var encoding = CalendarEvent.EventEncoding.Universal;
 
-        var generator = new PayloadGenerator.CalendarEvent(subject, description, location, begin, end, alldayEvent, encoding);
+        var generator = new CalendarEvent(subject, description, location, begin, end, alldayEvent, encoding);
 
         generator.ToString().ShouldBe($"BEGIN:VEVENT{Environment.NewLine}SUMMARY:Release party{Environment.NewLine}DESCRIPTION:A small party for the new QRCoder. Bring some beer!{Environment.NewLine}LOCATION:Programmer's paradise, Beachtown, Paradise{Environment.NewLine}DTSTART:20160103T120000{Environment.NewLine}DTEND:20160103T143000{Environment.NewLine}END:VEVENT");
     }
@@ -552,9 +544,9 @@ public class PayloadGeneratorTests
         var alldayEvent = false;
         var begin = new DateTime(2016, 01, 03, 12, 00, 00);
         var end = new DateTime(2016, 01, 03, 14, 30, 0);
-        var encoding = PayloadGenerator.CalendarEvent.EventEncoding.iCalComplete;
+        var encoding = CalendarEvent.EventEncoding.iCalComplete;
 
-        var generator = new PayloadGenerator.CalendarEvent(subject, description, location, begin, end, alldayEvent, encoding);
+        var generator = new CalendarEvent(subject, description, location, begin, end, alldayEvent, encoding);
 
         generator.ToString().ShouldBe($"BEGIN:VCALENDAR{Environment.NewLine}VERSION:2.0{Environment.NewLine}BEGIN:VEVENT{Environment.NewLine}SUMMARY:Release party{Environment.NewLine}DESCRIPTION:A small party for the new QRCoder. Bring some beer!{Environment.NewLine}LOCATION:Programmer's paradise, Beachtown, Paradise{Environment.NewLine}DTSTART:20160103T120000{Environment.NewLine}DTEND:20160103T143000{Environment.NewLine}END:VEVENT{Environment.NewLine}END:VCALENDAR");
     }
@@ -569,9 +561,9 @@ public class PayloadGeneratorTests
         var alldayEvent = true;
         var begin = new DateTime(2016, 01, 03);
         var end = new DateTime(2016, 01, 03);
-        var encoding = PayloadGenerator.CalendarEvent.EventEncoding.Universal;
+        var encoding = CalendarEvent.EventEncoding.Universal;
 
-        var generator = new PayloadGenerator.CalendarEvent(subject, description, location, begin, end, alldayEvent, encoding);
+        var generator = new CalendarEvent(subject, description, location, begin, end, alldayEvent, encoding);
 
         generator.ToString().ShouldBe($"BEGIN:VEVENT{Environment.NewLine}SUMMARY:Release party{Environment.NewLine}DESCRIPTION:A small party for the new QRCoder. Bring some beer!{Environment.NewLine}LOCATION:Programmer's paradise, Beachtown, Paradise{Environment.NewLine}DTSTART:20160103{Environment.NewLine}DTEND:20160103{Environment.NewLine}END:VEVENT");
     }
@@ -586,13 +578,12 @@ public class PayloadGeneratorTests
         var alldayEvent = false;
         var begin = new DateTime(2016, 01, 03, 12, 00, 00);
         var end = new DateTime(2016, 01, 03, 14, 30, 0);
-        var encoding = PayloadGenerator.CalendarEvent.EventEncoding.Universal;
+        var encoding = CalendarEvent.EventEncoding.Universal;
 
-        var generator = new PayloadGenerator.CalendarEvent(subject, description, location, begin, end, alldayEvent, encoding);
+        var generator = new CalendarEvent(subject, description, location, begin, end, alldayEvent, encoding);
 
         generator.ToString().ShouldBe($"BEGIN:VEVENT{Environment.NewLine}SUMMARY:Release party{Environment.NewLine}DTSTART:20160103T120000{Environment.NewLine}DTEND:20160103T143000{Environment.NewLine}END:VEVENT");
     }
-
 
     [Fact]
     public void calendarevent_should_add_unused_params()
@@ -604,54 +595,50 @@ public class PayloadGeneratorTests
         var begin = new DateTime(2016, 01, 03, 12, 00, 00);
         var end = new DateTime(2016, 01, 03, 14, 30, 0);
 
-        var generator = new PayloadGenerator.CalendarEvent(subject, description, location, begin, end, alldayEvent);
+        var generator = new CalendarEvent(subject, description, location, begin, end, alldayEvent);
 
         generator.ToString().ShouldBe($"BEGIN:VEVENT{Environment.NewLine}SUMMARY:Release party{Environment.NewLine}DESCRIPTION:A small party for the new QRCoder. Bring some beer!{Environment.NewLine}LOCATION:Programmer's paradise, Beachtown, Paradise{Environment.NewLine}DTSTART:20160103T120000{Environment.NewLine}DTEND:20160103T143000{Environment.NewLine}END:VEVENT");
     }
-
 
     [Fact]
     public void iban_validator_validate_german_iban()
     {
         var iban = "DE15268500010154131577";
 
-        MethodInfo method = typeof(PayloadGenerator).GetMethod("IsValidIban", BindingFlags.NonPublic | BindingFlags.Static);
+        MethodInfo method = typeof(StringHelper).GetMethod("IsValidIban", BindingFlags.Public | BindingFlags.Static);
         var result = (bool)method.Invoke(null, new object[] { iban });
 
         result.ShouldBe<bool>(true);
     }
-
 
     [Fact]
     public void iban_validator_validate_swiss_iban()
     {
         var iban = "CH1900767000U00121977";
 
-        MethodInfo method = typeof(PayloadGenerator).GetMethod("IsValidIban", BindingFlags.NonPublic | BindingFlags.Static);
+        MethodInfo method = typeof(StringHelper).GetMethod("IsValidIban", BindingFlags.Public | BindingFlags.Static);
         var result = (bool)method.Invoke(null, new object[] { iban });
 
         result.ShouldBe<bool>(true);
     }
-
 
     [Fact]
     public void iban_validator_invalidates_iban()
     {
         var iban = "DE29268500010154131577";
 
-        MethodInfo method = typeof(PayloadGenerator).GetMethod("IsValidIban", BindingFlags.NonPublic | BindingFlags.Static);
+        MethodInfo method = typeof(StringHelper).GetMethod("IsValidIban", BindingFlags.Public | BindingFlags.Static);
         var result = (bool)method.Invoke(null, new object[] { iban });
 
         result.ShouldBe<bool>(false);
     }
-
 
     [Fact]
     public void qriban_validator_validates_iban()
     {
         var iban = "CH2430043000000789012";
 
-        MethodInfo method = typeof(PayloadGenerator).GetMethod("IsValidQRIban", BindingFlags.NonPublic | BindingFlags.Static);
+        MethodInfo method = typeof(StringHelper).GetMethod("IsValidQRIban", BindingFlags.Public | BindingFlags.Static);
         var result = (bool)method.Invoke(null, new object[] { iban });
 
         result.ShouldBe<bool>(true);
@@ -660,24 +647,23 @@ public class PayloadGeneratorTests
     [Fact]
     public void qriban_validator_invalidates_iban()
     {
-        var iban = "CH3908704016075473007";
+        string iban = "CH3908704016075473007";
 
-        MethodInfo method = typeof(PayloadGenerator).GetMethod("IsValidQRIban", BindingFlags.NonPublic | BindingFlags.Static);
-        var result = (bool)method.Invoke(null, new object[] { iban });
+        MethodInfo? method = typeof(StringHelper).GetMethod("IsValidQRIban", BindingFlags.Public | BindingFlags.Static);
+        bool? result = (bool?)method?.Invoke(null, new object[] { iban });
 
-        result.ShouldBe<bool>(false);
+        result.ShouldBe<bool?>(false);
     }
-
 
     [Fact]
     public void girocode_generator_can_generate_payload_minimal()
     {
-        var iban = "DE33100205000001194700";
-        var bic = "BFSWDE33BER";
-        var name = "Wikimedia Fördergesellschaft";
-        var amount = 10.00m;
+        string iban = "DE33100205000001194700";
+        string bic = "BFSWDE33BER";
+        string name = "Wikimedia Fördergesellschaft";
+        decimal amount = 10.00m;
 
-        var generator = new PayloadGenerator.Girocode(iban, bic, name, amount);
+        var generator = new Girocode(iban, bic, name, amount);
 
         generator
             .ToString()
@@ -695,10 +681,10 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-        var generator = new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser,
-            PayloadGenerator.Girocode.GirocodeVersion.Version1,
-            PayloadGenerator.Girocode.GirocodeEncoding.ISO_8859_1);
+        var generator = new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser,
+            Girocode.GirocodeVersion.Version1,
+            Girocode.GirocodeEncoding.ISO_8859_1);
 
         generator
             .ToString()
@@ -716,16 +702,15 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-        var generator = new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser,
-            PayloadGenerator.Girocode.GirocodeVersion.Version2,
-            PayloadGenerator.Girocode.GirocodeEncoding.ISO_8859_1);
+        var generator = new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser,
+            Girocode.GirocodeVersion.Version2,
+            Girocode.GirocodeEncoding.ISO_8859_1);
 
         generator
             .ToString()
             .ShouldBe("BCD\n002\n2\nSCT\nBFSWDE33BER\nWikimedia Fördergesellschaft\nDE33100205000001194700\nEUR10.00\n1234\n\nDonation to Wikipedia.\nThanks for using Girocode");
     }
-
 
     [Fact]
     public void girocode_generator_should_handle_iban_whitespaces()
@@ -738,8 +723,8 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-        var generator = new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser);
+        var generator = new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser);
 
         generator
             .ToString()
@@ -757,14 +742,13 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-        var generator = new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser);
+        var generator = new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser);
 
         generator
             .ToString()
             .ShouldBe("BCD\n001\n2\nSCT\nBFSWDE33BER\nWikimedia Fördergesellschaft\nDE33100205000001194700\nEUR10.00\n1234\n\nDonation to Wikipedia.\nThanks for using Girocode");
     }
-
 
     [Fact]
     public void girocode_generator_should_fill_amount_decimals()
@@ -777,14 +761,13 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-        var generator = new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser);
+        var generator = new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser);
 
         generator
             .ToString()
             .ShouldBe("BCD\n001\n2\nSCT\nBFSWDE33BER\nWikimedia Fördergesellschaft\nDE33100205000001194700\nEUR12.00\n1234\n\nDonation to Wikipedia.\nThanks for using Girocode");
     }
-
 
     [Fact]
     public void girocode_generator_should_throw_iban_exception()
@@ -797,15 +780,13 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<Girocode.GirocodeException>(exception);
         exception.Message.ShouldBe("The IBAN entered isn't valid.");
     }
-
 
     [Fact]
     public void girocode_generator_should_throw_bic_exception()
@@ -818,15 +799,13 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<Girocode.GirocodeException>(exception);
         exception.Message.ShouldBe("The BIC entered isn't valid.");
     }
-
 
     [Fact]
     public void girocode_generator_should_throw_name_exception()
@@ -839,15 +818,13 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<Girocode.GirocodeException>(exception);
         exception.Message.ShouldBe("(Payee-)Name must be shorter than 71 chars.");
     }
-
 
     [Fact]
     public void girocode_generator_should_throw_amount_decimals_exception()
@@ -860,12 +837,11 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<Girocode.GirocodeException>(exception);
         exception.Message.ShouldBe("Amount must have less than 3 digits after decimal point.");
     }
 
@@ -880,16 +856,13 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<Girocode.GirocodeException>(exception);
         exception.Message.ShouldBe("Amount has to at least 0.01 and must be smaller or equal to 999999999.99.");
     }
-
-
 
     [Fact]
     public void girocode_generator_should_throw_amount_max_exception()
@@ -902,15 +875,13 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<GirocodeException>(exception);
         exception.Message.ShouldBe("Amount has to at least 0.01 and must be smaller or equal to 999999999.99.");
     }
-
 
     [Fact]
     public void girocode_generator_should_throw_purpose_exception()
@@ -923,12 +894,11 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "12345";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<Girocode.GirocodeException>(exception);
         exception.Message.ShouldBe("Purpose of credit transfer can only have 4 chars at maximum.");
     }
 
@@ -943,12 +913,11 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<Girocode.GirocodeException>(exception);
         exception.Message.ShouldBe("Unstructured reference texts have to shorter than 141 chars.");
     }
 
@@ -963,12 +932,11 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "Thanks for using Girocode";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Structured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Structured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<Girocode.GirocodeException>(exception);
         exception.Message.ShouldBe("Structured reference texts have to shorter than 36 chars.");
     }
 
@@ -983,15 +951,13 @@ public class PayloadGeneratorTests
         var purposeOfCreditTransfer = "1234";
         var messageToGirocodeUser = "The usermessage is shown to the user which scans the Girocode. It has to be shorter than 71 chars.";
 
-
-        var exception = Record.Exception(() => new PayloadGenerator.Girocode(iban, bic, name, amount, remittanceInformation,
-            PayloadGenerator.Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
+        var exception = Record.Exception(() => new Girocode(iban, bic, name, amount, remittanceInformation,
+            Girocode.TypeOfRemittance.Unstructured, purposeOfCreditTransfer, messageToGirocodeUser));
 
         Assert.NotNull(exception);
-        Assert.IsType<PayloadGenerator.Girocode.GirocodeException>(exception);
+        Assert.IsType<Girocode.GirocodeException>(exception);
         exception.Message.ShouldBe("Message to the Girocode-User reader texts have to shorter than 71 chars.");
     }
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_singlepayment_minimal()
@@ -1001,7 +967,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account: account, bnc: bnc, amount: amount);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.SinglePayment, name, account: account, bnc: bnc, amount: amount);
 
         generator
             .ToString()
@@ -1020,13 +986,12 @@ public class PayloadGeneratorTests
         var postingKey = 69;
         Currency currency = Currency.USD;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account, bnc, amount, "", 0, null, null, reason, postingKey, currency, DateTime.Now);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.SinglePayment, name, account, bnc, amount, "", 0, null, null, reason, postingKey, currency, DateTime.Now);
 
         generator
             .ToString()
             .ShouldBe("bank://singlepayment?name=Wikimedia%20F%C3%B6rdergesellschaft&account=001194700&bnc=100205000&postingkey=69&amount=10,00&reason=Thanks%20for%20all%20your%20efforts&currency=USD&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "");
     }
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_singledirectdebit()
@@ -1039,7 +1004,7 @@ public class PayloadGeneratorTests
         var postingKey = 69;
         Currency currency = Currency.USD;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singledirectdebit, name, account, bnc, amount, "", 0, null, null, reason, postingKey, currency, DateTime.Now);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.singledirectdebit, name, account, bnc, amount, "", 0, null, null, reason, postingKey, currency, DateTime.Now);
 
         generator
             .ToString()
@@ -1062,13 +1027,12 @@ public class PayloadGeneratorTests
         var periodicLastExecutionDate = DateTime.Now.AddMonths(3);
         Currency currency = Currency.USD;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepayment, name, account, bnc, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, reason, postingKey, currency, DateTime.Now);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.periodicsinglepayment, name, account, bnc, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, reason, postingKey, currency, DateTime.Now);
 
         generator
             .ToString()
             .ShouldBe("bank://periodicsinglepayment?name=Wikimedia%20F%C3%B6rdergesellschaft&account=001194700&bnc=100205000&postingkey=69&amount=10,00&reason=Thanks%20for%20all%20your%20efforts&currency=USD&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "&periodictimeunit=W&periodictimeunitrotation=2&periodicfirstexecutiondate=" + periodicFirstExecutionDate.ToString("ddMMyyyy") + "&periodiclastexecutiondate=" + periodicLastExecutionDate.ToString("ddMMyyyy"));
     }
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_singlepaymentsepa_minimal()
@@ -1078,13 +1042,12 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban: iban, bic: bic, amount: amount);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.SinglePaymentSepa, name, iban: iban, bic: bic, amount: amount);
 
         generator
             .ToString()
             .ShouldBe("bank://singlepaymentsepa?name=Wikimedia%20F%C3%B6rdergesellschaft&iban=DE33100205000001194700&bic=BFSWDE33BER&amount=10,00&currency=EUR&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "");
     }
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_singlepaymentsepa_full()
@@ -1097,13 +1060,12 @@ public class PayloadGeneratorTests
         var amount = 10.00m;
         Currency currency = Currency.USD;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban, bic, amount, "", 0, null, null, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.SinglePaymentSepa, name, iban, bic, amount, "", 0, null, null, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now);
 
         generator
             .ToString()
             .ShouldBe("bank://singlepaymentsepa?name=Wikimedia%20F%C3%B6rdergesellschaft&iban=DE33100205000001194700&bic=BFSWDE33BER&separeference=Fake%20SEPA%20reference&amount=10,00&reason=Thanks%20for%20all%20your%20efforts&currency=USD&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "");
     }
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_singledirectdebitsepa()
@@ -1118,13 +1080,12 @@ public class PayloadGeneratorTests
         var amount = 10.00m;
         Currency currency = Currency.USD;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singledirectdebitsepa, name, iban, bic, amount, "", 0, null, null, creditorId, mandateId, new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.singledirectdebitsepa, name, iban, bic, amount, "", 0, null, null, creditorId, mandateId, new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now);
 
         generator
             .ToString()
             .ShouldBe("bank://singledirectdebitsepa?name=Wikimedia%20F%C3%B6rdergesellschaft&iban=DE33100205000001194700&bic=BFSWDE33BER&separeference=Fake%20SEPA%20reference&creditorid=DE%2002%20TSV%2001234567890&mandateid=987543CB2&dateofsignature=01032017&amount=10,00&reason=Thanks%20for%20all%20your%20efforts&currency=USD&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "");
     }
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_periodicsinglepaymentsepa()
@@ -1141,13 +1102,12 @@ public class PayloadGeneratorTests
         var periodicLastExecutionDate = DateTime.Now.AddMonths(3);
         Currency currency = Currency.USD;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa, name, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.periodicsinglepaymentsepa, name, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now);
 
         generator
             .ToString()
             .ShouldBe("bank://periodicsinglepaymentsepa?name=Wikimedia%20F%C3%B6rdergesellschaft&iban=DE33100205000001194700&bic=BFSWDE33BER&separeference=Fake%20SEPA%20reference&amount=10,00&reason=Thanks%20for%20all%20your%20efforts&currency=USD&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "&periodictimeunit=M&periodictimeunitrotation=1&periodicfirstexecutiondate=" + periodicFirstExecutionDate.ToString("ddMMyyyy") + "&periodiclastexecutiondate=" + periodicLastExecutionDate.ToString("ddMMyyyy"));
     }
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_contact()
@@ -1156,13 +1116,12 @@ public class PayloadGeneratorTests
         var bnc = "100205000";
         var name = "Wikimedia Fördergesellschaft";
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.contact, name, account: account, bnc: bnc);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.contact, name, account: account, bnc: bnc);
 
         generator
             .ToString()
             .ShouldBe("bank://contact?name=Wikimedia%20F%C3%B6rdergesellschaft&account=001194700&bnc=100205000");
     }
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_contact_full()
@@ -1171,14 +1130,12 @@ public class PayloadGeneratorTests
         var bnc = "100205000";
         var name = "Wikimedia Fördergesellschaft";
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.contact, name, account, bnc, "", "", "New business contact.");
+        var generator = new BezahlCode(BezahlCode.AuthorityType.contact, name, account, bnc, "", "", "New business contact.");
 
         generator
             .ToString()
             .ShouldBe("bank://contact?name=Wikimedia%20F%C3%B6rdergesellschaft&account=001194700&bnc=100205000&reason=New%20business%20contact.");
     }
-
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_contactv2_classic()
@@ -1187,13 +1144,12 @@ public class PayloadGeneratorTests
         var bnc = "100205000";
         var name = "Wikimedia Fördergesellschaft";
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.contact_v2, name, account: account, bnc: bnc);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.contact_v2, name, account: account, bnc: bnc);
 
         generator
             .ToString()
             .ShouldBe("bank://contact_v2?name=Wikimedia%20F%C3%B6rdergesellschaft&account=001194700&bnc=100205000");
     }
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_contactv2_sepa()
@@ -1202,14 +1158,12 @@ public class PayloadGeneratorTests
         var bic = "BFSWDE33BER";
         var name = "Wikimedia Fördergesellschaft";
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.contact_v2, name, iban: iban, bic: bic);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.contact_v2, name, iban: iban, bic: bic);
 
         generator
             .ToString()
             .ShouldBe("bank://contact_v2?name=Wikimedia%20F%C3%B6rdergesellschaft&iban=DE33100205000001194700&bic=BFSWDE33BER");
     }
-
-
 
     [Fact]
     public void bezahlcode_generator_can_generate_payload_contactv2_sepa_full()
@@ -1218,14 +1172,12 @@ public class PayloadGeneratorTests
         var bic = "BFSWDE33BER";
         var name = "Wikimedia Fördergesellschaft";
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.contact_v2, name, "", "", iban, bic, "A new v2 contact.");
+        var generator = new BezahlCode(BezahlCode.AuthorityType.contact_v2, name, "", "", iban, bic, "A new v2 contact.");
 
         generator
             .ToString()
             .ShouldBe("bank://contact_v2?name=Wikimedia%20F%C3%B6rdergesellschaft&iban=DE33100205000001194700&bic=BFSWDE33BER&reason=A%20new%20v2%20contact.");
     }
-
-
 
     [Fact]
     public void bezahlcode_generator_should_handle_account_whitespaces()
@@ -1235,13 +1187,12 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account: account, bnc: bnc, amount: amount);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.SinglePayment, name, account: account, bnc: bnc, amount: amount);
 
         generator
             .ToString()
             .ShouldBe("bank://singlepayment?name=Wikimedia%20F%C3%B6rdergesellschaft&account=01194700&bnc=100205000&amount=10,00&currency=EUR&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "");
     }
-
 
     [Fact]
     public void bezahlcode_generator_should_handle_bnc_whitespaces()
@@ -1251,13 +1202,12 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account: account, bnc: bnc, amount: amount);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.SinglePayment, name, account: account, bnc: bnc, amount: amount);
 
         generator
             .ToString()
             .ShouldBe("bank://singlepayment?name=Wikimedia%20F%C3%B6rdergesellschaft&account=001194700&bnc=100205000&amount=10,00&currency=EUR&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "");
     }
-
 
     [Fact]
     public void bezahlcode_generator_should_handle_iban_whitespaces()
@@ -1267,13 +1217,12 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban: iban, bic: bic, amount: amount);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.SinglePaymentSepa, name, iban: iban, bic: bic, amount: amount);
 
         generator
             .ToString()
             .ShouldBe("bank://singlepaymentsepa?name=Wikimedia%20F%C3%B6rdergesellschaft&iban=DE33100205000001194700&bic=BFSWDE33BER&amount=10,00&currency=EUR&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "");
     }
-
 
     [Fact]
     public void bezahlcode_generator_should_handle_bic_whitespaces()
@@ -1283,13 +1232,12 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban: iban, bic: bic, amount: amount);
+        var generator = new BezahlCode(BezahlCode.AuthorityType.SinglePaymentSepa, name, iban: iban, bic: bic, amount: amount);
 
         generator
             .ToString()
             .ShouldBe("bank://singlepaymentsepa?name=Wikimedia%20F%C3%B6rdergesellschaft&iban=DE33100205000001194700&bic=BFSWDE33BER&amount=10,00&currency=EUR&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "");
     }
-
 
     [Fact]
     public void bezahlcode_generator_should_add_decimals()
@@ -1299,13 +1247,12 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10;
 
-        var generator = new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account: account, bnc: bnc, amount: amount);
+        var generator = new BezahlCode(AuthorityType.SinglePayment, name, account: account, bnc: bnc, amount: amount);
 
         generator
             .ToString()
             .ShouldBe("bank://singlepayment?name=Wikimedia%20F%C3%B6rdergesellschaft&account=001194700&bnc=100205000&amount=10,00&currency=EUR&executiondate=" + DateTime.Now.ToString("ddMMyyyy") + "");
     }
-
 
     [Fact]
     public void bezahlcode_generator_should_throw_wrong_contact_constructor_exception()
@@ -1314,13 +1261,12 @@ public class PayloadGeneratorTests
         var bnc = "10020 5000";
         var name = "Wikimedia Fördergesellschaft";
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account, bnc, "", "", "New business contact."));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePayment, name, account, bnc, "", "", "New business contact."));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
         exception.Message.ShouldBe("The constructor without an amount may only ne used with authority types 'contact' and 'contact_v2'.");
     }
-
 
     [Fact]
     public void bezahlcode_generator_should_throw_wrong_contact_v2_constructor_exception()
@@ -1329,7 +1275,7 @@ public class PayloadGeneratorTests
         var bic = "BFSWDE33BER";
         var name = "Wikimedia Fördergesellschaft";
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa, name, iban: iban, bic: bic));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.periodicsinglepaymentsepa, name, iban: iban, bic: bic));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1345,7 +1291,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, account: account, bnc: bnc, amount: amount));
+        var exception = Record.Exception(() => new BezahlCode(BezahlCode.AuthorityType.SinglePaymentSepa, name, account: account, bnc: bnc, amount: amount));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1367,7 +1313,7 @@ public class PayloadGeneratorTests
         var periodicLastExecutionDate = DateTime.Now.AddMonths(3);
         Currency currency = Currency.USD;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepayment, name, account, bnc, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, reason, postingKey, currency, DateTime.Now));
+        var exception = Record.Exception(() => new BezahlCode(BezahlCode.AuthorityType.periodicsinglepayment, name, account, bnc, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, reason, postingKey, currency, DateTime.Now));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1383,7 +1329,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, iban: iban, bic: bic, amount: amount));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePayment, name, iban: iban, bic: bic, amount: amount));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1406,7 +1352,7 @@ public class PayloadGeneratorTests
         var periodicLastExecutionDate = DateTime.Now.AddMonths(3);
         Currency currency = Currency.USD;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa, name, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.periodicsinglepaymentsepa, name, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1423,7 +1369,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft has really really really long name, over 71 chars";
         var amount = 10.00m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban: iban, bic: bic, amount: amount));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePaymentSepa, name, iban: iban, bic: bic, amount: amount));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1441,7 +1387,7 @@ public class PayloadGeneratorTests
         var reason = "A long long long reason text which may resolve in an exception";
         var amount = 10.00m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban: iban, bic: bic, amount: amount, reason: reason));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePaymentSepa, name, iban: iban, bic: bic, amount: amount, reason: reason));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1458,7 +1404,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account: account, bnc: bnc, amount: amount));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePayment, name, account: account, bnc: bnc, amount: amount));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1474,7 +1420,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account: account, bnc: bnc, amount: amount));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePayment, name, account: account, bnc: bnc, amount: amount));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1491,7 +1437,7 @@ public class PayloadGeneratorTests
         var postingKey = 101;
         var amount = 10.00m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account: account, bnc: bnc, amount: amount, postingKey: postingKey));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePayment, name, account: account, bnc: bnc, amount: amount, postingKey: postingKey));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1507,7 +1453,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban: iban, bic: bic, amount: amount));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePaymentSepa, name, iban: iban, bic: bic, amount: amount));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1524,7 +1470,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.00m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban: iban, bic: bic, amount: amount));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePaymentSepa, name, iban: iban, bic: bic, amount: amount));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1546,7 +1492,7 @@ public class PayloadGeneratorTests
         var amount = 10.00m;
         Currency currency = Currency.USD;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singledirectdebitsepa, name, iban, bic, amount, "", 0, null, null, creditorId, mandateId, new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.singledirectdebitsepa, name, iban, bic, amount, "", 0, null, null, creditorId, mandateId, new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1568,7 +1514,7 @@ public class PayloadGeneratorTests
         var amount = 10.00m;
         Currency currency = Currency.USD;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singledirectdebitsepa, name, iban, bic, amount, "", 0, null, null, creditorId, mandateId, new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.singledirectdebitsepa, name, iban, bic, amount, "", 0, null, null, creditorId, mandateId, new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1589,7 +1535,7 @@ public class PayloadGeneratorTests
         var amount = 10.00m;
         Currency currency = Currency.USD;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singledirectdebitsepa, name, iban, bic, amount, "", 0, null, null, creditorId, mandateId, new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.singledirectdebitsepa, name, iban, bic, amount, "", 0, null, null, creditorId, mandateId, new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1604,7 +1550,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 10.001m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban: iban, bic: bic, amount: amount));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePaymentSepa, name, iban: iban, bic: bic, amount: amount));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1621,7 +1567,7 @@ public class PayloadGeneratorTests
         var name = "Wikimedia Fördergesellschaft";
         var amount = 1000000000m;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepaymentsepa, name, iban: iban, bic: bic, amount: amount));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePaymentSepa, name, iban: iban, bic: bic, amount: amount));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1643,7 +1589,7 @@ public class PayloadGeneratorTests
         Currency currency = Currency.USD;
 
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.singlepayment, name, account, bnc, amount, "", 0, null, null, reason, postingKey, currency, executionDate));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.SinglePayment, name, account, bnc, amount, "", 0, null, null, reason, postingKey, currency, executionDate));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1666,7 +1612,7 @@ public class PayloadGeneratorTests
         var periodicLastExecutionDate = DateTime.Now.AddMonths(3);
         Currency currency = Currency.USD;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa, name, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.periodicsinglepaymentsepa, name, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -1689,7 +1635,7 @@ public class PayloadGeneratorTests
         var periodicLastExecutionDate = DateTime.Now.AddMonths(3);
         Currency currency = Currency.USD;
 
-        var exception = Record.Exception(() => new PayloadGenerator.BezahlCode(PayloadGenerator.BezahlCode.AuthorityType.periodicsinglepaymentsepa, name, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
+        var exception = Record.Exception(() => new BezahlCode(AuthorityType.periodicsinglepaymentsepa, name, iban, bic, amount, periodicTimeunit, periodicTimeunitRotation, periodicFirstExecutionDate, periodicLastExecutionDate, "", "", new DateTime(2017, 03, 01), reason, sepaReference, currency, DateTime.Now));
 
         Assert.NotNull(exception);
         Assert.IsType<BezahlCodeException>(exception);
@@ -2277,7 +2223,7 @@ public class PayloadGeneratorTests
     [Fact]
     public void one_time_password_generator_time_based_generates_with_standard_options()
     {
-        var pg = new PayloadGenerator.OneTimePassword
+        var pg = new OneTimePassword
         {
             Secret = "pwq6 5q55",
             Issuer = "Google",
@@ -2290,12 +2236,12 @@ public class PayloadGeneratorTests
     [Fact]
     public void one_time_password_generator_hmac_based_generates_with_standard_options()
     {
-        var pg = new PayloadGenerator.OneTimePassword
+        var pg = new OneTimePassword
         {
             Secret = "pwq6 5q55",
             Issuer = "Google",
             Label = "test@google.com",
-            Type = PayloadGenerator.OneTimePassword.OneTimePasswordAuthType.HOTP,
+            Type = OneTimePassword.OneTimePasswordAuthType.HOTP,
             Counter = 500,
         };
 
@@ -2333,7 +2279,6 @@ public class PayloadGeneratorTests
             .ShouldBe("ss://cmM0LW1kNTpzM2NyM3RAMTkyLjE2OC4yLjU6NjU1MzU=#server42");
     }
 
-
     [Fact]
     public void shadowsocks_generator_should_throw_portrange_low_exception()
     {
@@ -2349,7 +2294,6 @@ public class PayloadGeneratorTests
         exception.Message.ShouldBe("Value of 'port' must be within 0 and 65535.");
     }
 
-
     [Fact]
     public void shadowsocks_generator_should_throw_portrange_high_exception()
     {
@@ -2364,7 +2308,6 @@ public class PayloadGeneratorTests
         Assert.IsType<PayloadGenerator.ShadowSocksConfig.ShadowSocksConfigException>(exception);
         exception.Message.ShouldBe("Value of 'port' must be within 0 and 65535.");
     }
-
 
     [Fact]
     public void shadowsocks_generator_can_generate_payload_with_plugin()
@@ -2382,15 +2325,14 @@ public class PayloadGeneratorTests
             .ShouldBe("ss://YmYtY2ZiOnRlc3Q@192.168.100.1:8888/?plugin=obfs-local%3bobfs%3dhttp%3bobfs-host%3dgoogle.com");
     }
 
-
     [Fact]
     public void contactdata_generator_can_generate_payload_simple_mecard()
     {
         var firstname = "John";
         var lastname = "Doe";
-        var outputType = PayloadGenerator.ContactData.ContactOutputType.MeCard;
+        var outputType = ContactData.ContactOutputType.MeCard;
 
-        var generator = new PayloadGenerator.ContactData(outputType, firstname, lastname);
+        var generator = new ContactData(outputType, firstname, lastname);
 
         generator
             .ToString()
@@ -2415,9 +2357,9 @@ public class PayloadGeneratorTests
         var zipCode = "12345";
         var country = "Starlight Country";
         var note = "Badass programmer.";
-        var outputType = PayloadGenerator.ContactData.ContactOutputType.MeCard;
+        var outputType = ContactData.ContactOutputType.MeCard;
 
-        var generator = new PayloadGenerator.ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note);
+        var generator = new ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note);
 
         generator
             .ToString()
@@ -2442,9 +2384,9 @@ public class PayloadGeneratorTests
         var zipCode = "12345";
         var country = "Starlight Country";
         var note = "Badass programmer.";
-        var outputType = PayloadGenerator.ContactData.ContactOutputType.MeCard;
+        var outputType = ContactData.ContactOutputType.MeCard;
 
-        var generator = new PayloadGenerator.ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note, addressOrder: PayloadGenerator.ContactData.AddressOrder.Reversed);
+        var generator = new ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note, addressOrder: ContactData.AddressOrder.Reversed);
 
         generator
             .ToString()
@@ -2469,9 +2411,9 @@ public class PayloadGeneratorTests
         var zipCode = "12345";
         var country = "Starlight Country";
         var note = "Badass programmer.";
-        var outputType = PayloadGenerator.ContactData.ContactOutputType.VCard21;
+        var outputType = ContactData.ContactOutputType.VCard21;
 
-        var generator = new PayloadGenerator.ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note);
+        var generator = new ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note);
 
         generator
             .ToString()
@@ -2496,9 +2438,9 @@ public class PayloadGeneratorTests
         var zipCode = "12345";
         var country = "Starlight Country";
         var note = "Badass programmer.";
-        var outputType = PayloadGenerator.ContactData.ContactOutputType.VCard3;
+        var outputType = ContactData.ContactOutputType.VCard3;
 
-        var generator = new PayloadGenerator.ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note);
+        var generator = new ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note);
 
         generator
             .ToString()
@@ -2523,9 +2465,9 @@ public class PayloadGeneratorTests
         var zipCode = "12345";
         var country = "Starlight Country";
         var note = "Badass programmer.";
-        var outputType = PayloadGenerator.ContactData.ContactOutputType.VCard4;
+        var outputType = ContactData.ContactOutputType.VCard4;
 
-        var generator = new PayloadGenerator.ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note);
+        var generator = new ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note);
 
         generator
             .ToString()
@@ -2550,9 +2492,9 @@ public class PayloadGeneratorTests
         var zipCode = "12345";
         var country = "Starlight Country";
         var note = "Badass programmer.";
-        var outputType = PayloadGenerator.ContactData.ContactOutputType.VCard4;
+        var outputType = ContactData.ContactOutputType.VCard4;
 
-        var generator = new PayloadGenerator.ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note, addressOrder: PayloadGenerator.ContactData.AddressOrder.Reversed);
+        var generator = new ContactData(outputType, firstname, lastname, nickname, phone, mobilePhone, workPhone, email, birthday, website, street, houseNumber, city, zipCode, country, note, addressOrder: ContactData.AddressOrder.Reversed);
 
         generator
             .ToString()

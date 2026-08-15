@@ -1,13 +1,20 @@
 ﻿namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  FIM encoding
-///  Written by: Brad Barnhill.
+/// FIM encoding.
 /// </summary>
-internal class FIM : BarcodeCommon, IBarcode
+internal class FIM : BarcodeEncoding, IBarcode
 {
     private readonly string[] FIM_Codes = { "110010011", "101101101", "110101011", "111010111", "101000101" };
-    public enum FIMTypes { FIM_A = 0, FIM_B, FIM_C, FIM_D, FIM_E };
+
+    public enum FIMTypes
+    {
+        FIM_A = 0,
+        FIM_B,
+        FIM_C,
+        FIM_D,
+        FIM_E
+    }
 
     public FIM(string input)
     {
@@ -17,31 +24,30 @@ internal class FIM : BarcodeCommon, IBarcode
         {
             case "A":
             case "a":
-                _rawData = FIM_Codes[(int)FIMTypes.FIM_A];
+                RawData = FIM_Codes[(int)FIMTypes.FIM_A];
                 break;
             case "B":
             case "b":
-                _rawData = FIM_Codes[(int)FIMTypes.FIM_B];
+                RawData = FIM_Codes[(int)FIMTypes.FIM_B];
                 break;
             case "C":
             case "c":
-                _rawData = FIM_Codes[(int)FIMTypes.FIM_C];
+                RawData = FIM_Codes[(int)FIMTypes.FIM_C];
                 break;
             case "D":
             case "d":
-                _rawData = FIM_Codes[(int)FIMTypes.FIM_D];
+                RawData = FIM_Codes[(int)FIMTypes.FIM_D];
                 break;
             case "E":
             case "e":
-                _rawData = FIM_Codes[(int)FIMTypes.FIM_E];
+                RawData = FIM_Codes[(int)FIMTypes.FIM_E];
                 break;
             default:
                 Error("EFIM-1: Could not determine encoding type. (Only pass in A, B, C, D, or E)");
                 break;
         }
     }
-
-    public string Encode_FIM()
+    protected override string Encode()
     {
         string encoded = "";
         foreach (char c in RawData)
@@ -53,7 +59,4 @@ internal class FIM : BarcodeCommon, IBarcode
 
         return encoded;
     }
-
-    public string EncodedValue
-        => Encode_FIM();
 }

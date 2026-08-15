@@ -1,12 +1,11 @@
 namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  Code 39 encoding
-///  Written by: Brad Barnhill
+/// Code 39 encoding.
 /// </summary>
-class Code39 : BarcodeCommon, IBarcode
+internal class Code39 : BarcodeEncoding, IBarcode
 {
-    private readonly System.Collections.Hashtable C39_Code = new System.Collections.Hashtable(); //is initialized by InitCode39()
+    private readonly System.Collections.Hashtable C39_Code = new System.Collections.Hashtable(); // Is initialized by InitCode39()
     private readonly System.Collections.Hashtable ExtC39_Translation = new System.Collections.Hashtable();
     private readonly bool _allowExtended;
     private readonly bool _enableChecksum;
@@ -17,7 +16,7 @@ class Code39 : BarcodeCommon, IBarcode
     /// <param name="input">Data to encode.</param>
     public Code39(string input)
     {
-        _rawData = input;
+        RawData = input;
     }
 
     /// <summary>
@@ -27,7 +26,7 @@ class Code39 : BarcodeCommon, IBarcode
     /// <param name="allowExtended">Allow Extended Code 39 (Full Ascii mode).</param>
     public Code39(string input, bool allowExtended)
     {
-        _rawData = input;
+        RawData = input;
         _allowExtended = allowExtended;
     }
 
@@ -39,7 +38,7 @@ class Code39 : BarcodeCommon, IBarcode
     /// <param name="enableChecksum">Whether to calculate the Mod 43 checksum and encode it into the barcode</param>
     public Code39(string input, bool allowExtended, bool enableChecksum)
     {
-        _rawData = input;
+        RawData = input;
         _allowExtended = allowExtended;
         _enableChecksum = enableChecksum;
     }
@@ -47,7 +46,7 @@ class Code39 : BarcodeCommon, IBarcode
     /// <summary>
     /// Encode the raw data using the Code 39 algorithm.
     /// </summary>
-    private string Encode_Code39()
+    protected override string Encode()
     {
         InitCode39();
         init_ExtendedCode39();
@@ -60,13 +59,12 @@ class Code39 : BarcodeCommon, IBarcode
 
         string result = string.Empty;
 
-        //foreach (char c in this.FormattedData)
-        foreach (var c in strFormattedData)
+        foreach (char c in strFormattedData)
         {
             try
             {
                 result += C39_Code[c].ToString();
-                result += "0";//whitespace
+                result += "0"; // whitespace
             }
             catch
             {
@@ -225,7 +223,7 @@ class Code39 : BarcodeCommon, IBarcode
         ExtC39_Translation.Add("x", "+X");
         ExtC39_Translation.Add("y", "+Y");
         ExtC39_Translation.Add("z", "+Z");
-        ExtC39_Translation.Add(Convert.ToChar(127).ToString(), "%T"); //also %X, %Y, %Z 
+        ExtC39_Translation.Add(Convert.ToChar(127).ToString(), "%T"); // also %X, %Y, %Z
     }
 
     private void InsertExtendedCharsIfNeeded(ref string formattedData)
@@ -252,20 +250,17 @@ class Code39 : BarcodeCommon, IBarcode
     private char GetChecksumChar(string strNoAstr)
     {
         // checksum
-        string Code39_Charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%";
+        string code39_Charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%";
         var sum = 0;
         InsertExtendedCharsIfNeeded(ref strNoAstr);
 
         // Calculate the checksum
-        foreach (var t in strNoAstr)
+        foreach (char t in strNoAstr)
         {
-            sum = sum + Code39_Charset.IndexOf(t.ToString(), StringComparison.Ordinal);
+            sum = sum + code39_Charset.IndexOf(t.ToString(), StringComparison.Ordinal);
         }
 
         // return the checksum char
-        return Code39_Charset[sum % 43];
+        return code39_Charset[sum % 43];
     }
-
-    public string EncodedValue => Encode_Code39();
-
 }

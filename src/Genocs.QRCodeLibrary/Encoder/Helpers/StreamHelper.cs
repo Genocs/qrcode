@@ -1,6 +1,6 @@
 ﻿namespace Genocs.QRCodeLibrary.Encoder.Helpers;
 
-internal class Stream4Methods
+internal class StreamHelper
 {
     public static void CopyTo(Stream input, Stream output)
     {

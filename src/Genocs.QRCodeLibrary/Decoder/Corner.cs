@@ -1,21 +1,20 @@
 ﻿namespace Genocs.QRCodeLibrary.Decoder;
 
-/////////////////////////////////////////////////////////////////////
-// QR corner three finders pattern class
-/////////////////////////////////////////////////////////////////////
-
+/// <summary>
+/// Represents a corner of a QR code, defined by three finder patterns: top-left, top-right, and bottom-left.
+/// </summary>
 internal sealed class Corner
 {
-    internal Finder _topLeftFinder;
-    internal Finder _topRightFinder;
-    internal Finder _bottomLeftFinder;
+    private readonly double _topLineDeltaX;
+    private readonly double _topLineDeltaY;
 
-    internal double TopLineDeltaX;
-    internal double TopLineDeltaY;
-    internal double TopLineLength;
-    internal double LeftLineDeltaX;
-    internal double LeftLineDeltaY;
-    internal double LeftLineLength;
+    internal Finder TopLeftFinder { get; private set; }
+    internal Finder TopRightFinder { get; private set; }
+    internal Finder BottomLeftFinder { get; private set; }
+    internal double TopLineLength { get; private set; }
+    internal double LeftLineDeltaX { get; private set; }
+    internal double LeftLineDeltaY { get; private set; }
+    internal double LeftLineLength { get; private set; }
 
     /// <summary>
     /// QR corner constructor.
@@ -26,33 +25,36 @@ internal sealed class Corner
     private Corner(Finder topLeftFinder, Finder topRightFinder, Finder bottomLeftFinder)
     {
         // save three finders
-        _topLeftFinder = topLeftFinder;
-        _topRightFinder = topRightFinder;
-        _bottomLeftFinder = bottomLeftFinder;
+        TopLeftFinder = topLeftFinder;
+        TopRightFinder = topRightFinder;
+        BottomLeftFinder = bottomLeftFinder;
 
         // top line slope
-        TopLineDeltaX = topRightFinder._col - topLeftFinder._col;
-        TopLineDeltaY = topRightFinder._row - topLeftFinder._row;
+        _topLineDeltaX = topRightFinder.Col - topLeftFinder.Col;
+        _topLineDeltaY = topRightFinder.Row - topLeftFinder.Row;
 
         // top line length
-        TopLineLength = Math.Sqrt((TopLineDeltaX * TopLineDeltaX) + (TopLineDeltaY * TopLineDeltaY));
+        TopLineLength = Math.Sqrt((_topLineDeltaX * _topLineDeltaX) + (_topLineDeltaY * _topLineDeltaY));
 
         // left line slope
-        LeftLineDeltaX = bottomLeftFinder._col - topLeftFinder._col;
-        LeftLineDeltaY = bottomLeftFinder._row - topLeftFinder._row;
+        LeftLineDeltaX = bottomLeftFinder.Col - topLeftFinder.Col;
+        LeftLineDeltaY = bottomLeftFinder.Row - topLeftFinder.Row;
 
         // left line length
         LeftLineLength = Math.Sqrt((LeftLineDeltaX * LeftLineDeltaX) + (LeftLineDeltaY * LeftLineDeltaY));
         return;
     }
 
-    /////////////////////////////////////////////////////////////////////
-    // Test QR corner for validity
-    /////////////////////////////////////////////////////////////////////
-
+    /// <summary>
+    /// Create a corner from three finder patterns.
+    /// </summary>
+    /// <param name="topLeftFinder">The top-left finder.</param>
+    /// <param name="topRightFinder">The top-right finder.</param>
+    /// <param name="bottomLeftFinder">The bottom-left finder.</param>
+    /// <returns>The created corner, or null if invalid.</returns>
     internal static Corner? CreateCorner(Finder topLeftFinder, Finder topRightFinder, Finder bottomLeftFinder)
     {
-        // try all three possible permutation of three finders
+        // Try all three possible permutation of three finders
         for (int index = 0; index < 3; index++)
         {
             // TestCorner runs three times to test all possibilities
@@ -66,18 +68,18 @@ internal sealed class Corner
             }
 
             // top line slope
-            double topLineDeltaX = topRightFinder._col - topLeftFinder._col;
-            double topLineDeltaY = topRightFinder._row - topLeftFinder._row;
+            double topLineDeltaX = topRightFinder.Col - topLeftFinder.Col;
+            double topLineDeltaY = topRightFinder.Row - topLeftFinder.Row;
 
             // left line slope
-            double leftLineDeltaX = bottomLeftFinder._col - topLeftFinder._col;
-            double leftLineDeltaY = bottomLeftFinder._row - topLeftFinder._row;
+            double leftLineDeltaX = bottomLeftFinder.Col - topLeftFinder.Col;
+            double leftLineDeltaY = bottomLeftFinder.Row - topLeftFinder.Row;
 
             // top line length
-            double topLineLength = Math.Sqrt((topLineDeltaX * topLineDeltaX) + topLineDeltaY * topLineDeltaY);
+            double topLineLength = Math.Sqrt((topLineDeltaX * topLineDeltaX) + (topLineDeltaY * topLineDeltaY));
 
             // left line length
-            double leftLineLength = Math.Sqrt(leftLineDeltaX * leftLineDeltaX + (leftLineDeltaY * leftLineDeltaY));
+            double leftLineLength = Math.Sqrt((leftLineDeltaX * leftLineDeltaX) + (leftLineDeltaY * leftLineDeltaY));
 
             // the short side must be at least 80% of the long side
             if (Math.Min(topLineLength, leftLineLength) < QRDecoder.CORNER_SIDE_LENGTH_DEV * Math.Max(topLineLength, leftLineLength)) continue;
@@ -98,9 +100,7 @@ internal sealed class Corner
             if (newLeftY < 0)
             {
                 // swap top left with bottom right
-                var tempFinder = topRightFinder;
-                topRightFinder = bottomLeftFinder;
-                bottomLeftFinder = tempFinder;
+                (bottomLeftFinder, topRightFinder) = (topRightFinder, bottomLeftFinder);
             }
 
             return new Corner(topLeftFinder, topRightFinder, bottomLeftFinder);
@@ -109,26 +109,27 @@ internal sealed class Corner
         return null;
     }
 
-    /////////////////////////////////////////////////////////////////////
-    // Test QR corner for validity
-    /////////////////////////////////////////////////////////////////////
-
+    /// <summary>
+    /// Calculate the initial version number of the QR code based on the corner finders.
+    /// </summary>
+    /// <returns>The initial version number.</returns>
+    /// <exception cref="ApplicationException">Thrown when the corner is not valid.</exception>
     internal int InitialVersionNumber()
     {
         // version number based on top line
         double topModules = 7;
 
         // top line is mostly horizontal
-        if (Math.Abs(TopLineDeltaX) >= Math.Abs(TopLineDeltaY))
+        if (Math.Abs(_topLineDeltaX) >= Math.Abs(_topLineDeltaY))
         {
             topModules += TopLineLength * TopLineLength /
-                (Math.Abs(TopLineDeltaX) * 0.5 * (_topLeftFinder._hModule + _topRightFinder._hModule));
+                (Math.Abs(_topLineDeltaX) * 0.5 * (TopLeftFinder.HModule + TopRightFinder.HModule));
         }
         else
         {
             // top line is mostly vertical
             topModules += TopLineLength * TopLineLength /
-                (Math.Abs(TopLineDeltaY) * 0.5 * (_topLeftFinder._vModule + _topRightFinder._vModule));
+                (Math.Abs(_topLineDeltaY) * 0.5 * (TopLeftFinder.VModule + TopRightFinder.VModule));
         }
 
         // version number based on left line
@@ -138,13 +139,13 @@ internal sealed class Corner
         if (Math.Abs(LeftLineDeltaY) >= Math.Abs(LeftLineDeltaX))
         {
             leftModules += LeftLineLength * LeftLineLength /
-                (Math.Abs(LeftLineDeltaY) * 0.5 * (_topLeftFinder._vModule + _bottomLeftFinder._vModule));
+                (Math.Abs(LeftLineDeltaY) * 0.5 * (TopLeftFinder.VModule + BottomLeftFinder.VModule));
         }
         else
         {
             // left line is mostly horizontal
             leftModules += LeftLineLength * LeftLineLength /
-                (Math.Abs(LeftLineDeltaX) * 0.5 * (_topLeftFinder._hModule + _bottomLeftFinder._hModule));
+                (Math.Abs(LeftLineDeltaX) * 0.5 * (TopLeftFinder.HModule + BottomLeftFinder.HModule));
         }
 
         // version (there is rounding in the calculation)

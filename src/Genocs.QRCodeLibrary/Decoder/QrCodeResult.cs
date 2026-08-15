@@ -2,7 +2,7 @@
 
 public class QrCodeResult
 {
-    public List<string> Results { get; set; }
+    public List<string> Results { get; }
 
     public QrCodeResult()
     {

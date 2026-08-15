@@ -38,6 +38,15 @@ app.UseOpenApiDocs();
 app.UseEndpoints(static endpoints =>
 {
     endpoints.Get(
+        "/",
+        async context =>
+            await context.Response.Ok("Welcome to Genocs QRCode Library WebApi"),
+        endpoint: route => route
+            .WithSummary("Home")
+            .WithDescription("Returns the welcome message for the QRCode Web API.")
+            .WithTags("System"));
+
+    endpoints.Get(
         "health",
         async context =>
             await context.Response.Ok(new { status = "ok", service = "Genocs.QRCodeLibrary.WebApi" }),
@@ -48,13 +57,6 @@ app.UseEndpoints(static endpoints =>
                 "Use this endpoint for container/orchestrator probes and basic connectivity checks.")
             .WithTags("System"));
 });
-
-app.MapGet(
-    "/",
-    () => Results.Ok("Welcome to Genocs QRCode Library WebApi"))
-    .WithSummary("Home")
-    .WithDescription("Returns the welcome message for the QRCode Web API.")
-    .WithTags("System");
 
 app.MapPost(
     "/FindQrCode",

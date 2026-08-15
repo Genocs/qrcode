@@ -26,14 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="DemoFiles\" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="DemoFiles\image2.jpg">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="DemoFiles\image3.jpg">
+        <None Update="DemoFiles\**\*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

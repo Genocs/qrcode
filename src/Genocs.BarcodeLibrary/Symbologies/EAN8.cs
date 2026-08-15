@@ -1,17 +1,16 @@
 namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  EAN-8 encoding
-///  Written by: Brad Barnhill.
+/// EAN-8 encoding.
 /// </summary>
-internal class EAN8 : BarcodeCommon, IBarcode
+internal class EAN8 : BarcodeEncoding, IBarcode
 {
     private readonly string[] EAN_CodeA = { "0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011" };
     private readonly string[] EAN_CodeC = { "1110010", "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100" };
 
     public EAN8(string input)
     {
-        _rawData = input;
+        RawData = input;
 
         // check numeric only
         if (!CheckNumericOnly(RawData)) Error("EEAN8-2: Numeric only.");
@@ -22,7 +21,7 @@ internal class EAN8 : BarcodeCommon, IBarcode
     /// <summary>
     /// Encode the raw data using the EAN-8 algorithm.
     /// </summary>
-    private string Encode_EAN8()
+    protected override string Encode()
     {
         // check length
         if (RawData.Length != 8 && RawData.Length != 7) Error("EEAN8-1: Invalid data length. (7 or 8 numbers only)");
@@ -78,9 +77,7 @@ internal class EAN8 : BarcodeCommon, IBarcode
                 checksum = 0;
 
             // add the checksum to the end of the
-            _rawData += checksum.ToString();
+            RawData += checksum.ToString();
         }
     }
-
-    public string EncodedValue => Encode_EAN8();
 }

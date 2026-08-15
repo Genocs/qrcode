@@ -1,13 +1,12 @@
 ﻿namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  Blank encoding template
-///  Written by: Brad Barnhill.
+/// Blank encoding template.
 /// </summary>
-internal class Blank : BarcodeCommon, IBarcode
+internal class Blank : BarcodeEncoding, IBarcode
 {
-    public string EncodedValue
+    protected override string Encode()
     {
-        get { throw new NotImplementedException(); }
+        throw new NotImplementedException();
     }
 }

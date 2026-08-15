@@ -1,14 +1,13 @@
 ﻿namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  Pharmacode encoding
-///  Written by: Brad Barnhill.
+/// Pharmacode encoding.
 /// </summary>
-class Pharmacode : BarcodeCommon, IBarcode
+internal class Pharmacode : BarcodeEncoding, IBarcode
 {
-    readonly string _thinBar = "1";
-    readonly string _gap = "00";
-    readonly string _thickBar = "111";
+    private readonly string _thinBar = "1";
+    private readonly string _gap = "00";
+    private readonly string _thickBar = "111";
 
     /// <summary>
     /// Encodes with Pharmacode.
@@ -16,11 +15,11 @@ class Pharmacode : BarcodeCommon, IBarcode
     /// <param name="input">Data to encode.</param>
     public Pharmacode(string input)
     {
-        _rawData = input;
+        RawData = input;
 
         if (!CheckNumericOnly(RawData))
         {
-            Error("EPHARM-1: Data contains invalid  characters (non-numeric).");
+            Error("EPHARM-1: Data contains invalid characters (non-numeric).");
         }
         else if (RawData.Length > 6)
         {
@@ -31,42 +30,36 @@ class Pharmacode : BarcodeCommon, IBarcode
     /// <summary>
     /// Encode the raw data using the Pharmacode algorithm.
     /// </summary>
-    private string Encode_Pharmacode()
+    protected override string Encode()
     {
-
         if (!int.TryParse(RawData, out int num))
         {
             Error("EPHARM-3: Input is unparseable.");
         }
-        else if (num < 3 || num > 131070)
+
+        if (num < 3 || num > 131070)
         {
-            Error("EPHARM-4: Data contains invalid  characters (invalid numeric range).");
+            Error("EPHARM-4: Data contains invalid characters (invalid numeric range). The lenght must be between 3 and 131070.");
         }
 
-        string result = string.Empty;
+        List<string> bars = new List<string>();
+
         do
         {
             if ((num & 1) == 0)
             {
-                result = _thickBar + result;
+                bars.Add(_thickBar);
                 num = (num - 2) / 2;
             }
             else
             {
-                result = _thinBar + result;
+                bars.Add(_thinBar);
                 num = (num - 1) / 2;
-            }
-
-            if (num != 0)
-            {
-                result = _gap + result;
             }
         }
         while (num != 0);
 
-        return result;
+        bars.Reverse();
+        return string.Join(_gap, bars);
     }
-
-    public string EncodedValue
-        => Encode_Pharmacode();
 }

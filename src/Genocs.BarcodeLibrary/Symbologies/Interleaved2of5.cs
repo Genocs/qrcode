@@ -1,10 +1,9 @@
 namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  Interleaved 2 of 5 encoding
-///  Written by: Brad Barnhill.
+///  Interleaved 2 of 5 encoding.
 /// </summary>
-internal class Interleaved2of5 : BarcodeCommon, IBarcode
+internal class Interleaved2of5 : BarcodeEncoding, IBarcode
 {
     private readonly string[] _i25Code = { "NNWWN", "WNNNW", "NWNNW", "WWNNN", "NNWNW", "WNWNN", "NWWNN", "NNNWW", "WNNWN", "NWNWN" };
     private readonly BarcodeType _encodedType;
@@ -12,20 +11,24 @@ internal class Interleaved2of5 : BarcodeCommon, IBarcode
     public Interleaved2of5(string input, BarcodeType encodedType)
     {
         _encodedType = encodedType;
-        _rawData = input;
+        RawData = input;
     }
 
     /// <summary>
     /// Encode the raw data using the Interleaved 2 of 5 algorithm.
     /// </summary>
-    private string Encode_Interleaved2of5()
+    protected override string Encode()
     {
-        // check length of input (only even if no checkdigit, else with check digit odd)
+        // Check length of input (only even if no checkdigit, else with check digit odd)
         if (RawData.Length % 2 != (_encodedType == BarcodeType.Interleaved2Of5Mod10 ? 1 : 0))
+        {
             Error("EI25-1: Data length invalid.");
+        }
 
         if (!CheckNumericOnly(RawData))
+        {
             Error("EI25-2: Numeric Data Only");
+        }
 
         string result = "1010";
         string data = RawData + (_encodedType == BarcodeType.Interleaved2Of5Mod10 ? CalculateMod10CheckDigit().ToString() : "");
@@ -33,19 +36,19 @@ internal class Interleaved2of5 : BarcodeCommon, IBarcode
         for (int i = 0; i < data.Length; i += 2)
         {
             bool bars = true;
-            string patternbars = _i25Code[(int)char.GetNumericValue(data, i)];
-            string patternspaces = _i25Code[(int)char.GetNumericValue(data, i + 1)];
-            string patternmixed = string.Empty;
+            string patternBars = _i25Code[(int)char.GetNumericValue(data, i)];
+            string patternSpaces = _i25Code[(int)char.GetNumericValue(data, i + 1)];
+            string patternMixed = string.Empty;
 
-            // interleave
-            while (patternbars.Length > 0)
+            // Interleave
+            while (patternBars.Length > 0)
             {
-                patternmixed += patternbars[0].ToString() + patternspaces[0].ToString();
-                patternbars = patternbars.Substring(1);
-                patternspaces = patternspaces.Substring(1);
+                patternMixed += patternBars[0].ToString() + patternSpaces[0].ToString();
+                patternBars = patternBars.Substring(1);
+                patternSpaces = patternSpaces.Substring(1);
             }
 
-            foreach (char c1 in patternmixed)
+            foreach (char c1 in patternMixed)
             {
                 if (bars)
                 {
@@ -66,25 +69,23 @@ internal class Interleaved2of5 : BarcodeCommon, IBarcode
             }
         }
 
-        // add ending bars
+        // Add ending bars
         result += "1101";
         return result;
     }
 
     private int CalculateMod10CheckDigit()
     {
-        var sum = 0;
-        var even = true;
-        for (var i = RawData.Length - 1; i >= 0; --i)
+        int sum = 0;
+        bool even = true;
+        for (int i = RawData.Length - 1; i >= 0; --i)
         {
-            // convert numeric in char format to integer and
+            // Convert numeric in char format to integer and
             // multiply by 3 or 1 based on if an even index from the end
             sum += (RawData[i] - '0') * (even ? 3 : 1);
             even = !even;
         }
 
-        return (10 - sum % 10) % 10;
+        return (10 - (sum % 10)) % 10;
     }
-
-    public string EncodedValue => this.Encode_Interleaved2of5();
 }

@@ -19,4 +19,9 @@
         <PackageReference Include="xunit.v3" Version="3.2.2" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\..\Genocs.BarcodeLibrary\Genocs.BarcodeLibrary.csproj" />
+        <ProjectReference Include="..\..\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj" />
+    </ItemGroup>
+
 </Project>

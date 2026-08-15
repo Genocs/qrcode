@@ -33,7 +33,7 @@ public class QRCodeData : IDisposable
             using var output = new MemoryStream();
             using (var dstStream = new DeflateStream(input, CompressionMode.Decompress))
             {
-                Stream4Methods.CopyTo(dstStream, output);
+                StreamHelper.CopyTo(dstStream, output);
             }
 
             bytes = new List<byte>(output.ToArray());
@@ -44,7 +44,7 @@ public class QRCodeData : IDisposable
             using var output = new MemoryStream();
             using (var dstStream = new GZipStream(input, CompressionMode.Decompress))
             {
-                Stream4Methods.CopyTo(dstStream, output);
+                StreamHelper.CopyTo(dstStream, output);
             }
 
             bytes = new List<byte>(output.ToArray());

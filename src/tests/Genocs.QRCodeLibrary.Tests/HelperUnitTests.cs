@@ -6,18 +6,22 @@ public static class HelperUnitTests
 {
     public static string GetLocationOfExecutingAssembly()
     {
-        return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string? directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        if (string.IsNullOrEmpty(directory))
+        {
+            throw new InvalidOperationException("Could not resolve the test assembly directory.");
+        }
+
+        return directory;
     }
 
     public static string GetDemoFileFolder()
     {
-        string fullPath = GetLocationOfExecutingAssembly();
-        return @$"{fullPath}\Demofiles";
+        return Path.Combine(GetLocationOfExecutingAssembly(), "DemoFiles");
     }
 
     public static string GetDemoFile(string filename)
     {
-        string fullPath = GetLocationOfExecutingAssembly();
-        return @$"{fullPath}\Demofiles\{filename}";
+        return Path.Combine(GetDemoFileFolder(), filename);
     }
 }

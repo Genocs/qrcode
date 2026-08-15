@@ -1,35 +1,36 @@
 namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  Code 11 encoding
-///  Written by: Brad Barnhill.
+/// Code 11 encoding.
 /// </summary>
-internal class Code11 : BarcodeCommon, IBarcode
+internal class Code11 : BarcodeEncoding, IBarcode
 {
     private readonly string[] C11_Code = { "101011", "1101011", "1001011", "1100101", "1011011", "1101101", "1001101", "1010011", "1101001", "110101", "101101", "1011001" };
 
     public Code11(string input)
     {
-        _rawData = input;
+        RawData = input;
     }
 
     /// <summary>
     /// Encode the raw data using the Code 11 algorithm.
     /// </summary>
-    private string EncodeCode11()
+    protected override string Encode()
     {
-        if (!CheckNumericOnly(RawData.Replace("-", "")))
+        if (!CheckNumericOnly(RawData.Replace("-", string.Empty)))
+        {
             Error("EC11-1: Numeric data and '-' Only");
+        }
 
-        //calculate the checksums
+        // Calculate the checksums
         var weight = 1;
         var cTotal = 0;
         var dataToEncodeWithChecksums = RawData;
 
-        //figure the C checksum
+        // Figure the C checksum
         for (var i = RawData.Length - 1; i >= 0; i--)
         {
-            //C checksum weights go 1-10
+            // C checksum weights go 1-10
             if (weight == 10) weight = 1;
 
             if (RawData[i] != '-')
@@ -42,7 +43,7 @@ internal class Code11 : BarcodeCommon, IBarcode
 
         dataToEncodeWithChecksums += checksumC.ToString();
 
-        //K checksums are recommended on any message length greater than or equal to 10
+        // K checksums are recommended on any message length greater than or equal to 10
         if (RawData.Length >= 10)
         {
             weight = 1;
@@ -64,25 +65,22 @@ internal class Code11 : BarcodeCommon, IBarcode
             dataToEncodeWithChecksums += checksumK.ToString();
         }
 
-        //encode data
-        var space = "0";
-        var result = C11_Code[11] + space; //start-stop char + interchar space
+        // Encode data
+        const string space = "0";
+        string result = C11_Code[11] + space; // start-stop char + interchar space
 
-        foreach (var c in dataToEncodeWithChecksums)
+        foreach (char c in dataToEncodeWithChecksums)
         {
-            var index = (c == '-' ? 10 : Int32.Parse(c.ToString()));
+            int index = c == '-' ? 10 : int.Parse(c.ToString());
             result += C11_Code[index];
 
-            //inter-character space
+            // inter-character space
             result += space;
         }
 
-        //stop bars
+        // Stop bars
         result += C11_Code[11];
 
         return result;
     }
-
-    public string EncodedValue => EncodeCode11();
-
 }

@@ -3,22 +3,21 @@ using System.Text;
 namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  Codabar encoding
-///  Written by: Brad Barnhill.
+/// Codabar encoding.
 /// </summary>
-internal class Codabar : BarcodeCommon, IBarcode
+internal class Codabar : BarcodeEncoding, IBarcode
 {
-    private readonly System.Collections.Hashtable _codabarCode = new(); // is initialized by init_Codabar()
+    private readonly System.Collections.Hashtable _codabarCode = new();
 
     public Codabar(string input)
     {
-        _rawData = input;
+        RawData = input;
     }
 
     /// <summary>
     /// Encode the raw data using the Codabar algorithm.
     /// </summary>
-    private string EncodeCodabar()
+    protected override string Encode()
     {
         if (RawData.Length < 2) Error("ECODABAR-1: Data format invalid. (Invalid length)");
 
@@ -81,7 +80,7 @@ internal class Codabar : BarcodeCommon, IBarcode
         _codabarCode.Clear();
 
         // change the Raw_Data to strip out the start stop chars for label purposes
-        _rawData = RawData.Trim()[1..^1];
+        RawData = RawData.Trim()[1..^1];
 
         return result;
     }
@@ -114,6 +113,4 @@ internal class Codabar : BarcodeCommon, IBarcode
         _codabarCode.Add('c', "1001001011"); // "110101100101");
         _codabarCode.Add('d', "1010011001"); // "101101100101");
     }
-
-    public string EncodedValue => EncodeCodabar();
 }

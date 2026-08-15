@@ -3,10 +3,9 @@ using System.Collections;
 namespace Genocs.BarcodeLibrary.Symbologies;
 
 /// <summary>
-///  EAN-13 encoding
-///  Written by: Brad Barnhill
+/// EAN-13 encoding.
 /// </summary>
-internal class EAN13 : BarcodeCommon, IBarcode
+internal class EAN13 : BarcodeEncoding, IBarcode
 {
     private readonly string[] EAN_CodeA = { "0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011" };
     private readonly string[] EAN_CodeB = { "0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111" };
@@ -19,7 +18,7 @@ internal class EAN13 : BarcodeCommon, IBarcode
 
     public EAN13(string input, bool disableCountryCode = false)
     {
-        _rawData = input;
+        RawData = input;
         DisableCountryCode = disableCountryCode;
 
         CheckDigit();
@@ -33,9 +32,9 @@ internal class EAN13 : BarcodeCommon, IBarcode
     /// <summary>
     /// Encode the raw data using the EAN-13 algorithm. (Can include the checksum already.  If it doesnt exist in the data then it will calculate it for you.  Accepted data lengths are 12 + 1 checksum or just the 12 data digits)
     /// </summary>
-    private string Encode_EAN13()
+    protected override string Encode()
     {
-        //check length of input
+        // Check length of input
         if (RawData.Length < 12 || RawData.Length > 13)
             Error("EEAN13-1: Data length invalid. (Length must be 12 or 13)");
 
@@ -57,10 +56,9 @@ internal class EAN13 : BarcodeCommon, IBarcode
             if (patterncode[pos] == 'b')
                 result += EAN_CodeB[int.Parse(RawData[pos + 1].ToString())];
             pos++;
-        }//while
+        }
 
-
-        //add divider bars
+        // Add divider bars
         result += "01010";
 
         //get the third
@@ -68,7 +66,7 @@ internal class EAN13 : BarcodeCommon, IBarcode
         while (pos <= 5)
         {
             result += EAN_CodeC[int.Parse(RawData[pos++ + 6].ToString())];
-        }//while
+        }
 
         //checksum digit
         var cs = int.Parse(RawData[RawData.Length - 1].ToString());
@@ -275,7 +273,7 @@ internal class EAN13 : BarcodeCommon, IBarcode
                     odd += int.Parse(rawDataHolder.Substring(i, 1));
                 else
                     even += int.Parse(rawDataHolder.Substring(i, 1)) * 3;
-            }//for
+            }
 
             var total = even + odd;
             var cs = total % 10;
@@ -283,14 +281,11 @@ internal class EAN13 : BarcodeCommon, IBarcode
             if (cs == 10)
                 cs = 0;
 
-            _rawData = rawDataHolder + cs.ToString()[0];
-        }//try
+            RawData = rawDataHolder + cs.ToString()[0];
+        }
         catch
         {
             Error("EEAN13-4: Error calculating check digit.");
-        }//catch
+        }
     }
-
-    public string EncodedValue
-        => Encode_EAN13();
 }
