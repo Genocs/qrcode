@@ -1,4 +1,3 @@
 #!/bin/bash
 export ASPNETCORE_ENVIRONMENT=local
-cd src/Genocs.QRCodeLibrary.WebApi
-dotnet run
+dotnet run --project src/WebApi/Host.csproj
