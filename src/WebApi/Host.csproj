@@ -29,14 +29,9 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.BarcodeLibrary\Genocs.BarcodeLibrary.csproj" />
         <ProjectReference Include="..\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.BarcodeLibrary" Version="5.0.*" />
-        <PackageReference Include="Genocs.QRCodeLibrary" Version="5.0.*" />
     </ItemGroup>
 
 </Project>

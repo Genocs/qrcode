@@ -63,7 +63,7 @@ dotnet add package Genocs.QRCodeLibrary
 dotnet add package Genocs.BarcodeLibrary
 ```
 
-Pin an exact version. Do not use floating `5.0.*` in production builds.
+Pin an exact version. Do not use floating `7.0.*` in production builds.
 
 ## Usage (illustrative)
 
@@ -108,8 +108,6 @@ dotnet build
 dotnet test
 ```
 
-CI currently installs **.NET 8 only**; that gap is tracked in the [findings](docs/findings.md) (F-06).
-
 ### Demo host (optional)
 
 The Web API under `src/WebApi` is a local demo (`GET /BuildQrCode`, `GET /BuildBarcode`, `POST /FindQrCode`). Do not expose it on the public internet.
@@ -130,11 +128,6 @@ The Web API under `src/WebApi` is a local demo (`GET /BuildQrCode`, `GET /BuildB
 ## License
 
 This repository is published under the [MIT license](LICENSE). NuGet packages pack that same file (`PackageLicenseFile`).
-
-Upstream code is not all MIT:
-
-- 1D barcodes are a port of [BarcodeLib](https://github.com/barnhill/barcodelib) (**Apache 2.0**). The Apache license copy previously at `src/Genocs.BarcodeLibrary/LICENSE.txt` is no longer in the tree.
-- The QR decoder originates from a CodeProject article (typically **CPOL**). There is no CPOL file in the repo.
 
 A single MIT file does not satisfy those upstream terms. That remains a shipping blocker: [F-04](docs/findings.md).
 
