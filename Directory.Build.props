@@ -1,5 +1,9 @@
 <Project>
 
+    <!--
+        This Directory.Build.props files sets default properties that apply to all projects found in
+        this folder or subfolders, recursively.
+    -->
     <PropertyGroup>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -10,14 +14,30 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
         <Version>7.0.0-beta001</Version>
-        <Authors>Nocco Giovanni Emanuele</Authors>
+        <LangVersion>latest</LangVersion>
         <Company>Genocs</Company>
         <Copyright>Genocs 2026</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/Genocs/qrcode</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <RepositoryType>git</RepositoryType>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <MinClientVersion>5.0.0</MinClientVersion>
+        <Authors>Nocco Giovanni Emanuele</Authors>
+        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <PackageReleaseNotes>
+            The change log and breaking changes are listed here.
+            https://github.com/Genocs/qrcode/releases
+        </PackageReleaseNotes>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <!--<WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>-->
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Roslynator.Analyzers" Version="4.16.0">
+        <PackageReference Include="Roslynator.Analyzers" Version="5.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -31,4 +51,28 @@
         <AdditionalFiles Include="$(MSBuildThisFileDirectory).editorconfig" Link="Properties\.editorconfig" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\icon.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="README_NUGET.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Define the global DefaultIdType here. -->
+        <Using Include="System.Guid" Alias="DefaultIdType" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <!-- Enable Build Acceleration in Visual Studio. -->
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    </PropertyGroup>
 </Project>

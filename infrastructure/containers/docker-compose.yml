@@ -1,9 +1,9 @@
 services:
 
-  barcode-builder:
-    image: genocs/barcode-builder:local
-    hostname: barcode-builder
-    container_name: barcode-builder
+  coder-service:
+    image: genocs/coder-service:local
+    hostname: coder-service
+    container_name: coder-service
     ports:
       - 5070:8080
     environment:

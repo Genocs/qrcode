@@ -26,4 +26,4 @@ nuget.exe
 .vs/
 project.lock.json
 bower_components/
-node_modules/
+**/node_modules/

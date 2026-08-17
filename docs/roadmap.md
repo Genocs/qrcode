@@ -53,17 +53,12 @@ If you pick **A**, the rest of this document applies. If you pick **B**, skip en
 
 | ID | Work item | Addresses |
 | --- | --- | --- |
-| R-10 | Single GitHub Actions workflow: matrix `net8.0 / net9.0 / net10.0` on `ubuntu-latest` (+ one Windows job for SkiaSharp). Install SDK 10, pin `global.json` (`allowPrerelease: false`, `rollForward: latestFeature`). | F-06, F-07 |
 | R-11 | Pack **Release** only; SourceLink; snupkg; `dotnet nuget push` with symbols. Version from git tag (`MinVer` or `Nerdbank.GitVersioning`). Stop `GeneratePackageOnBuild` in Debug. | F-07, F-20 |
 | R-12 | Rewrite package READMEs, descriptions, tags, release notes. Set `PackageReadmeFile`. Remove “reader” until decode ships. | F-08 |
 | R-13 | Replace `CHANGELOG.md` with Keep a Changelog for *this* repo. Add `CONTRIBUTING.md`. Remove label-studio deploy buttons and fix README fences. | F-09 |
-| R-14 | Finish SkiaSharp migration: no `System.Drawing` in public API (use `SKColor`, a small `QrSize` record, or hex strings). Delete “Unmerged change” comments. Fix XML `cref`s. | F-10 |
 | R-15 | Typed exceptions: `BarcodeException`, keep `DataTooLongException`, stop `throw new Exception`. Do not swallow in the decoder; return `null` only for “not found”. | F-11 |
 | R-16 | Barcode tests: encode-string tests for Code128, Code39, EAN-13, EAN-8, UPC-A, ITF-14, plus one PNG round-trip each. Port cases from upstream BarcodeLib where license allows. | F-05 | **Done.** `BarcodeSymbologyTests` covers every `BarcodeType` except `Unspecified`: binary `EncodedValue`, PNG raster, aliases, and invalid payloads. Pharmacode goldens remain in `PharmaCodeUnitTests`. |
 | R-17 | Web API: treat as sample. Project-reference libraries in **all** configurations. Add `MultipartBodyLengthLimit`. Map errors to 4xx/5xx. Remove unused MongoDB/MediatR packages **or** actually use them. Fix Dockerfile (runtime native deps, Release, correct comments). Point docker publish at `src/WebApi/Dockerfile`. Delete `manual.yml`. | F-12 |
-| R-18 | Replace console sample with a documented `examples/` project using relative paths. | F-13 |
-
-**Suggested release:** `5.1.0` — first version you are willing to support with SemVer.
 
 ---
 
@@ -89,7 +84,6 @@ If you pick **A**, the rest of this document applies. If you pick **B**, skip en
 | --- | --- | --- |
 | R-30 | DocFX or similar from XML comments; examples for QR PNG, SVG, Code128. | F-22 |
 | R-31 | SECURITY.md, supported versions table, vulnerability contact. | governance |
-| R-32 | Remove unused `infrastructure/` PDF/FO assets **or** document why they belong. | F-21 |
 | R-33 | Optional: GS1 / ISO/IEC 18004 compliance checklist and scanner lab notes (iOS Camera, Android, dedicated hardware). | F-05 |
 | R-34 | Performance budget: encode 1000 QR version-5 / s on a reference VM; decode p95 for 1 MP images. | operability |
 | R-35 | If decode remains weak, wrap ZXing for read and keep Genocs for write — document the split. | strategy |
@@ -113,9 +107,8 @@ A consuming team can say yes when **all** of the following are true:
 1. PNG (and SVG, if advertised) round-trip tests pass on Linux CI for the documented ECC levels.
 2. Decode is either tested on fixtures **or** not in the public surface.
 3. Each advertised barcode symbology has encode tests; top retail symbologies have a raster check.
-4. NuGet page matches the product; license files satisfy Apache/CPOL (or those parts were replaced).
-5. Release artifacts are Release-mode, with symbols, versioned from tags.
-6. Breaking changes follow SemVer; `PublicAPI.Shipped.txt` exists.
-7. The Web API is not implied to be a supported SaaS unless it has auth, limits, and probes.
+4. Release artifacts are Release-mode, with symbols, versioned from tags.
+5. Breaking changes follow SemVer; `PublicAPI.Shipped.txt` exists.
+6. The Web API is not implied to be a supported SaaS unless it has auth, limits, and probes.
 
 Until then, treat published `5.0.0` packages as **unsupported snapshots**.

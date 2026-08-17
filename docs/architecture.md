@@ -13,11 +13,11 @@ The solution `qrcode.slnx` contains four applications of very different maturity
 | `src/WebApi` (`Host.csproj`) | Demo HTTP surface over both libraries | Docker / local demos |
 | `src/Console` | Scratch encode/decode sample | Maintainers only |
 
-The README positions the libraries as **OS-agnostic**, **Linux-Docker friendly**, and **free of `System.Drawing.Common`**. That direction is correct for modern .NET, but the port is incomplete (see [findings](findings.md)).
+The README positions the libraries as **OS-agnostic**, **Linux-Docker friendly**, and **free of `System.Drawing.Common`**.
 
 ## Provenance
 
-Neither library is an original implementation. They are ports of well-known open-source projects, with a partial migration from `System.Drawing` to SkiaSharp.
+Neither library is an original implementation. They are ports of well-known open-source projects, with a migration from `System.Drawing` to `SkiaSharp`.
 
 ```text
 QRCoder (codebude)          Uzi Granot QR decoder (CodeProject)
@@ -76,7 +76,7 @@ The decoder also keeps mutable instance fields (`FinderList`, transform coeffici
 
 The library is **encode-only**. Package tags still say “reader writer”. There is no barcode decode path.
 
-Public overloads still accept `System.Drawing.Color` and convert to `SKColor`. `IDisposable` is implemented, but `Dispose` does not follow the managed/unmanaged split correctly (font and image disposal happens even when `disposing` is false).
+`IDisposable` is implemented, but `Dispose` does not follow the managed/unmanaged split correctly (font and image disposal happens even when `disposing` is false).
 
 ## Demo Web API
 

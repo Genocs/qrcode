@@ -3,7 +3,7 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 ###############################################################################
 
-@url = https://localhost:5001
+@url = https://localhost:5070
 @payload = BCD\n001\n2\nSCT\nBFSWDE33BER\nWikimedia Fördergesellschaft\nDE33100205000001194700\nEUR10.00\n\n\n\n
 ### Welcome message
 GET {{url}}
@@ -47,7 +47,6 @@ GET {{url}}/BuildBarcode?payload=123547571&width=800&barcodeType=10
 
 ### Build a Farmacode barcode
 GET {{url}}/BuildBarcode?payload=131050&barcodeType=39
-
 
 ### Read a qrcode printed into an image
 POST {{url}}/findQrCode

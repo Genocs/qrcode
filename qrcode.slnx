@@ -1,10 +1,9 @@
 <Solution>
-  <Folder Name="/tests/">
-    <Project Path="src/tests/Genocs.BarcodeLibrary.Tests/Genocs.BarcodeLibrary.Tests.csproj" />
-    <Project Path="src/tests/Genocs.QRCodeLibrary.Tests/Genocs.QRCodeLibrary.Tests.csproj" />
+  <Folder Name="/tests/BarcodeLibary/">
+    <Project Path="src/tests/BarcodeLibrary.Tests/Tests.csproj" />
   </Folder>
-  <Folder Name="/Console/">
-    <Project Path="src/Console/Host.csproj" />
+  <Folder Name="/tests/QRCodeLibrary/">
+    <Project Path="src/tests/QRCodeLibrary.Tests/Tests.csproj" />
   </Folder>
   <Folder Name="/WebApi/">
     <Project Path="src/WebApi/Host.csproj" />
@@ -16,12 +15,14 @@
     <File Path="Directory.Build.targets" />
     <File Path="dotnet.ruleset" />
     <File Path="global.json" />
+    <File Path="infrastructure/containers/docker-compose.override.yml" />
+    <File Path="infrastructure/containers/docker-compose.yml" />
     <File Path="launchSettings.json" />
     <File Path="Makefile" />
     <File Path="README.md" />
+    <File Path="src/WebApi/web-api.rest" />
     <File Path="stylecop.json" />
-    <File Path="./src/WebApi/web-api.rest" />
   </Folder>
-  <Project Path="src/Genocs.BarcodeLibrary/Genocs.BarcodeLibrary.csproj" />
-  <Project Path="src/Genocs.QRCodeLibrary/Genocs.QRCodeLibrary.csproj" />
+  <Project Path="src/BarcodeLibrary/BarcodeLibrary.csproj" />
+  <Project Path="src/QRCodeLibrary/QRCodeLibrary.csproj" />
 </Solution>

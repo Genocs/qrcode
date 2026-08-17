@@ -21,7 +21,7 @@
 
 # Genocs QR code and barcode libraries
 
-.NET libraries to **encode QR codes** and **1D barcodes** as images, without a dependency on `System.Drawing.Common`, so the same code can run on Windows, Linux, and Linux containers.
+.NET libraries to **encode QR codes** and **1D barcodes** as images, without a dependency on `System.Drawing`, so the same code can run on Windows, Linux, and Linux containers.
 
 The work is a SkiaSharp-based port of existing open-source projects ([QRCoder](https://github.com/codebude/QRCoder), [BarcodeLib](https://github.com/barnhill/barcodelib), and a [CodeProject QR decoder](https://www.codeproject.com/Articles/1250071/QR-Code-Encoder-and-Decoder-NET-Framework-Standard/)). Target frameworks are **.NET 8, 9, and 10**.
 

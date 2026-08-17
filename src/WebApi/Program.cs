@@ -102,8 +102,7 @@ app.MapGet(
     {
         try
         {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
+            QRCodeData qrCodeData = QRCodeGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
             using var image = qrCode.GetGraphic(size);
             return Results.File(image.Encode().AsStream(), "image/png");

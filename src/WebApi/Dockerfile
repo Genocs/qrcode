@@ -1,4 +1,4 @@
-# Genocs.Fonet PDF Web API
+# Genocs.Coder Web API
 # Multi-stage build for linux/amd64.
 
 # Use the official .NET runtime as base image
@@ -22,13 +22,15 @@ COPY ["global.json", "global.json"]
 
 # COPY .csproj and restore as distinct layers
 # This is CRITICAL: If code changes but .csproj doesn't, Docker reuses this cached layer
+COPY src/BarcodeLibrary/BarcodeLibrary.csproj src/BarcodeLibrary/
+COPY src/QRCodeLibrary/QRCodeLibrary.csproj src/QRCodeLibrary/
 COPY src/WebApi/Host.csproj src/WebApi/
 RUN dotnet restore src/WebApi/Host.csproj
 
 # Copy the rest of the source code
+COPY src/BarcodeLibrary/ src/BarcodeLibrary/
+COPY src/QRCodeLibrary/ src/QRCodeLibrary/
 COPY src/WebApi/ src/WebApi/
-COPY src/Genocs.BarcodeLibrary/ src/Genocs.BarcodeLibrary/
-COPY src/Genocs.QRCodeLibrary/ src/Genocs.QRCodeLibrary/
 
 WORKDIR "/src/src/WebApi"
 RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build

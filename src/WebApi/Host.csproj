@@ -30,8 +30,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Genocs.BarcodeLibrary\Genocs.BarcodeLibrary.csproj" />
-        <ProjectReference Include="..\Genocs.QRCodeLibrary\Genocs.QRCodeLibrary.csproj" />
+        <ProjectReference Include="..\BarcodeLibrary\BarcodeLibrary.csproj" />
+        <ProjectReference Include="..\QRCodeLibrary\QRCodeLibrary.csproj" />
     </ItemGroup>
 
 </Project>
