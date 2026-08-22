@@ -32,7 +32,7 @@ jobs:
         run: dotnet build -c Debug --no-restore
 
       - name: Test
-        run: dotnet test -c Debug --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
+        run: dotnet test -c Debug --no-build --verbosity normal --report-trx --results-directory TestResults
 
       - name: Upload Test Results
         if: always()
