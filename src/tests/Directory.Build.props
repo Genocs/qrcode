@@ -7,4 +7,10 @@
              CopyFilesToOutputDirectory (MSB3030). Tests run via `dotnet test`. -->
         <UseAppHost>false</UseAppHost>
     </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Required for TRX reports when using Microsoft.Testing.Platform (see global.json). -->
+        <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="2.3.3" />
+        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.6.1" />
+    </ItemGroup>
 </Project>
