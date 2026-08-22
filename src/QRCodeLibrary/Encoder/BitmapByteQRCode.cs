@@ -1,0 +1,126 @@
+﻿namespace Genocs.QRCodeLibrary.Encoder;
+
+public class BitmapByteQRCode : AbstractQRCode
+{
+    public BitmapByteQRCode(QRCodeData data)
+        : base(data)
+    {
+    }
+
+    public byte[] GetGraphic(int pixelsPerModule)
+    {
+        return GetGraphic(pixelsPerModule, new byte[] { 0x00, 0x00, 0x00 }, new byte[] { 0xFF, 0xFF, 0xFF });
+    }
+
+    public byte[] GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex)
+    {
+        return GetGraphic(pixelsPerModule, HexColorToByteArray(darkColorHtmlHex), HexColorToByteArray(lightColorHtmlHex));
+    }
+
+    public byte[] GetGraphic(int pixelsPerModule, byte[] darkColorRgb, byte[] lightColorRgb)
+    {
+        int sideLength = QrCodeData!.ModuleMatrix.Count * pixelsPerModule;
+
+        var moduleDark = darkColorRgb.Reverse();
+        var moduleLight = lightColorRgb.Reverse();
+
+        var bmp = new List<byte>();
+
+        // Header
+        bmp.AddRange(new byte[] { 0x42, 0x4D, 0x4C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00 });
+
+        // Width
+        bmp.AddRange(IntTo4Byte(sideLength));
+
+        // Height
+        bmp.AddRange(IntTo4Byte(sideLength));
+
+        // Header end
+        bmp.AddRange(new byte[] { 0x01, 0x00, 0x18, 0x00 });
+
+        // Draw qr code
+        for (int x = sideLength - 1; x >= 0; x -= pixelsPerModule)
+        {
+            for (int pm = 0; pm < pixelsPerModule; pm++)
+            {
+                for (int y = 0; y < sideLength; y += pixelsPerModule)
+                {
+                    bool module = QrCodeData.ModuleMatrix[((x + pixelsPerModule) / pixelsPerModule) - 1][((y + pixelsPerModule) / pixelsPerModule) - 1];
+
+                    for (int i = 0; i < pixelsPerModule; i++)
+                    {
+                        bmp.AddRange(module ? moduleDark : moduleLight);
+                    }
+                }
+
+                if (sideLength % 4 != 0)
+                {
+                    for (int i = 0; i < sideLength % 4; i++)
+                    {
+                        bmp.Add(0x00);
+                    }
+                }
+            }
+        }
+
+        // Finalize with terminator
+        bmp.AddRange(new byte[] { 0x00, 0x00 });
+
+        return bmp.ToArray();
+    }
+
+    private static byte[] HexColorToByteArray(string colorString)
+    {
+        if (colorString.StartsWith("#"))
+        {
+            colorString = colorString.Substring(1);
+        }
+
+        byte[] byteColor = new byte[colorString.Length / 2];
+
+        for (int i = 0; i < byteColor.Length; i++)
+        {
+            byteColor[i] = byte.Parse(colorString.AsSpan(i * 2, 2), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        return byteColor;
+    }
+
+    private static byte[] IntTo4Byte(int inp)
+    {
+        byte[] bytes = new byte[2];
+        unchecked
+        {
+            bytes[1] = (byte)(inp >> 8);
+            bytes[0] = (byte)inp;
+        }
+
+        return bytes;
+    }
+}
+
+public static class BitmapByteQRCodeHelper
+{
+    public static byte[] GetQRCode(
+                                    string plainText,
+                                    int pixelsPerModule,
+                                    string darkColorHtmlHex,
+                                    string lightColorHtmlHex,
+                                    QRCodeGenerator.ECCLevel eccLevel,
+                                    bool forceUtf8 = false,
+                                    bool utf8BOM = false,
+                                    QRCodeGenerator.EciMode eciMode = QRCodeGenerator.EciMode.Default,
+                                    int requestedVersion = -1)
+    {
+        using var qrCodeData = QRCodeGenerator.CreateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion);
+        using var qrCode = new BitmapByteQRCode(qrCodeData);
+        return qrCode.GetGraphic(pixelsPerModule, darkColorHtmlHex, lightColorHtmlHex);
+    }
+
+    public static byte[] GetQRCode(string txt, QRCodeGenerator.ECCLevel eccLevel, int size)
+    {
+        using var qrCode = QRCodeGenerator.CreateQrCode(txt, eccLevel);
+        using var qrBmp = new BitmapByteQRCode(qrCode);
+        return qrBmp.GetGraphic(size);
+    }
+}

@@ -13,7 +13,7 @@ on:
         description: "Image Version"
 
         # Default value if no value is explicitly provided
-        default: "5.0.0"
+        default: "7.0.0"
 
         # Input has to be provided for the workflow to run
         required: true
@@ -21,38 +21,48 @@ on:
 
 jobs:
   build:
-    name: Publish Docker Image
+    name: Build Test and Publish on Dockerhub
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
-      - name: Restore dependencies
+      - name: Restore Dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build -c Debug --no-restore
 
       - name: Test
-        run: dotnet test -c Debug --no-build --verbosity normal
+        run: dotnet test -c Debug --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: GenocsTestResults
+          path: TestResults/*.trx
 
       - name: Pack
         run: dotnet pack -c Debug --no-build --verbosity normal
 
-      - name: Docker Hub Log in
-        uses: docker/login-action@v3
+      - name: Login to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        uses: docker/login-action@v4
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
 
       - name: Build and push image to Dockerhub
         run: |
-          docker build -f webapi.dockerfile -t genocs/codes-webapi:${{ github.event.inputs.version }} -t genocs/codes-webapi:latest .
+          docker build -f .src/WebApi/Dockerfile -t genocs/codes-webapi:${{ github.event.inputs.version }} -t genocs/codes-webapi:latest .
           docker push genocs/codes-webapi:${{ github.event.inputs.version }}
           docker push genocs/codes-webapi:latest

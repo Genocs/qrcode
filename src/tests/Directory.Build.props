@@ -1,0 +1,10 @@
+<Project>
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+    <PropertyGroup>
+        <!-- xunit.v3 test projects are executables. SDK 10 does not emit an apphost
+             for net8.0/net9.0 unless those host packs are installed, which breaks
+             CopyFilesToOutputDirectory (MSB3030). Tests run via `dotnet test`. -->
+        <UseAppHost>false</UseAppHost>
+    </PropertyGroup>
+</Project>

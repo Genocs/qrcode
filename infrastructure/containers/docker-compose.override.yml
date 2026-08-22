@@ -1,0 +1,6 @@
+services:
+
+  coder-service:
+    build:
+      context: ../../
+      dockerfile: ./src/WebApi/Dockerfile

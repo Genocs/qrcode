@@ -1,0 +1,58 @@
+###############################################################################
+# Use this file inside Visual Studio code with 'REST Client' plugin 
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+###############################################################################
+
+@url = https://localhost:5070
+@payload = BCD\n001\n2\nSCT\nBFSWDE33BER\nWikimedia Fördergesellschaft\nDE33100205000001194700\nEUR10.00\n\n\n\n
+### Welcome message
+GET {{url}}
+
+### Check the health of the service
+GET {{url}}/health
+
+### Build a qrcode
+GET {{url}}/BuildQrCode?payload={{payload}}
+
+### Build a barcode UpcA
+GET {{url}}/BuildBarcode?payload=12547852157&width=600&barcodeType=1
+
+### Build a barcode UpcE
+GET {{url}}/BuildBarcode?payload=100200000470&width=600&barcodeType=2
+
+### Build a barcode UpcSupplemental2Digit
+GET {{url}}/BuildBarcode?payload=12&width=600&barcodeType=3
+
+### Build a barcode UpcSupplemental5Digit
+GET {{url}}/BuildBarcode?payload=12354&width=600&barcodeType=4
+
+### Build a barcode Ean13
+GET {{url}}/BuildBarcode?payload=1235475124214&width=600&barcodeType=5
+
+### Build a barcode Ean8
+GET {{url}}/BuildBarcode?payload=12354751&width=600&barcodeType=6
+
+### Build a barcode Interleaved2Of5
+GET {{url}}/BuildBarcode?payload=12354751&width=600&barcodeType=7
+
+### Build a barcode Interleaved2Of5Mod10
+GET {{url}}/BuildBarcode?payload=123547571&width=600&barcodeType=8
+
+### Build a barcode Standard2Of5
+GET {{url}}/BuildBarcode?payload=123547571&width=600&barcodeType=9
+
+### Build a barcode Standard2Of5Mod10
+GET {{url}}/BuildBarcode?payload=123547571&width=800&barcodeType=10
+
+
+### Build a Farmacode barcode
+GET {{url}}/BuildBarcode?payload=131050&barcodeType=39
+
+### Read a qrcode printed into an image
+POST {{url}}/findQrCode
+Content-Type: application/json
+{
+
+  "fullname": "John Doe",
+  "address": "New York City, Street XYZ"
+}
