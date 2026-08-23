@@ -95,7 +95,7 @@ public class Barcode : IDisposable
     public SKColorF BackColor { get; set; } = SKColors.White;
 
     /// <summary>
-    /// Gets or sets the label font. (Default is Arial Bold 28px, with Linux-safe fallbacks).
+    /// Gets or sets the label font. (Default is Ubuntu in Docker, otherwise Arial Bold 28px).
     /// </summary>
     public SKFont LabelFont { get; set; } = new SKFont(CreateLabelTypeface(), 28);
 
@@ -186,7 +186,8 @@ public class Barcode : IDisposable
 
     /// <summary>
     /// Creates a typeface that can render barcode labels.
-    /// Uses Arial when present; otherwise Liberation Sans, DejaVu Sans, or another installed family.
+    /// Uses Ubuntu when running in a container (or when GENOCS_BARCODE_LABEL_FONT is set);
+    /// otherwise Arial, then Liberation Sans / DejaVu Sans.
     /// </summary>
     /// <returns>A typeface with drawable glyphs.</returns>
     public static SKTypeface CreateLabelTypeface() => LabelTypefaceFactory.Create();

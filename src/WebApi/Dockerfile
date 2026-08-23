@@ -8,11 +8,12 @@ WORKDIR /src
 EXPOSE 8080
 
 # SkiaSharp.NativeAssets.Linux needs fontconfig plus actual TTF files.
-# Arial is not present in this image; Liberation provides a compatible family (and fontconfig aliases).
+# fonts-ubuntu-classic ships static Ubuntu-B.ttf / Ubuntu-R.ttf used for barcode labels.
 USER root
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         fontconfig \
+        fonts-ubuntu-classic \
         fonts-liberation \
         fonts-dejavu-core \
         libfontconfig1 \
@@ -20,6 +21,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && fc-cache -f
 USER app
+
+# Official Microsoft images already set DOTNET_RUNNING_IN_CONTAINER=true.
+# Prefer the Ubuntu family for barcode labels inside this container.
+ENV GENOCS_BARCODE_LABEL_FONT=Ubuntu
 
 # Use the official .NET SDK for building
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build

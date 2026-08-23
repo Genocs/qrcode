@@ -14,6 +14,27 @@ public class LabelTypefaceTests
     }
 
     [Fact]
+    public void create_falls_back_when_container_ubuntu_font_is_missing()
+    {
+        string? previousContainer = Environment.GetEnvironmentVariable(LabelTypefaceFactory.ContainerEnvironmentVariable);
+        string? previousFont = Environment.GetEnvironmentVariable(LabelTypefaceFactory.FontFamilyEnvironmentVariable);
+        try
+        {
+            Environment.SetEnvironmentVariable(LabelTypefaceFactory.ContainerEnvironmentVariable, "true");
+            Environment.SetEnvironmentVariable(LabelTypefaceFactory.FontFamilyEnvironmentVariable, "Ubuntu");
+
+            using SKTypeface typeface = Barcode.CreateLabelTypeface();
+
+            Assert.True(typeface.GlyphCount > 0);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(LabelTypefaceFactory.ContainerEnvironmentVariable, previousContainer);
+            Environment.SetEnvironmentVariable(LabelTypefaceFactory.FontFamilyEnvironmentVariable, previousFont);
+        }
+    }
+
+    [Fact]
     public void include_label_draws_text_on_the_image()
     {
         using var unlabeledBarcode = new Barcode { IncludeLabel = false };
