@@ -95,9 +95,9 @@ public class Barcode : IDisposable
     public SKColorF BackColor { get; set; } = SKColors.White;
 
     /// <summary>
-    /// Gets or sets the label font. (Default is Microsoft Sans Serif, 10pt, Bold).
+    /// Gets or sets the label font. (Default is Arial Bold 28px, with Linux-safe fallbacks).
     /// </summary>
-    public SKFont LabelFont { get; set; } = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), 28);
+    public SKFont LabelFont { get; set; } = new SKFont(CreateLabelTypeface(), 28);
 
     /// <summary>
     /// Gets or sets the width of the image to be drawn. (Default is 300 pixels).
@@ -183,6 +183,13 @@ public class Barcode : IDisposable
     /// </summary>
     public bool DisableEan13CountryException { get; set; }
     #endregion
+
+    /// <summary>
+    /// Creates a typeface that can render barcode labels.
+    /// Uses Arial when present; otherwise Liberation Sans, DejaVu Sans, or another installed family.
+    /// </summary>
+    /// <returns>A typeface with drawable glyphs.</returns>
+    public static SKTypeface CreateLabelTypeface() => LabelTypefaceFactory.Create();
 
     #region General Encode
 

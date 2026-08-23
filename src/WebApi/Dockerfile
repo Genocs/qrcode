@@ -3,10 +3,23 @@
 
 # Use the official .NET runtime as base image
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-USER app
 ARG BUILD_CONFIGURATION=Debug
 WORKDIR /src
 EXPOSE 8080
+
+# SkiaSharp.NativeAssets.Linux needs fontconfig plus actual TTF files.
+# Arial is not present in this image; Liberation provides a compatible family (and fontconfig aliases).
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        fontconfig \
+        fonts-liberation \
+        fonts-dejavu-core \
+        libfontconfig1 \
+        libfreetype6 \
+    && rm -rf /var/lib/apt/lists/* \
+    && fc-cache -f
+USER app
 
 # Use the official .NET SDK for building
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
@@ -38,15 +51,6 @@ RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 # Build and Publish
 # -c Release: Optimizes code
 # /p:UseAppHost=false: Disables creating a native exe (we just need the dll)
-
-# SkiaSharp / fontconfig native dependencies for Linux PDF rendering
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        fontconfig \
-        fonts-dejavu-core \
-        libfontconfig1 \
-        libfreetype6 \
-    && rm -rf /var/lib/apt/lists/*
 
 ENV ASPNETCORE_URLS=http://+:8080
 

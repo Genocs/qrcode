@@ -126,7 +126,7 @@ app.MapGet(
             Barcode barcodeGenerator = new Barcode
             {
                 IncludeLabel = true,
-                LabelFont = new SKFont(SKTypeface.FromFamilyName("Arial"), height / 10f)
+                LabelFont = new SKFont(Barcode.CreateLabelTypeface(), height / 10f)
             };
             var img = barcodeGenerator.Encode(barcodeType, payload, width, height);
 

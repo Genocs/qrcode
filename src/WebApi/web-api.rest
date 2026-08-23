@@ -3,7 +3,7 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 ###############################################################################
 
-@url = https://localhost:5070
+@url = http://localhost:5070
 @payload = BCD\n001\n2\nSCT\nBFSWDE33BER\nWikimedia Fördergesellschaft\nDE33100205000001194700\nEUR10.00\n\n\n\n
 ### Welcome message
 GET {{url}}

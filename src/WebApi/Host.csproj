@@ -11,7 +11,6 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..</DockerfileContext>
 
-        <IsPackable>false</IsPackable>
         <!-- Disable web.config transformation for Docker builds -->
         <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
         <WebConfigTransformEnabled>false</WebConfigTransformEnabled>

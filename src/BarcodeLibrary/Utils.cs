@@ -19,7 +19,7 @@ internal static class Utils
         {
             for (int i = 1; i <= 100; i++)
             {
-                using var testFont = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Normal), i);
+                using var testFont = new SKFont(LabelTypefaceFactory.Create(SKFontStyle.Normal), i);
                 testFont.MeasureText(label, out SKRect bounds);
 
                 if (!(bounds.Width > width) && !(bounds.Height > height)) continue;
