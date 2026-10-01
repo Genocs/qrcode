@@ -18,9 +18,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Genocs.Core" Version="9.0.1" />
+        <PackageReference Include="Genocs.Core" Version="9.0.2" />
         <PackageReference Include="Genocs.Logging" Version="9.0.1" />
-        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.1" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.2" />
         <PackageReference Include="Genocs.WebApi" Version="9.0.1" />
         <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.1" />
 
