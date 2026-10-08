@@ -4,16 +4,16 @@ repository:
   # See https://docs.github.com/en/rest/reference/repos#update-a-repository for all available settings.
 
   # The name of the repository. Changing this will rename the repository
-  name: genocs-fonet
+  name: qrcode
 
   # A short description of the repository that will show up on GitHub
-  description: A .NET library for building QR codes and barcodes.
+  description: A .NET library for generating QR codes.
 
   # A URL with more information about the repository
   homepage: https://genocs-blog.netlify.app
 
   # A comma-separated list of topics to set on the repository
-  topics: automation,docker,dotnet,testing,qrcodes,barcodes,genocs
+  topics: automation,docker,dotnet,testing,qr-code,genocs
 
   # Either `true` to make the repository private, or `false` to make it public.
   private: false

@@ -18,7 +18,6 @@ on:
         # Input has to be provided for the workflow to run
         required: true
 
-
 jobs:
   build:
     name: Build Test and Publish on Dockerhub
@@ -31,7 +30,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
 
       - name: Restore Dependencies
         run: dotnet restore

@@ -1,9 +1,9 @@
 <Solution>
   <Folder Name="/tests/BarcodeLibary/">
-    <Project Path="src/tests/BarcodeLibrary.Tests/Tests.csproj" />
+    <Project Path="tests/BarcodeLibrary.Tests/Tests.csproj" />
   </Folder>
   <Folder Name="/tests/QRCodeLibrary/">
-    <Project Path="src/tests/QRCodeLibrary.Tests/Tests.csproj" />
+    <Project Path="tests/QRCodeLibrary.Tests/Tests.csproj" />
   </Folder>
   <Folder Name="/WebApi/">
     <Project Path="src/WebApi/Host.csproj" />

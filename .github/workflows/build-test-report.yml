@@ -1,6 +1,7 @@
 name: Build Test Report
 
 on:
+  # Triggered when the "Build Test and Pack" workflow completes.
   workflow_run:
     workflows:
       - Build Test and Pack

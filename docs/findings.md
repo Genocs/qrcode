@@ -64,7 +64,7 @@ Removing the Apache file made the tree look single-licensed. It did not relicens
 ### F-05 No image-level proof that codes scan
 
 **Component:** tests  
-**Evidence:** `src/tests/Genocs.QRCodeLibrary.Tests/SvgQRCodeTests.cs`, `QrDecoderFixtureTests.cs`, `Genocs.BarcodeLibrary.Tests/BarcodeSymbologyTests.cs`
+**Evidence:** `tests/Genocs.QRCodeLibrary.Tests/SvgQRCodeTests.cs`, `QrDecoderFixtureTests.cs`, `Genocs.BarcodeLibrary.Tests/BarcodeSymbologyTests.cs`
 
 | Area | Automated proof |
 | --- | --- |
