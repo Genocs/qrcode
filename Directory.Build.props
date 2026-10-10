@@ -13,7 +13,7 @@
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)dotnet.ruleset</CodeAnalysisRuleSet>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-        <Version>3.0.0</Version>
+        <Version>7.0.0</Version>
         <LangVersion>latest</LangVersion>
         <Company>Genocs</Company>
         <Copyright>Genocs 2026</Copyright>
