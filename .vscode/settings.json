@@ -1,24 +1,10 @@
 {
   "omnisharp.useModernNet": true,
-  "omnisharp.path": "latest",
-  "omnisharp.enableRoslynAnalyzers": true,
   "csharp.format.enable": true,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "ms-dotnettools.csharp",
   "dotnet.formatting.organizeImportsOnFormat": true,
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "material-icon-theme.files.associations": {
-    "*.fo": "xsl"
-  },
-  "vsicons.associations.files": [
-    {
-      "icon": "xsl",
-      "extensions": [
-        "fo"
-      ],
-      "format": "svg"
-    }
-  ]
+  }
 }

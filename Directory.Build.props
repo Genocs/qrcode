@@ -13,7 +13,7 @@
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)dotnet.ruleset</CodeAnalysisRuleSet>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-        <Version>7.0.0-beta001</Version>
+        <Version>3.0.0</Version>
         <LangVersion>latest</LangVersion>
         <Company>Genocs</Company>
         <Copyright>Genocs 2026</Copyright>
@@ -22,17 +22,16 @@
         <RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>
         <PackageIcon>icon.png</PackageIcon>
         <RepositoryType>git</RepositoryType>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
         <AnalysisLevel>latest</AnalysisLevel>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <PackageReleaseNotes>
             The change log and breaking changes are listed here.
             https://github.com/Genocs/qrcode/releases
         </PackageReleaseNotes>
-        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
         <!--<WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>-->
     </PropertyGroup>
 

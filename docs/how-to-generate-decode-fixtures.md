@@ -1,5 +1,10 @@
+# This is a demo program to generate QR code images for testing the decoder.
+
+This file came from an AI Assistant, and it is not part of the library. It is provided for demonstration purposes only.
+
 #:project ../src/Genocs.QRCodeLibrary/Genocs.QRCodeLibrary.csproj
 
+```csharp
 using Genocs.QRCodeLibrary.Encoder;
 using SkiaSharp;
 
@@ -101,3 +106,4 @@ static byte[] Render(
     using SKData encoded = image.Encode(SKEncodedImageFormat.Png, 100);
     return encoded.ToArray();
 }
+```

@@ -8,8 +8,8 @@
 
 [license-shield]: https://img.shields.io/github/license/Genocs/qrcode?color=2da44e&style=flat-square
 [license-url]: https://github.com/Genocs/qrcode/blob/main/LICENSE
-[build-shield]: https://github.com/Genocs/qrcode/actions/workflows/build_and_test.yml/badge.svg?branch=main
-[build-url]: https://github.com/Genocs/qrcode/actions/workflows/build_and_test.yml
+[build-shield]: https://github.com/Genocs/qrcode/actions/workflows/build-and-test.yml/badge.svg?branch=main
+[build-url]: https://github.com/Genocs/qrcode/actions/workflows/build-and-test.yml
 [downloads-br-shield]: https://img.shields.io/nuget/dt/Genocs.BarcodeLibrary.svg?color=2da44e&label=downloads_barcode&logo=nuget
 [downloads-br-url]: https://www.nuget.org/packages/Genocs.BarcodeLibrary
 [downloads-qr-shield]: https://img.shields.io/nuget/dt/Genocs.QRCodeLibrary.svg?color=2da44e&label=downloads_qrcode&logo=nuget
@@ -38,7 +38,7 @@ Provide a **single Genocs surface** for:
 | [`Genocs.QRCodeLibrary`](https://www.nuget.org/packages/Genocs.QRCodeLibrary) | Build QR payloads and rasterize them (PNG / SVG / PostScript). Optionally decode QR images. |
 | [`Genocs.BarcodeLibrary`](https://www.nuget.org/packages/Genocs.BarcodeLibrary) | Encode common 1D symbologies (Code 128, Code 39, EAN/UPC, ITF-14, Pharmacode, and others) to a SkiaSharp image. Encode-only — there is no barcode reader. |
 
-The repository also includes a **demo Web API** and a console scratchpad. Those hosts are samples, not a supported service.
+The repository also includes a **demo Web API**. This host is a sample, not a supported service.
 
 ## Current status
 

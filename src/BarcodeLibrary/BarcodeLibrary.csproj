@@ -7,18 +7,7 @@
         <AssemblyName>Genocs.BarcodeLibrary</AssemblyName>
         <Title>Library to build Barcodes for .NET Core projects.</Title>
         <Description>QRCode library for .NET Core.</Description>
-        <LangVersion>10.0</LangVersion>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <PackageProjectUrl>https://github.com/Genocs/qrcode.git</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>
-        <PackageIcon>icon.png</PackageIcon>
-        <RepositoryType>git</RepositoryType>
         <PackageTags>genocs barcode</PackageTags>
-        <PackageReleaseNotes>Removed reference</PackageReleaseNotes>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>
 
     <ItemGroup>

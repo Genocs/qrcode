@@ -1,15 +1,10 @@
 ﻿namespace Genocs.QRCodeLibrary.Encoder;
 
-public class BitmapByteQRCode : AbstractQRCode
+public class BitmapByteQRCode(QRCodeData data) : AbstractQRCode(data)
 {
-    public BitmapByteQRCode(QRCodeData data)
-        : base(data)
-    {
-    }
-
     public byte[] GetGraphic(int pixelsPerModule)
     {
-        return GetGraphic(pixelsPerModule, new byte[] { 0x00, 0x00, 0x00 }, new byte[] { 0xFF, 0xFF, 0xFF });
+        return GetGraphic(pixelsPerModule, [0x00, 0x00, 0x00], [0xFF, 0xFF, 0xFF]);
     }
 
     public byte[] GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex)
@@ -21,8 +16,10 @@ public class BitmapByteQRCode : AbstractQRCode
     {
         int sideLength = QrCodeData!.ModuleMatrix.Count * pixelsPerModule;
 
-        var moduleDark = darkColorRgb.Reverse();
-        var moduleLight = lightColorRgb.Reverse();
+        byte[] moduleDark = (byte[])darkColorRgb.Clone();
+        byte[] moduleLight = (byte[])lightColorRgb.Clone();
+        Array.Reverse(moduleDark);
+        Array.Reverse(moduleLight);
 
         var bmp = new List<byte>();
 
@@ -66,7 +63,7 @@ public class BitmapByteQRCode : AbstractQRCode
         // Finalize with terminator
         bmp.AddRange(new byte[] { 0x00, 0x00 });
 
-        return bmp.ToArray();
+        return [.. bmp];
     }
 
     private static byte[] HexColorToByteArray(string colorString)

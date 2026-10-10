@@ -44,7 +44,7 @@ Avoid the `GetGraphic` overload that takes an icon or logo overlay.
 
 ## Warning Policy
 
-This package follows the quality gate in [build_and_test.yml](https://github.com/Genocs/qrcode/blob/main/.github/workflows/build-and-test.yml):
+This package follows the quality gate in [build-and-test.yml](https://github.com/Genocs/qrcode/blob/main/.github/workflows/build-and-test.yml):
 
 - Libraries must build for `net10.0`, `net9.0`, and `net8.0`.
 - Unit tests must pass before merging QR encode or decode changes.
