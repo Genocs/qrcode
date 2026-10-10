@@ -14,7 +14,7 @@
         <RepositoryUrl>https://github.com/Genocs/qrcode.git</RepositoryUrl>
         <PackageIcon>icon.png</PackageIcon>
         <RepositoryType>git</RepositoryType>
-        <PackageTags>barcode reader writer</PackageTags>
+        <PackageTags>genocs barcode</PackageTags>
         <PackageReleaseNotes>Removed reference</PackageReleaseNotes>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>

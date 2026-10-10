@@ -1,6 +1,6 @@
 # Genocs Barcode Library
 
-![Genocs Barcode Library Banner](https://raw.githubusercontent.com/Genocs/genocs-qrcode/main/assets/genocs-barcode-library-banner.png)
+![Genocs Barcode Library Banner](https://raw.githubusercontent.com/Genocs/genocs-qrcode/main/assets/banner.png)
 
 Encode common 1D barcode symbologies to SkiaSharp images. Supports `net10.0`, `net9.0`, and `net8.0`.
 
@@ -47,7 +47,7 @@ Static helpers such as `Barcode.DoEncode` wrap the same path for one-shot genera
 
 ## Warning Policy
 
-This package follows the quality gate in [build_and_test.yml](https://github.com/Genocs/qrcode/blob/main/.github/workflows/build_and_test.yml):
+This package follows the quality gate in [build_and_test.yml](https://github.com/Genocs/qrcode/blob/main/.github/workflows/build-and-test.yml):
 
 - Libraries must build for `net10.0`, `net9.0`, and `net8.0`.
 - Unit tests must pass before merging barcode changes.
